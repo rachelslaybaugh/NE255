@@ -8,6 +8,6 @@ Initially taught Fall 2016.
 Latex files can be constructed using pdflatex.
 
 .ipynb notebooks can be launched from the command line with
-> ipython notebook -matplotlibo
+> ipython notebook
 
 Course materials derived from Jasmina Vujic.
