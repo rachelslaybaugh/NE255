@@ -408,44 +408,20 @@ We'll solve the steady state Boltzmann Transport Equation
 \end{itemize}
 \end{frame}
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Current State}
-2010: the DOE announced \emph{Oak Ridge National Laboratory} won the Nuclear Energy Modeling and Simulation Energy Innovation Hub (reawarded for 10 years), including:	
+\begin{frame}{This Class}
+
+We will focus on
 \begin{itemize}
-\item Electric Power Research Institute (EPRI), Palo Alto, CA
-\item Idaho National Laboratory, Idaho Falls, ID
-\item Los Alamos National Laboratory, Los Alamos, NM
-\item Massachusetts Institute of Technology, Cambridge, MA
-\item North Carolina State University, Raleigh, NC
-\item Sandia National Laboratories, Albuquerque, NM
-\item Tennessee Valley Authority, Knoxville, TN
-\item University of Michigan, Ann Arbor, MI
-\item Westinghouse Electric Company, Pittsburgh, PA
+\item Understanding the mathematical model (more of that in 250)
+\item Learning computational methods (most of class)
+\item (possibly) A little bit of implementation (take a computing class for this)
+\item Assessing the answer
 \end{itemize}
 \end{frame}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Consortium for Advanced Simulation of Light Water Reactors}
-\begin{center}
-\includegraphics[height=0.75in,clip]{CASL}
-\end{center}
-CASL was established to provide leading edge modeling and simulation (M\& S) capability to improve the performance of \textit{currently operating light water reactors}. Our vision is safer and more productive commercial nuclear power production afforded through comprehensive science-based predictive M\& S technology...CASL is developing the Virtual Environment for Reactor Applications, \textbf{VERA}. CASL's VERA software simulates nuclear reactor physical phenomena using coupled multi-physics models. 
-\end{frame}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{MOOSE and SHARP}
-\begin{center}
-\includegraphics[height=0.75in,clip]{moose}
-\end{center}
-\begin{itemize}
-\item \textcolor{RawSienna}{MOOSE}: The Multiphysics Object-Oriented Simulation Environment (MOOSE) is a finite-element, multiphysics framework primarily developed by Idaho National Laboratory. It provides a high-level interface to some of the most sophisticated nonlinear solver technology on the planet.
-\item \textcolor{RawSienna}{SHARP}: The Simulation-based High-efficiency Advanced Reactor Prototyping (SHARP) suite of codes enables virtual design and engineering of nuclear plant behavior...researchers have developed a set of simulation tools that provide a highly detailed description of the reactor core and the nuclear plant behavior. 
-\end{itemize}
-\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -462,15 +438,6 @@ These kinds of simulations require time on the fastest computers in the world
 \end{figure}
 \end{frame}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{It's Important}
-``. . . At Oak Ridge National Laboratory, they're using supercomputers to get a lot more power out of our nuclear facilities . . . . "
-
-\vspace*{0.5 in}
-President Obama, 2011 State of the Union\\
-\href{http://www.casl.gov/media/20110127\_news.shtml}{http://www.casl.gov/media/20110127\_news.shtml}
-\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -488,6 +455,7 @@ President Obama, 2011 State of the Union\\
 \end{figure}
 \end{frame}
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{What Can We Accomplish?}
@@ -503,7 +471,7 @@ to solve problems that were \emph{previously unthinkable or impractical} in term
 However, these computer simulations will not completely eliminate the need for \emph{experimental or measurement data} to confirm or ``validate" the software. 
 
 \vspace*{1em}
-\hspace*{0.25 in} John Wagner, ORNL
+\hspace*{0.25 in} John Wagner, INL
 \end{frame}
 
 %"Traditionally, reactor models for radiation dose assessments have considered just the reactor core, or a small part of the core," Wagner says. "However, we're now simulating entire nuclear facilities, such as a nuclear power reactor facility with its auxiliary buildings and the ITER fusion reactor, with much greater accuracy than any other organization that we're aware of." 
@@ -512,6 +480,85 @@ However, these computer simulations will not completely eliminate the need for \
 %
 %DENOVO is a Scalable HPC Transport Code for Multi-Scale Nuclear Energy Applications
 %http://computing.ornl.gov/SC09/videos/tomevans_1Mb.mov
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Current State: CASL}
+2010: the DOE announced \emph{Oak Ridge National Laboratory} won the Nuclear Energy Modeling and Simulation Energy Innovation Hub (awarded 5 more years in 2015), including:	
+\begin{itemize}
+\item Electric Power Research Institute (EPRI), Palo Alto, CA
+\item Idaho National Laboratory, Idaho Falls, ID
+\item Los Alamos National Laboratory, Los Alamos, NM
+\item Massachusetts Institute of Technology, Cambridge, MA
+\item North Carolina State University, Raleigh, NC
+\item Sandia National Laboratories, Albuquerque, NM
+\item Tennessee Valley Authority, Knoxville, TN
+\item University of Michigan, Ann Arbor, MI
+\item Westinghouse Electric Company, Pittsburgh, PA
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Consortium for Advanced Simulation of Light Water Reactors}
+\begin{center}
+\includegraphics[height=0.65in,clip]{CASL}
+\end{center}
+\begin{itemize}
+\item CASL's focus is on \textit{currently operating light water reactors}.
+\item They've developed the Virtual Environment for Reactor Applications, \textbf{VERA}, which simulates nuclear reactor physical phenomena using coupled multi-physics models.
+\item They have LWR-specific challenge problems such as GTRF, CRUD, PCI, DNB, FAD, RPV internals, etc. \end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Current State: MOOSE and SHARP}
+
+\begin{itemize}
+\item \textcolor{RawSienna}{MOOSE}: The Multiphysics Object-Oriented Simulation Environment (MOOSE) is a finite-element, multiphysics framework primarily developed by Idaho National Lab. It provides a high-level interface to some of the most sophisticated nonlinear solver technology on the planet.
+\pause
+\vspace*{1 em}
+\item \textcolor{RawSienna}{SHARP}: The Simulation-based High-efficiency Advanced Reactor Prototyping (SHARP) suite of codes enables virtual design and engineering of nuclear plant behavior...researchers (Argonne National Lab) have developed a set of simulation tools that provide a highly detailed description of the reactor core and the nuclear plant behavior. 
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Quick Comparison}
+\begin{center}
+\includegraphics[height=0.75in,clip]{moose}
+\end{center}
+\begin{itemize}
+\item MOOSE and SHARP focus more heavily on advanced reactor design.
+\item They have package that address more types of physics than CASL.
+\item MOOSE is open source, though many of the ``animals" that do the physics are not.
+\item MOOSE and SHARP are supported by DOE Office of Nuclear Energy, while CASL is the Office of Science.
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{What Are People Working on Now?}
+Examples from DOE-NE funding opportunity announcement
+\begin{itemize}
+\item Advanced Reactor Methods Topics
+  \begin{itemize}
+  \item Sodium Fast Reactor
+  \item High Temperature Gas Reactor
+  \item Molten Salt Reactor
+  \end{itemize}
+\item Reactor Concepts
+\item Nuclear Energy Advanced Modeling and Simulation (NEAMS): Core Neutronics
+\item Grand Challenge Problem for Nuclear Energy
+\item Critical Data Needs for NEAMS
+\end{itemize}
+
+\end{frame}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
