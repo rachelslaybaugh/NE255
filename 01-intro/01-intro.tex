@@ -2,7 +2,7 @@
 %%  Class 1, NE 255
 %%
 
-\documentclass[xcolor=x11names,compress]{beamer}
+\documentclass[xcolor=x11names,compress, handout]{beamer}
 
 \definecolor{CoolBlack}{rgb}{0.0, 0.18, 0.39}
 %% General document %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -270,62 +270,14 @@ Everything can be worked out in communication.
 \item I encourage you to choose a project that is useful to your research.
 \item Keep this in the back of your mind as we go through the course.
 \end{itemize}
+
+\pause
+\vspace*{2em}
+\begin{center}
+\textbf{STRETCH BREAK}
+\end{center}
 \end{frame}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Preview}
-\begin{align}
-  [\vOmega \cdot \nabla + \Macro(\vec{r}, E)] &\psi(\vec{r}, \vOmega, E)  = \chi(E) \int_0^{\infty} dE' \:\nu \Macro_{f}(\vec{r}, E') \int_{4\pi} d\vOmega' \:\psi(\vec{r}, \vOmega', E')  \nonumber \\
-   &+ \int_0^{\infty} dE' \int_{4\pi} d\vOmega' \:\Macro_{s}(\vec{r}, E' \to E, \vOmega' \cdot \vOmega) \psi(\vec{r}, \vOmega', E')  \nonumber
-\end{align}
-\vspace{-2em}
-\begin{columns}
-  \begin{column}{0.5\textwidth}
-    Learn methods to translate equations like the \\\emph{Boltzmann Transport equation} \\into computer-generated solutions
-  \end{column}
-  \begin{column}{0.5\textwidth}
-    \begin{figure}
-    \includegraphics[height=1.75in,clip]{UNIC_powerDist}
-    \end{figure}
-  \end{column}
-\end{columns}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Categories}
-\underline{Experiment}: Experimental scientists work by \alert{observing how} nature behaves\\
-\vspace*{0.25 in}
-\underline{Theory}: Theoretical scientists use the language of mathematics to \alert{explain and predict} the behavior of nature\\
-\vspace*{0.25 in}
-\underline{Computation}: Computational scientists use theoretical and experimental knowledge to \alert{create computer-based models} of aspects of nature
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Computational Science/Engineering}
-\textcolor{dgreen}{Computational Science} seeks to gain understanding principally through the analysis of mathematical models on high performance computers.\\
-\vspace*{0.25 in}
-The term \textcolor{dgreen}{computational scientists} has been coined to describe scientists, engineers, and mathematicians who apply high performance computer technology in innovative and essential ways to advance the state of knowledge in their respective disciplines.\\
-\vspace*{0.25 in}
-Thus, we distinguish it from \textcolor{dgreen}{computer science}, which is the study of \emph{computer and computation} and \emph{theory and experiment}, the traditional form of science. 
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{frame}{The Hacker Within}
-%Learn/teach skills to be a successful computational scientist
-%\begin{itemize}
-%\item Brand new chapter at Berkeley
-%\item Wednesdays, 4-6 pm, 2nd floor of Chase Building (by the BART)
-%\item Will teach skills useful for this course
-%\item Valuable resource; lots of fun
-%\item Website: http://thehackerwithin.github.io/berkeley/
-%\item GitHub: https://github.com/thehackerwithin/berkeley
-%\item in the news: http://www.news.wisc.edu/19236
-%\end{itemize}
-%\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -351,167 +303,108 @@ Using
 \end{enumerate}
 \end{frame}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Big Challenges}
-\begin{itemize}
-\item Science
-\begin{itemize}
-\item Global climate modeling
-\item Astrophysical modeling
-\item Biology: genomics; protein folding; drug design
-\item \alert{Computational Material Sciences} and Nano-sciences
-\end{itemize}
-\item Engineering
-\begin{itemize}
-\item Semiconductor design
-\item Earthquake and structural modeling
-\item \alert{Computational fluid dynamics} 
-%\item Combustion (engine design)
-\item Analysis and design of \alert{nuclear reactors}
-\end{itemize}
-\item Business
-\begin{itemize}
-\item Financial and economic modeling
-\item Transaction processing, web services and search engines
-\end{itemize}
-\item Defense
-\begin{itemize}
-\item Nuclear weapons -- test by simulations
-\item Cryptography
-\end{itemize}
-\end{itemize}
-\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{frame}{Big Potential}
-%\begin{itemize}
-%\item ``Periods of rapid advancements in the sciences have often been sparked by timely technology breakthroughs in experimental technique." \vspace*{1 em}
-%\item ``The next epochal period of scientific growth may be unleashed by major design breakthroughs in computer architectures and advances in modeling approaches, where supercomputers become the laboratories to test and advance new theories for which no practical experimental apparatus can be built." (1990)
-%%\item Why the 90s? What's the history of computers?
-%\end{itemize}
-%\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{frame}{Big Resources?}
-%\begin{itemize}
-%\item ``I think there is a world market for maybe five computers."\\
-%\hspace*{0.5 in}Thomas Watson, chairman of IBM, 1943
-%\item ``There is no reason for any individual to have a computer in their home."\\
-%\hspace*{0.5 in}Ken Olson, president and founder of \\
-%\hspace*{0.5 in}Digital Equipment Corporation, 1977
-%\item ``640K [of memory] ought to be enough for anybody."\\
-%\hspace*{0.5 in}Bill Gates, chairman of Microsoft, 1981
-%\vspace*{0.25 in}
-%\item ``Reaching a teraflop is the single biggest computer science achievement in two decades. Ten years ago, the most credible leaders in computing said it was not possible."\\
-%\hspace*{0.5 in}Gil Weigand, supercomputing guru, 1996
-%\end{itemize}
-%\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{What are we trying to accomplish?}
+\begin{frame}{Identify the Problem}
+What are we trying to accomplish?
 \begin{itemize}
 \item The challenge of designing a nuclear reactor is to make it as \textbf{economical} as possible while ensuring its \textbf{safety}. \vspace*{1 em}
-\item This is not an easy task! \vspace*{1 em}
+
+\pause
 \item The principle of a nuclear reactor is relatively simple:
 \begin{itemize}
 \item \underline{Fission} creates heat within the nuclear fuel,
 \item The \underline{heat} is conducted to the fuel cladding surface and to the coolant,
 \item The heat is subsequently transported by a coolant through heat exchangers and ultimately to a \underline{steam} conversion plant.
 \end{itemize}
+\vspace*{1 em}
+
+\pause
+\item Many scales, physics, and systems are involved (read: complex)
 \end{itemize}
 \end{frame}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Easy?}
- \begin{figure}
-   \begin{center}
-     \includegraphics[height=2.5in,clip]{TeaPot}
-   \end{center}
- \end{figure}
-\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{What are we trying to accomplish?}
+\begin{frame}{Identify the Problem}
 \begin{itemize}
 \item In order to design economical and safe reactors, one must choose among a vast range of competing designs:
 \begin{itemize}
 \item What are the \alert{best} fuels, structure, and coolant materials; what are their appropriate ratios?
 \item How does the reactor respond to component failures?
-\item How does one balance those choices given competing goals of performance, lifetime, safety, and capital cost? \vspace*{1 em}
+\item How does one balance those choices given competing goals of performance, lifetime, safety, and capital cost? 
+\vspace*{1 em}
 \end{itemize}
-\item Ideally, one would like to base these choices on theory rather than experimental trial and error \vspace*{1 em}
-\item This is where \textcolor{dgreen}{computational science} fits in...
-\end{itemize}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Early Days}
-Before much computer use (e.g., 1943), things took a long time
-\begin{tabu}{|X | l|}
-\hline
-Project & Est. Time \\\hline
-Density distribution in difficult system & 2 weeks \\
-Integral equation for absorption in Al slab & 2 weeks \\
-Slowing-down length in H$_2$O \& related calcs & 3 weeks \\
-Albedo problems & 1 week \\\hline
-\end{tabu}
-\begin{center}
-\includegraphics[height=1.5in,clip]{ACRM}
-\end{center}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Adolescence -- Early 1980s}
-\begin{itemize}
-\item NE was at the forefront of computer applications (!)
-%pushing the envelope for ever greater computing resources and related advances in computational science.
-\item Major early success story in the computational sciences:
-\begin{itemize}
-\item Reduced the burden of experiment
-\item Contributed greatly to reactor design
-\end{itemize}
-\item However, modeling was severely constrained 
-%Even state-of-the-art machines such as Cray-1 were 
-\begin{itemize}
-\item Unable to explicitly model the key physical phenomena within a reactor
-\item Low-dimensional representation
-\item Lumped parameter models
-\item Empirical correlations with tunable parameters established largely by experiments
-\end{itemize}
+\item Ideally, one would like to base these choices on theory rather than experimental trial and error 
+\vspace*{1 em}
+\item This is where \textcolor{dgreen}{predictive computing} fits in...
 \end{itemize}
 \end{frame}
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Adolescence $\rightarrow$ Today's Challenges}
+\begin{frame}{Predictive Computing}
+
+The idea behind \alert{predictive computing} is to have
 \begin{itemize}
-\item Computing limitations caused
+\item a mathematical model that is sufficiently representative
+\item \textit{and} methods that are sufficiently accurate
+\item \textit{and} an implementation this is sufficiently robust
+\end{itemize}
+\pause
+such that \alert{calculations} can
+\begin{itemize}
+\item inform experiment design
+\item \textit{and} replace experiments
+\item \textit{and be so reliable that we can make new design choices using only calculations}.
+\end{itemize}
+\vspace*{1 em}
+We will only look at one piece needed for predictive computing...
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Mathematical Model}
+
+We'll solve the steady state Boltzmann Transport Equation
+\vspace{-.5em}
+\begin{align}
+  [\vOmega \cdot \nabla + \Macro(\vec{r}, E)] &\psi(\vec{r}, \vOmega, E)  = \chi(E) \int_0^{\infty} dE' \:\nu \Macro_{f}(\vec{r}, E') \int_{4\pi} d\vOmega' \:\psi(\vec{r}, \vOmega', E')  \nonumber \\
+   &+ \int_0^{\infty} dE' \int_{4\pi} d\vOmega' \:\Macro_{s}(\vec{r}, E' \to E, \vOmega' \cdot \vOmega) \psi(\vec{r}, \vOmega', E')  \nonumber
+\end{align}
+\vspace{-1.5em}
+    \begin{figure}
+    \includegraphics[height=1.5in,clip]{FissionSourceDistribution}
+    \end{figure}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Historical Context}
+\begin{itemize}
+\item Computing limitations of the past caused
 \begin{itemize}
 \item Heavy reliance on expensive and often complicated experiments
 \item Inaccuracy resulted in \emph{significant design margins} $\rightarrow$ negative impact on plant economics
-\item Exploration of novel reactor design concepts was greatly constrained 
-%by fundamental limitations in the predictability of the models
+\item Exploration of novel reactor design concepts was greatly constrained by fundamental limitations in the predictability of the models
 \vspace*{1 em}
 \end{itemize}
-\item Many codes developed then are still used 
+\item Many codes (methods+implementation) developed then are still used 
 \pause
-\item Can we update these tools?
+\item Can we update these tools or do we need new ones?
 \pause
-\item Do we need to design new tools?
-\pause
-\item What methods will take us into the future?
+\item What \textit{methods} will take us into the future?
 \pause
 \item What will the architectures look like?
 \pause
-\item How do we successfully navigate that interplay?
+\item What and how do we need to include other physics?
 \end{itemize}
 \end{frame}
 
