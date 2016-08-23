@@ -33,6 +33,14 @@
 \newcommand{\nth}{n\ensuremath{^{\text{th}}} }
 \newcommand{\ve}[1]{\ensuremath{\mathbf{#1}}}
 \newcommand{\Macro}{\ensuremath{\Sigma}}
+\newcommand{\rvec}{\ensuremath{\vec{r}}}
+\newcommand{\vecr}{\ensuremath{\vec{r}}}
+\newcommand{\omvec}{\ensuremath{\hat{\Omega}}}
+\newcommand{\vOmega}{\ensuremath{\hat{\Omega}}}
+\newcommand{\sigs}{\ensuremath{\Sigma_s(\rvec,E'\rightarrow E,\omvec'\rightarrow\omvec)}}
+\newcommand{\el}{\ensuremath{\ell}}
+\newcommand{\sigso}{\ensuremath{\Sigma_{s,0}}}
+\newcommand{\sigsi}{\ensuremath{\Sigma_{s,1}}}
 
 %---------------------------------------------------------------------------
 \begin{document}
@@ -78,7 +86,7 @@ a_{n}(x)y^{(n)}(x) + a_{n-1}(x)y^{(n-1)}(x) + \cdots + a_{2}(x)y^{(2)}(x) + a_{1
 
 Boundary conditions:
 \begin{enumerate}
-\item Initial Value Problem (\textbf{IVP}): if y and its derivatives are given at one end of the domain/interval (e.g.\ time zero if there's time or spatial starting point if there's only space, etc.)
+\item Initial Value Problem (\textbf{IVP}): if y and its derivatives are given at one end of the domain (e.g.\ time zero if there's time or spatial starting point if there's only space, etc.)
 \item Boundary Value Problem (\textbf{BVP}): if $y$ and/or its derivatives are given at \underline{each} end of the interval
 \end{enumerate}
 
@@ -415,14 +423,51 @@ The general first-order, linear (only with respect to the term involving the der
 \[
 \frac{d}{dx}u(x) + \int_{x_0}^{x} f(t,u(t)) dt = g(x,u(x))\:, \qquad u(x_0) = u_0 \:, \qquad x_0 \geq 0\:.
 \]
+This is the equation type we will likely deal with the most.
 
 \underline{Nuclear Example:}\\
 One-dimensional in space, one-dimensional in angle, time-independent, monoenergetic neutron transport equation:	
 \[
-\mu \frac{\partial \psi(x,\mu)}{\partial x} + \Sigma_t \psi(x,\mu) = \frac{\Sigma_s}{2}\int_{-1}^{1} d\mu' \psi(x,\mu') + S(x\mu)
+\mu \frac{\partial \psi(x,\mu)}{\partial x} + \Sigma_t \psi(x,\mu) = \frac{\Sigma_s}{2}\int_{-1}^{1} d\mu' \psi(x,\mu') + S(x, \mu)
 \]
 where the angular neutron flux is a function of one spatial variable ($x$) and one anglular variable ($\mu = \cos(\theta)$).
 
+%%-------------------------------------------------------------
+%%-------------------------------------------------------------
+\subsection*{Integral Equations}
+...are equations in which an unknown function appears under an integral sign.
+%https://en.wikipedia.org/wiki/Integral_equation
+Integral equations are classified according to three different dichotomies, creating eight different kinds:
+\begin{enumerate}
+\item Limits of integration
+  \begin{enumerate}
+  \item both fixed: Fredholm equation
+    \[f(x)=\int _{a}^{b}K(x,t)\,\varphi (t)\,dt\]
+  \item one variable: Volterra equation
+    \[f(x)=\int _{a}^{x}K(x,t)\,\varphi (t)\,dt\]
+  \end{enumerate}
 
+\item Placement of unknown function
+  \begin{enumerate}
+  \item only inside integral: first kind (both above examples)
+  \item both inside and outside integral: second kind
+    \[\varphi (x)=f(x)+\lambda \int _{a}^{x}K(x,t)\,\varphi (t)\,dt\]
+  \end{enumerate}
+
+\item Nature of known function, $f$
+  \begin{enumerate}
+  \item identically zero: homogeneous
+  \item not identically zero: inhomogeneous
+  \end{enumerate}
+\end{enumerate}
+Both Fredholm and Volterra equations are linear integral equations, due to the linear behaviour of $\phi(x)$ under the integral. 
+A nonlinear Volterra integral equation has the general form:
+\[ \varphi (x)=f(x)+\lambda \int _{a}^{x}K(x,t)\,F(x,t,\varphi (t))\,dt\]
+where $F$ is a known function.
+
+The integral form of the Neutron Transport Equation is
+\[
+\psi(\rvec, \vOmega, E) =\int_0^{\infty} d\rho' \:\exp[-\int_0^{\rho'} d\rho'' \: \Sigma_t(\rvec-\rho''\vOmega,E)]q(\rvec-\rho'\vOmega,\vOmega,E)\]
+where $q$ contains fixed, inscattering, and fission sources. That is, $q = f(\psi)$.
 
 \end{document}
