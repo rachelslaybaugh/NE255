@@ -170,6 +170,13 @@ If a material is made of multiple isotopes, the material macroscopic cross secti
 
 \item \textbf{double-differential scattering x-sec} ($\sigma_s(E, \vOmega \rightarrow E', \vOmega')dE' d\vOmega'$): measure of the probability that a neutron of energy $E$ and moving in direction $\vOmega$ scatters off of a specific nucleus into energy range $[E', E' + dE']$ and direction range $[\vOmega', \vOmega' + d\vOmega']$.
 
+We can think of this as the fractional probability multiplied by the total scattering cross section
+\begin{align*}
+\sigma_s(E, \vOmega \rightarrow E', \vOmega') &= \sigma_s(E) f_s(E, \vOmega \rightarrow E', \vOmega')\\
+\text{where } &\int_0^{E_0} dE' \int_{4 \pi} d\vOmega' \: f_s(E, \vOmega \rightarrow E', \vOmega') = 1\\
+\sigma_s(E) &= \int_0^{E_0} dE' \int_{4 \pi} d\vOmega' \:\sigma_s(E, \vOmega \rightarrow E', \vOmega')
+\end{align*}
+
 \item \textbf{fission yield} ($\nu(E)$): average \# of neutrons released by a fission induced by a neutron of energy E.
 
 \item \textbf{fission spectrum} ($\chi(E)dE$): average \# of neutrons produced from fission that are born with energy in $[E, E + dE]$. This is normalized such that
@@ -360,20 +367,23 @@ Of this number, $\nu(E)[1-M(E)]$ are \textit{prompt} fission neutrons (being emi
 Assuming (for simplicity) that the number of delayed neutrons emitted by fission is very small [$M(E)<<1$], we can neglect the delayed neutron terms and rewrite
 the transport equation as
 \begin{align}
-&\frac{1}{v}\frac{\partial \psi}{\partial t}(\rvec,E,\omvec,t) + \omvec\cdot  \nabla \psi(\rvec,E,\omvec,t) +
- \Sigma_t(\rvec,E)\psi(\rvec,E,\omvec,t) 
+&\frac{1}{v}\frac{\partial \psi}{\partial t}(\rvec,E,\omvec,t) + 
+\underbrace{\omvec\cdot  \nabla \psi(\rvec,E,\omvec,t)}_{\text{streaming loss rate}} +
+ \underbrace{\Sigma_t(\rvec,E)\psi(\rvec,E,\omvec,t) }_{\text{total interaction loss rate}}
 \\& \quad\quad\quad\quad =
-\int_0^{\infty}\int_{4\pi}\Sigma_s(\rvec, E'\rightarrow E,\omvec'\rightarrow\omvec)
-\psi(\rvec,E',\omvec',t)d\omvec'dE'\nonumber
-\\&\quad\quad\quad\quad\quad\quad +\frac{\chi_p(E)}{4\pi}\int_0^{\infty}\int_{4\pi}\nu(E')\Sigma_f(\rvec,E')
-\psi(\rvec,E',\omvec',t)d\omvec'dE'\nonumber
-\\&\quad\quad\quad\quad\quad\quad\quad\quad+S(\rvec, E, \omvec,t) \nonumber.
+\underbrace{\int_0^{\infty}\int_{4\pi}\Sigma_s(\rvec, E'\rightarrow E,\omvec'\rightarrow\omvec)
+\psi(\rvec,E',\omvec',t)d\omvec'dE'}_{\text{in scattering source rate}}\nonumber
+\\&\quad\quad\quad\quad\quad\quad +\underbrace{\frac{\chi_p(E)}{4\pi}\int_0^{\infty}\int_{4\pi}\nu(E')\Sigma_f(\rvec,E')
+\psi(\rvec,E',\omvec',t)d\omvec'dE'}_{\text{fission source rate}}\nonumber
+\\&\quad\quad\quad\quad\quad\quad\quad\quad+\underbrace{S(\rvec, E, \omvec,t)}_{\text{external source rate}} \nonumber.
 \end{align}
    
+   
+\subsection*{boundary and initial conditions}
 These equations require both spatial and temporal boundary conditions.
-Assuming that the
+\textit{Assuming that the
 physical
-system of interest is nonreentrant (convex) and characterized by a
+system of interest is nonreentrant} (convex) and characterized by a
 volume $V$, it is sufficient to specify the flux of
 particles at all points of the bounding surface of the system in the incoming
 directions. This implies
@@ -388,7 +398,13 @@ initial condition at $t=0$, such that
 \psi(\rvec,E,\omvec,0) = \psi_0(\rvec,E,\omvec),
 \end{align*}
  where $\psi_0$ is a specified function.
- 
+
+A few other boundary conditions that we frequently use in nuclear engineering
+\begin{itemize}
+\item reflecting: $\psi(\vec{r}, E, \vOmega, t) =  \psi(\vec{r}, E, \vOmega', t) \quad \forall \vec{r} \in S$, where $S$ is a surface, and $\]ve	
+\end{itemize}
+
+\subsection*{Simplifications} 
 It is common to make extra assumptions in order to obtain a simpler version of these equations. For instance, in the case of time-independent, monoenergetic particle transport in a homogeneous medium with a known interior isotropic source:
 \begin{align*}
 \omvec\cdot  \nabla \psi(\rvec,\omvec) +
