@@ -175,6 +175,12 @@ If a material is made of multiple isotopes, the material macroscopic cross secti
 \item \textbf{fission spectrum} ($\chi(E)dE$): average \# of neutrons produced from fission that are born with energy in $[E, E + dE]$. This is normalized such that
 \[\int_0^{\infty} \chi(E)dE =1\:.\]
 
+
+\begin{itemize}
+\item U-235: $\chi(E) = 0.453 e^{-1.036E} \sinh(\sqrt{2.29E})$
+\item Pu-239: $\chi(E) = 0.6739 \sqrt{E} e^{-E / 1.41}$
+\end{itemize}
+
 \item \textbf{particle angular density} ($n(\vec{r}, E, \vOmega, t)d\vec{r} d\vOmega dE$): expected number of particles in volume element $d^3r$ at $\vec{r}$ whose energies are in $[E, E + dE]$ and direction of motion is in $[\vOmega, \vOmega + d\vOmega]$ at time $t$.
 
 Note:
