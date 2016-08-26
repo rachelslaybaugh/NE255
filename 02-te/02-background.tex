@@ -93,6 +93,8 @@ here $y$ and $x$ are typically $\alpha$, $\beta$, or $\gamma$ and $Q$ is energy.
 \item Neutron-Producing Reactions (absorption): $(n,2n)$	 \ce{^1_0 n} + \ce{^A_Z X} $\rightarrow$ \ce{^{A-1}_{Z} X} + 2\ce{^1_0 n}
 \end{itemize}
 
+Which reaction happens depends on the type of nucleus, the energy of the incoming neutron, and statistics. We can, fortunately, draw general categories for many types of reactions:
+
 \begin{figure}[h!]
     \begin{center}
     \includegraphics[keepaspectratio, width = 5 in]{reactionenergy}
@@ -114,48 +116,31 @@ transformation must be equal to the total charge of the system after the transfo
 \item Conservation of Nucleons: Total number of nucleons (protons and neutrons) of the system before nuclear transformation must be equal to the total number of nucleons (protons and neutrons) of the system after the transformation.
 \end{itemize}
 
+The conservation laws govern what reactions can happen. What reactions actually happen govern the neutron population in a reactor. 
 
-
-
-
-$\lambda$ is the decay constant. If $N(t)$ is the number of nuclei at $t$ and $N_0$ is the original number of nuclei, then
-%
-\begin{align*}
-N(t + dt) - N(t) &= -\lambda N(t) dt = dN(t)\\
--\frac{dN}{dt} &= \lambda N(t)\\
-N(t) &= N_0 e^{-\lambda t}
-\end{align*}
-
-The rate of decay is\[\lambda N_0 e^{-\lambda t} \:.\]
-
-The probability that a given nucleus will decay in a given time interval is \[p(t) dt = \lambda e^{-\lambda t} dt \:.\]
-
-We are interested in the mean lifetime of nuclei (predicting the decay of a particular nucleus doesn't really work)
-\[\bar{t} \equiv \int_0^\infty dt \: t \: p(t) = \lambda \int_0^\infty dt \: t \: e^{-\lambda t} = \frac{1}{\lambda} \:. \]
-We very often use the related quantity of half-life (time it takes for half of the original nuclei to decay) 
-\[t_{\frac{1}{2}} = \frac{\ln(2)}{\lambda} \:. \]
+What we'll cover next are the definitions and terms we will use to describe neutrons in six-dimensional phase space: $(x,y,z,\vOmega, E)$.
 
 \subsection*{Definitions}
 
-%\begin{figure}[h!]
-%    \begin{center}
-%    \includegraphics[keepaspectratio, width = 2.7 in]{phase_space}
-%    \end{center}
-%    \caption{Schematic of Phase Space}
-%    \label{fig:phase_space}
-%\end{figure}
+\begin{figure}[h!]
+    \begin{center}
+    \includegraphics[keepaspectratio, width = 4 in]{phase-space}
+    \end{center}
+    \caption{Schematic of Phase Space}
+    \label{fig:phase_space}
+\end{figure}
 
 Spatial logistics
 \begin{itemize}
 \item $d\vec{r} = d^3r$ = ordinary volume = $r^2 \sin(\theta) d\theta d\varphi dr$
 %
 \item $v$ = speed (scaler)
-\item $\vec{v}$ = velocity (vector)
-\item $d\vec{v} = d^3v$ = velocity volume = $v^2 \sin(\theta')d\theta' d\varphi' dr$
+\item $\vec{v}$ = $v\vOmega$ = velocity (vector)
+\item $d\vec{v} = d^3v$ = velocity volume = $v^2 \sin(\theta)d\theta d\varphi dr$
 \item $v = \sqrt{(2E)/m}$ where $m$ is the rest mass of the particle. Thus, we can relate energy and speed.
 
 \item $\vOmega$: unit directional vector in velocity space, $\vec{v} = v\vOmega$
-\item $d\vOmega = \sin(\theta')d\theta' d\varphi' =  d^2\Omega$
+\item $d\vOmega = \sin(\theta)d\theta d\varphi =  d^2\Omega$
 %\item thus $d\vec{v} = v^2 dv d\vOmega$
 \end{itemize}
 
@@ -174,7 +159,14 @@ Physics terms we will use:
 
 \item \textbf{macroscopic x-sec} ($\Sigma$ [$cm^{-1}$]): measure of the probability per unit path length that an incident neutron will collide with a target
 \[\Sigma_j = \sigma_j N\:,\]
-where N is the atomic density of the target.
+where N is the atomic density of the target. The total cross section is simply the sum of all possible reaction types, $j$. 
+
+If a material is made of multiple isotopes, the material macroscopic cross section is also the sum over all materials, $i$:
+\[
+\Sigma_i(\vec{r}, E, t) = \sum_{j=1}^J  N_j(\vec{r}, t)\sigma_{i,j}(E)
+\qquad
+\Sigma_t(\vec{r}, E, t) = \sum_{j=1}^J \sum_{i=1}^I N_j(\vec{r}, t)\sigma_{i,j}(E)
+\]
 
 \item \textbf{double-differential scattering x-sec} ($\sigma_s(E, \vOmega \rightarrow E', \vOmega')dE' d\vOmega'$): measure of the probability that a neutron of energy $E$ and moving in direction $\vOmega$ scatters off of a specific nucleus into energy range $[E', E' + dE']$ and direction range $[\vOmega', \vOmega' + d\vOmega']$.
 
@@ -191,13 +183,20 @@ n(\vec{r}, E, \vOmega, t) &= \frac{1}{mv}n(\vec{r}, v, \vOmega, t) \\
 n(\vec{r}, v, \vOmega, t) &= v^2 n(\vec{r}, \vec{v}, t) \\
 n(\vec{r}, \vec{v}, t) &= \frac{m}{v}n(\vec{r}, E, \vOmega, t)
 \end{align*}
+\begin{figure}[h!]
+    \begin{center}
+    \includegraphics[keepaspectratio, width = 2.5 in]{differential-element}
+    \end{center}
+    \caption{Differential volume, velocity (energy), and angle}
+    \label{fig:phase_space}
+\end{figure}
 
 \item \textbf{particle density}: ($N(\vec{r},E,t)d^3r dE$): expected number of particles in $d^3r$ at $\vec{r}$ whose energies are in $[E, E + dE]$ at time $t$.
 \[N(\vec{r},E,t)d^3r dE = \int_{4\pi} d\vOmega\: n(\vec{r}, E, \vOmega, t)d^3r dE \]
 
-\item \textbf{angular flux}: $\psi(\vec{r}, E, \vOmega, t) \equiv v n(\vec{r}, E, \vOmega, t)$.
+\item \textbf{angular flux}: $\psi(\vec{r}, E, \vOmega, t) \equiv v n(\vec{r}, E, \vOmega, t)$ [neutrons / (cm$^2$ s MeV steradian)] can be thought of as path length per unit volume about $\vec{r}$ passed by neutrons with energies...
 
-\item \textbf{scalar flux}: $\phi(\vec{r},E,t) \equiv v N(\vec{r},E,t)$.
+\item \textbf{scalar flux}: $\phi(\vec{r},E,t) \equiv v N(\vec{r},E,t)$ [neutrons / (cm$^2$ s MeV)] can be thought of as the number of neutrons that penetrate a sphere of 1 cm$62$ cross sectional area at $\vec{r}$ with energies in $dE$ about $E$ at time $t$.
 %
 \[= \int_{4\pi} d\vOmega\: \psi(\vec{r}, E, \vOmega, t) \]
 
