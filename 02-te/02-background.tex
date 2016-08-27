@@ -401,8 +401,33 @@ initial condition at $t=0$, such that
 
 A few other boundary conditions that we frequently use in nuclear engineering
 \begin{itemize}
-\item reflecting: $\psi(\vec{r}, E, \vOmega, t) =  \psi(\vec{r}, E, \vOmega', t) \quad \forall \vec{r} \in S$, where $S$ is a surface, and $\]ve	
+\item mirror reflecting: $\psi(\vec{r}, E, \vOmega, t) =  \psi(\vec{r}, E, \vOmega', t) \quad \forall \vec{r} \in S$, where $S$ is a surface, and $\hat(e)\cdot \vOmega < 0$
+\item isotropic reflecting: $\psi(\vec{r}, E, \vOmega, t) =  \dfrac{\phi(\vec{r}, E, t)}{4\pi}$
+\item vacuum: $\psi(\vec{r}, E, \vOmega, t) = 0\quad \forall \vec{r} \in S$, where $S$ is a surface, and $\hat(e)\cdot \vOmega < 0$ \\
+$J^-(\vec{r}, E, t) = \int_{\hat(e)\cdot \vOmega < 0} d\vOmega \: |\hat(e)\cdot \vOmega| \psi(\vec{r}, E, \vOmega, t) = 0$
+\item periodic: $\psi(\vec{r}, E, \vOmega, t) = \psi(\vec{r} + d, E, \vOmega, t)$
 \end{itemize}
+
+\begin{figure}[h!]
+    \begin{center}
+    \includegraphics[keepaspectratio, width = 3.5 in]{reflecting-bc}
+     \includegraphics[keepaspectratio, width = 2 in]{periodic-bc}
+    \end{center}
+\end{figure}
+
+\subsection*{Additional Conditions}
+\begin{itemize}
+\item Finiteness condition: $0 \leq \psi(\vec{r}, E, \vOmega, t) \leq \infty$
+\item Interface condition: $\psi_1(\vec{r}, E, \vOmega, t) = \psi_2(\vec{r}, E, \vOmega, t) \qquad \forall \vec{r} \in S_i$, all energies, and all $\vOmega$
+\item Source condition: $Q(\vec{r_0}, E, \vOmega, t) = Q_0(E, \vOmega, t)\delta(\vec{r} - \vec{r_0})$
+\end{itemize}
+
+\begin{figure}[h!]
+    \begin{center}
+    \includegraphics[keepaspectratio, width = 1.5 in]{interface}
+     \includegraphics[keepaspectratio, width = 1.5 in]{source}
+    \end{center}
+\end{figure}
 
 \subsection*{Simplifications} 
 It is common to make extra assumptions in order to obtain a simpler version of these equations. For instance, in the case of time-independent, monoenergetic particle transport in a homogeneous medium with a known interior isotropic source:
