@@ -1,0 +1,286 @@
+\documentclass[12pt]{article}
+\usepackage[top=0.75in, bottom=0.75in, left=1in, right=1in]{geometry}
+%\pagestyle{empty}
+\usepackage{tabu}
+\usepackage{hyperref}
+\usepackage{csvsimple}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\begin{document}
+
+\begin{center}
+{\bf NE 255 - Numerical Simulation in Radiation Transport \\ Tu Th 11:00 AM - 12:30 PM,  Room: 285 Cory Hall  
+}
+\end{center}
+
+\setlength{\unitlength}{1in}
+\begin{picture}(6,.1) 
+\put(0,0) {\line(1,0){6.25}}         
+\end{picture}
+
+\renewcommand{\arraystretch}{2}
+
+\vskip.25in
+\noindent\textbf{Instructor:} Rachel Slaybaugh,  4173 Etcheverry Hall,\\ \hspace*{0.95 in}slaybaugh@berkeley.edu,  570-850-3385\\
+\noindent\textbf{Office Hours:} 2:30-3:30 PM Mondays and by appointment
+
+\vskip.25in
+\noindent\textbf{Reader:} Kelly Rowland, 4104 Etcheverry Hall\\
+\hspace*{0.7 in}krowland@berkeley.edu\\
+\noindent\textbf{Reader Office Hours:} 4:00-5:00 PM Thursdays and by appointment
+
+\vskip.25in
+\noindent\textbf{Course Description:}
+Computational methods used to analyze nuclear reactor systems described by various differential, integral, and integro-differential equations. Numerical methods include finite difference, finite elements, discrete ordinates, and Monte Carlo. Examples from neutron and photon transport, heat transfer, and thermal hydraulics. An overview of optimization techniques for solving the resulting discrete equations on vector and parallel computer systems.
+
+
+\vskip.25in
+\noindent\textbf{Prerequisites:} NE 150; basic programming skills
+
+
+\vskip.25in
+\noindent\textbf{Grading:} 
+\begin{itemize}
+\item \noindent Take-home tests (6): 60\% (lowest grade is dropped)
+\item \noindent Final project: 40\%
+\item Late submissions: -20\% for each day it is late with a maximum of -60\%\footnote{The point of this is to try to get you to always do the homework}
+\item Note: If something comes up, let me know \textit{in advance} and I can work it out with you
+\end{itemize}
+
+
+\vskip.25in
+\noindent\textbf{References and resources:}
+\begin{itemize}
+\item Class GitHub: \href{https://github.com/rachelslaybaugh/NE255}{https://github.com/rachelslaybaugh/NE255}
+
+\item Helpful Resources \href{http://tinyurl.com/ne-technical-resources}{http://tinyurl.com/ne-technical-resources}
+
+\item Free Python Ebooks: \href{http://www.leettips.org/2013/02/top-10-free-python-pdf-ebooks-download.html}{http://www.leettips.org/2013/02/top-10-free-python-pdf-ebooks-download.html}
+
+\item Jupyter (the awesome thing formerly known as iPython): \href{http://jupyter.org/}{http://jupyter.org/}
+
+\item Software Carpentry: \href{http://software-carpentry.org/lessons.html}{http://software-carpentry.org/lessons.html}
+
+\item The Hacker Within: \href{http://thehackerwithin.github.io/berkeley/}{http://thehackerwithin.github.io/berkeley/}
+
+\item Library: \href{http://www.lib.berkeley.edu/node}{http://www.lib.berkeley.edu/node}
+
+\item KAERI: \href{http://atom.kaeri.re.kr/}{http://atom.kaeri.re.kr/}
+
+\item U.S.\ Nuclear Data \href{http://www.nndc.bnl.gov/}{http://www.nndc.bnl.gov/}
+
+\item E.\ E.\ Lewis and W.\ E.\ Miller Jr., ``Computational Methods of Neutron Transport," J.\ Wiley \& Sons, New York (1993).
+\item J.\ J.\ Duderstadt and L.\ J.\ Hamilton, ``Nuclear Reactor Analysis," Wiley (1976)
+\item Y.\ Y.\ Azmy and E.\ Sartori, Eds., ``Nuclear Computational Science: A Century in Review," Springer (2010).
+\item J.\ Spanier and E. M. Gelbard, ``Monte Carlo Principles and Neutron Transport Problems," Dover Publications, Inc., 2008 (Reprinted from 1969 edition).
+\item A.\ Hebert, ``Applied Reactor Physics," Presses Internationales
+Polytechnique (2009).
+\item C.\ Pozrikidis, ``Numerical Computation in Science and Engineering," Oxford University Press, NY (1998).
+\end{itemize}
+
+%\vskip.25in
+%\noindent\textbf{bCourses Site:} \href{https://bcourses.berkeley.edu/courses/1292802}{https://bcourses.berkeley.edu/courses/1292802}
+%
+%\noindent\textbf{Course GitHub page:} \href{https://github.com/rachelslaybaugh/NE155}{https://github.com/rachelslaybaugh/NE155}
+%
+%\vskip.25in
+%\noindent\textbf{the Hacker Within:} 
+%\begin{itemize}
+%\item Wednesdays, 4-6 pm, 190 Doe Library (BIDS Space)
+%\item Will teach skills useful for this course
+%\item Website: \href{http://thehackerwithin.github.io/berkeley/}{http://thehackerwithin.github.io/berkeley/}
+%\item GitHub: \href{https://github.com/thehackerwithin/berkeley}{https://github.com/thehackerwithin/berkeley}
+%\end{itemize}
+
+%\clearpage
+\noindent\textbf{Computer Information:} 
+\begin{itemize}
+\item All students will get class computer lab accounts at Davis Etcheverry Computing Facility (DECF) (1171 and 1111 Etcheverry): \href{http://www.decf.berkeley.edu/}{http://www.decf.berkeley.edu/}
+
+\item A package with Python and many useful support libraries (called Anaconda) can be downloaded from \href{http://continuum.io/downloads}{http://continuum.io/downloads}
+
+\item We may use the Serpent Monte Carlo code (\href{http://montecarlo.vtt.fi/}{http://montecarlo.vtt.fi/}) in this course
+  
+\item License for MCNP6 is available through RSICC. Log onto the website at \href{http://www-rsicc.ornl.gov}{http://www-rsicc.ornl.gov}.  On the left hand portion of the homepage you will see a customer service tab.  When you click on that link you will I think need to register and then you can request the software; indicate you are a student and it is for this course.
+\end{itemize}
+
+\vspace*{.15in}
+\noindent \textbf{Useful Campus Information:} 
+\begin{itemize}
+  \item Mental health resources: \href{http://www.uhs.berkeley.edu/students/counseling/cps.shtml}{http://www.uhs.berkeley.edu/students/counseling/cps.shtml}
+  \item Sexual assault support on campus: \href{http://survivorsupport.berkeley.edu/}{http://survivorsupport.berkeley.edu/}
+\end{itemize}
+
+\vspace*{.15in}
+\noindent \textbf{Course Outline:} (subject to change)
+\begin{enumerate}
+\item Introduction
+  \begin{enumerate}
+  \item Overview of computational science/engineering 
+  \item History of computing and parallelization
+  \item An overview of advanced computer architectures; Vector and parallel processing
+  \end{enumerate}
+
+\item Types of equations in radiation transport
+  \begin{enumerate}
+  \item General types of differential and integral equations
+  \item Integro-differential form of transport equation 
+  \item Integral form of transport equation 
+  \item Diffusion approximation to transport equation
+  \item Time-dependent forms of transport equation
+  \item Computational Methods: Probabilistic and Deterministic
+  \end{enumerate}
+
+\item Numerical Methods for PDEs: Integro-Differential Form of Transport Equation
+  \begin{enumerate}
+  \item Time, energy, angle, and spatial discretization
+  \item Discrete-ordinates (Sn) methods in one spatial dimension (angular approximation, spatial differencing, iterative methods for solving discretized equations)
+  \item Multidimensional discrete ordinates (Sn) methods (angular quadrants, ray effects, streaming effects)
+  \item Discrete-ordinates computer codes; Optimization for vector and parallel processing
+  \item Spherical harmonics (Pn) method
+  \item Transport theory codes
+  \end{enumerate}
+
+\item Numerical Methods for ODEs
+  \begin{enumerate}
+  \item Numerical solution of the 1st order ODE: Initial value problems
+  \item Numerical solution of the 2nd order ODE: Finite difference method
+    \begin{enumerate}
+    \item Formulation of the finite difference equations for the fixed source problem
+    \item Direct solution by Gaussian elimination
+    \item Iterative solutions by Jacobi, Gauss-Seidel, and SOR Methods
+    \item Krylov methods for iterative solution of linear systems
+    \item Formulation of the finite difference equation for the eigenvalue (criticality)
+    \item Power and inverse power iterative method
+    \end{enumerate}
+  \item Numerical solution of the 2nd order ODE: Finite element / Nodal methods
+  \item Diffusion equation in two or more dimensions
+  \item Diffusion theory codes
+  \item Applications of PARCS to the LWR and HTR
+  \end{enumerate}
+
+\item Integral Form of NTE: Collision Probability Method
+  \begin{enumerate}
+  \item Traditional collision probability method in one and two dimensions
+  \item Collision/transfer probability method in arbitrary 2D/3D geometries
+  \item Ray tracing in arbitrary geometry
+  \item Discrete integral transport
+  \item Interface coupling methods (interface-current, response matrices)
+  \item Optimization of integral transport methods for parallel processing
+  \item CP codes: GTRAN2
+  \end{enumerate}
+
+\item Integral Form of NTE: Method of Characteristics (MOC)
+  \begin{enumerate}
+  \item Method of characteristics in two dimensions
+  \item Choice of Angles
+  \item Choice of boundary conditions
+  \item Ray tracing in arbitrary geometry for MOC
+  \item Linearly anisotropic scattering in MOC
+  \item Approximate methods for solving 3D MOC Problems
+  \item Coupled MOC/CFD
+  \item MOC Codes: MOCHA
+  \end{enumerate}
+
+\item Probabilistic Numerical Method: Monte Carlo
+  \begin{enumerate}
+  \item Random numbers; Probability density function; Cumulative PDFs
+  \item Analog Monte Carlo
+  \item Nonanalog Monte Carlo; Importance sampling; Variance reduction methods
+  \item Error estimates
+  \item Monte Carlo neutron and photon transport simulation
+  \item All-particle Monte Carlo simulation
+  \item Parallel Monte Carlo
+  \item Monte Carlo codes: MCNP, SERPENT
+  \end{enumerate}
+\end{enumerate}
+
+\vspace*{.15in}
+\noindent\textbf{Academic Honesty}:  Berkeley's honor code is
+
+\begin{quote}
+As a member of the UC Berkeley community, I act with honesty, integrity, and respect for others.
+\end{quote}
+
+\noindent The University provides some basic guidance about academic integrity: \href{http://sa.berkeley.edu/conduct/integrity}{http://sa.berkeley.\\edu/conduct/integrity}. Lack of knowledge of the academic honesty policy is not a reasonable explanation for a violation. Questions related to course assignments and the academic honesty policy should be directed to me.
+
+\vskip.25in
+\noindent My policy is that you may work together on homework, \textit{but you must specifically cite with whom you worked and what you did together}.
+
+\vskip.25in
+\noindent\textbf{Extra Help}:  Do not hesitate to come to my office during office hours or by appointment to discuss a homework problem or any aspect of the course. 
+
+\vskip.25in
+\noindent\textbf{Attendance}: Students are expected to attend classes regularly. A student who incurs an excessive number of absences may be withdrawn from this class at my discretion.
+
+\vskip.25in
+\noindent\textbf{Other Policies}: This course abides by the university policies for
+\begin{itemize}
+  \item Accommodation of religious creed: \href{http://registrar.berkeley.edu/DisplayMedia.aspx?ID=Religious\%20Creed\%20Policy.pdf}{http://registrar.berkeley.edu/DisplayMedia.aspx?ID\\=Religious\%20Creed\%20Policy.pdf}
+  \item Conflicts between extracurricular activities and academic requirements: \href{http://academic-senate.berkeley.edu/sites/default/files/committees/cep/guidelines\_acadschedconflicts\_final\_2014.pdf}{http://academic-senate.berkeley.edu/sites/default/files/committees/cep/guidelines\_acadschedconflicts\\\_final\_2014.pdf}
+  \item In case of illness please do not come to class if you have a fever or something highly contagious. Please attend if there is any chance you will pay attention and not get others sick: \href{http://academic-senate.berkeley.edu/committees/coci/toolbox\#16}{http://academic-senate.berkeley.edu/committees/coci/toolbox\#16}
+\end{itemize}
+
+%\noindent\textbf{Schedule}: \textit{Note that all dates are subject to change}\\
+
+%%-----------------------------------------------------------------------------
+%\clearpage
+%\begin{tabu}{| c | l | X | c | c |}
+%\hline
+%    Lecture & Date & Topic & Assigned & Due \\
+%    \hline
+%% Table generated by Excel2LaTeX from sheet '2016'
+%    1     & 20-Jan & introduction & hw 1  &  \\
+%    2     & 22-Jan & computing and parallelization &       & hw 1 \\
+%    3     & 25-Jan & types of equations &       &  \\
+%    4     & 27-Jan & transport equation &       &  \\
+%    5     & 29-Jan & transport equation & hw 2  &  \\
+%    6     & 1-Feb & diffusion equation &       &  \\
+%    7     & 5-Feb & diffusion equation &       &  \\
+%    8     & 5-Feb & diffusion equation & hw 3  & hw 2 \\
+%    9     & 8-Feb & interpolation &       &  \\
+%    10    & 10-Feb & interpolation cont'd; approximation &       &  \\
+%    11    & 12-Feb & numerical differentiation & hw 4  & hw 3 \\
+%    -     & 15-Feb & \textit{President's Day} &       &  \\
+%    12    & 17-Feb & numerical integration &       &  \\
+%    13    & 19-Feb & numerical integration &       &  \\
+%    14    & 22-Feb & vectors and matrices reviews &       &  \\
+%    15    & 24-Feb & 1-D finite diff and vol intro & hw 5  & hw 4 \\
+%    16    & 26-Feb & 1-D finite vol for DE &       &  \\
+%    17    & 29-Feb & norms and convergence &       &  \\
+%    18    & 2-Mar & direct solvers &       &  \\
+%    19    & 4-Mar & iterative solvers &       & hw 5 \\
+%    20    & 7-Mar & catch up + exam review &       &  \\
+%    21    & 9-Mar & \textbf{Midterm 1 (through TE/DE)} & \textbf{} &  \\
+%\hline
+%\end{tabu}%
+%\begin{tabu}{| c | l | X | c | c |}
+%\hline
+%    Lecture & Date & Topic & Assigned & Due \\
+%    \hline
+%    22    & 11-Mar & 1-D finite vol soln methods & hw 6  &  \\
+%    23    & 14-Mar & eigenvalues review &       &  \\
+%    24    & 16-Mar & eigenvalue solvers &       &  \\
+%    25    & 18-Mar & FVM for 1-D eigenvalue &       &  \\
+%    -     & 21-25 Mar & \textit{spring break} & \textit{} &  \\
+%    26    & 28-Mar & project planning, return midterm, FVM for 1-D eig & hw 7  & hw 6 \\
+%    27    & 30-Mar & 2-D finite vol for DE &       &  \\
+%    28    & 1-Apr & 2-D finite vol for DE &       &  \\
+%    29    & 4-Apr & point kinetics &       &  \\
+%    30    & 6-Apr & Taylor and Runge Kutta &       & abstract \\
+%    31    & 8-Apr & predictor-corrector methods & hw 8  & hw 7 \\
+%    32    & 11-Apr & Monte Carlo intro &       &  \\
+%    33    & 13-Apr & MC probability and statistics &       &  \\
+%    34    & 15-Apr & MC random sampling &       &  \\
+%    35    & 18-Apr & MC tracking and collisions &       & interim report \\
+%    36    & 20-Apr & MC tallies &       & hw  8 \\
+%    37    & 22-Apr & exam review, MC wrap up &       &  \\
+%    38    & 25-Apr & \textbf{Midterm 2 (through MC)} & \textbf{} &  \\
+%    39    & 27-Apr & variance reduction &       &  \\
+%    40    & 29-Apr & review midterm 2, go over presentation/report expectations &       &  \\
+%    -     & 2-6 May & \textit{RRR week} & \textit{} &  \\
+%    final & 10-May & Final presentations, 7 to 10 pm &       & final reports \\
+%\hline
+%\end{tabu}%
+
+\end{document}
