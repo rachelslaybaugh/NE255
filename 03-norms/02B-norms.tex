@@ -1,0 +1,474 @@
+\documentclass[12pt]{article}
+\usepackage[top=1in, bottom=1in, left=1in, right=1in]{geometry}
+
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage{amssymb}
+%% The amsthm package provides extended theorem environments
+\usepackage{amsthm}
+\usepackage{epsfig}
+\usepackage{times}
+\renewcommand{\ttdefault}{cmtt}
+\usepackage{amsmath}
+\usepackage{graphicx} % for graphics files
+
+% Draw figures yourself
+\usepackage{tikz} 
+
+% The float package HAS to load before hyperref
+\usepackage{float} % for psuedocode formatting
+\usepackage{xspace}
+
+% from Denovo Methods Manual
+\usepackage{mathrsfs}
+\usepackage[mathcal]{euscript}
+\usepackage{color}
+\usepackage{array}
+
+\usepackage[pdftex]{hyperref}
+\usepackage[parfill]{parskip}
+
+% math syntax
+\newcommand{\nth}{n\ensuremath{^{\text{th}}} }
+\newcommand{\ve}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\Macro}{\ensuremath{\Sigma}}
+\newcommand{\rvec}{\ensuremath{\vec{r}}}
+\newcommand{\vecr}{\ensuremath{\vec{r}}}
+\newcommand{\vecx}{\ensuremath{\vec{x}}}
+\newcommand{\vecy}{\ensuremath{\vec{y}}}
+\newcommand{\omvec}{\ensuremath{\hat{\Omega}}}
+\newcommand{\vOmega}{\ensuremath{\hat{\Omega}}}
+\newcommand{\sigs}{\ensuremath{\Sigma_s(\rvec,E'\rightarrow E,\omvec'\rightarrow\omvec)}}
+\newcommand{\el}{\ensuremath{\ell}}
+\newcommand{\sigso}{\ensuremath{\Sigma_{s,0}}}
+\newcommand{\sigsi}{\ensuremath{\Sigma_{s,1}}}
+
+\newtheorem{theorem}{Theorem}
+\newenvironment{definition}[1][Definition]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{example}[1][Example]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+
+
+%---------------------------------------------------------------------------
+\begin{document}
+\begin{center}
+{\bf NE 255, Class 3, Fa16 \\
+Vectors and Matrix norms, Convergence \\ September 01, 2016}
+\end{center}
+
+\setlength{\unitlength}{1in}
+\begin{picture}(6,.1) 
+\put(0,0) {\line(1,0){6.25}}         
+\end{picture}
+
+\noindent \textbf{Introduction}
+
+In today's lecture we will introduce/recap basic concepts about vector and matrix norms.
+%
+\begin{itemize}
+\item Vector norms
+  \begin{itemize}
+  \item $l_1, l_2$, and $l_\infty$
+  \item Triangle inequality and Cauchy-Schwarz
+  \item Convergence
+  \item Equivalence of norms
+  \end{itemize}
+\item Matrix norms
+  \begin{itemize}
+  \item Natural norms
+  \item Convergence
+  \item Spectral Radius
+  \item Gelfand's Formula
+  \end{itemize}
+\end{itemize}
+
+%------------------------------------------------------------------------------
+\section{Vector Norms}
+
+\begin{definition}
+A \textit{Vector Norm} on $\mathbb{R}^n$ is a function $||\cdot||$ mapping $\mathbb{R}^n \rightarrow \mathbb{R}$ with the following properties:
+\begin{enumerate}
+\item $|| \vecx|| \geq 0$ for all $\vecx \in \mathbb{R}^n$
+\item $|| \vecx|| = 0$ iff $\vecx = 0$
+\item $|| \alpha\vecx|| = |\alpha| ||\vecx||$ for all $\alpha\in\mathbb{R}$  and $\vecx \in \mathbb{R}^n$ (scalar multiplication)
+\item $|| \vecx + \vecy|| \leq ||\vecx|| + ||\vecy||$ for all $\vecx,\vecy \in \mathbb{R}^n$ (triangle inequality)
+\end{enumerate}
+\end{definition}
+\pagebreak
+
+\underline{\textbf{Common Norms}}
+
+\begin{itemize}
+\item The $l_1$ norm is given by
+\[
+||\vecx||_1 = \sum_{i=1}^n|x_i|
+\]
+\item The \textit{Max norm, Sup norm}, or $l_\infty$ norm, is given by
+\[
+||\vecx||_\infty = \max_{1\leq i\leq n} |x_i|
+\]
+\item The \textit{Euclidean Norm}, or $l_2$ norm, is given by
+\[
+||\vecx||_2 = \left(\sum_{i=1}^n x_i^2\right)^{1/2}
+\]
+Note: this norm represents the usual notion of distance (Pythagorean theorem)
+\end{itemize}
+
+\begin{example}
+Consider $\vecx = (1,-3,5)^T$. Then
+\begin{itemize}
+\item[i.] $||\vecx||_1 = 9$
+\item[ii.] $||\vecx||_\infty = 5$
+\item[iii.] $||\vecx||_2 = \sqrt{1+9+25} = \sqrt{35}$
+\end{itemize}
+\end{example}
+
+\begin{center}$-----------------$\end{center}
+
+\vspace*{1em}
+\underline{\textbf{Cauchy-Schwarz and Triangle Inequality}}
+
+It is easy to see that all the properties of a vector norm are satisfied for $l_1$ and $l_\infty$, but we need to show that the triangle inequality holds for $l_2$.
+We will need the following theorem:
+
+\vspace*{1em}
+
+\begin{theorem}
+(Cauchy-Schwarz in $\mathbb{R}^n$)\\
+For each $\vecx,\vecy \in \mathbb{R}^n$,
+\[
+\vecx^T\vecy = \sum_{i=1}^n x_iy_i\leq\left(\sum_{i=1}^nx_i^2\right)^{1/2}\left(\sum_{i=1}^ny_i^2\right)^{1/2} = ||\vecx||_2||\vecy||_2
+\]
+\end{theorem}
+\begin{proof}
+Consider the following quadratic polynomial in $z\in\mathbb{R}$:
+\[
+0\leq(x_1z+y_1)^2+...+(x_nz+y_n)^2 = \left(\sum_{i=1}^nx_i^2\right)z^2 + 2\left(\sum_{i=1}^nx_iy_i\right)z + \left(\sum_{i=1}^ny_i^2\right).
+\]
+Since it is nonnegative, it has at most one real root for $z$.
+Hence, its discriminant is less than or equal to zero; that is,
+\[
+\left(\sum_{i=1}^nx_iy_i\right)^2-\left(\sum_{i=1}^nx_i^2\right)\left(\sum_{i=1}^ny_i^2\right)\leq 0.
+\]
+\end{proof}
+
+\vspace*{1em}
+\underline{\textbf{Proof of the Triangle Inequality for $l_2$}}:
+\begin{proof}
+Using Cauchy-Schwarz, for each $\vecx,\vecy \in \mathbb{R}^n$:
+\[
+||\vecx + \vecy||_2^2 = \sum_{i=1}^n(x_i+y_i)^2 = \sum_{i=1}^nx_i^2 + 2\sum_{i=1}^nx_iy_i + \sum_{i=1}^ny_i^2 \leq ||\vecx||_2^2 + 2||\vecx||_2||\vecy||_2 + ||\vecy||_2^2.
+\]
+Taking the square root of both sides, we obtain
+\[
+||\vecx + \vecy||_2 \leq ||\vecx||_2+||\vecy||_2.
+\]
+\end{proof}
+
+\vspace*{1em}
+\underline{\textbf{Basic Theorems of Convergence}}
+
+\begin{definition}
+A sequence of vectors $\{\vecx^{(k)}\}_{k=1}^\infty$ in $\mathbb{R}^n$ is said to \textit{converge} to $\vecx$ with respect to norm $||\cdot||$ if given any $\varepsilon > 0$ there exists an integer $N(\varepsilon)$ such that
+\[
+||\vecx^{(k)} - \vecx|| < \varepsilon \quad \text{for all}  \quad k\geq N(\varepsilon).
+\]
+\end{definition}
+
+\begin{theorem}
+The sequence of vectors $\{\vecx^{(k)}\}_{k=1}^\infty\rightarrow \vecx$ in $\mathbb{R}^n$ with respect to $||\cdot ||_\infty$ iff
+\[
+\lim_{k\rightarrow\infty}x_i^{(k)} = x_i \quad \text{for each} \quad i=1,2,...,n.
+\]
+\end{theorem}
+\pagebreak
+
+\begin{proof}
+$(\hookrightarrow)$
+
+Let $\displaystyle{\lim_{k\rightarrow\infty}}||\vecx^{(k)}||_\infty = ||\vecx||_\infty$. Then for any $\varepsilon > 0$, there exists $N(\varepsilon)$ such that
+\[
+||\vecx^{(j)}-\vecx^{(m)}||_\infty <\varepsilon \quad \text{for all}\quad j,m > N(\varepsilon).
+\]
+Thus
+\[
+\max_{1\leq i\leq n}|x_i^{(j)}-x_i^{(m)}| <\varepsilon\quad \text{for all}\quad j,m > N(\varepsilon),
+\]
+implying that
+\[
+|x_i^{(j)}-x_i^{(m)}| <\varepsilon\quad \text{for all}\quad i \quad \text{and for all}\quad j,m > N(\varepsilon).
+\]
+Therefore,
+\[
+\lim_{k\rightarrow\infty}x_i^{(k)} = x_i \quad \text{for each} \quad i=1,2,...,n.
+\]
+\end{proof}
+\begin{proof}
+$(\hookleftarrow)$
+
+Let
+\[
+\lim_{k\rightarrow\infty}x_i^{(k)} = x_i \quad \text{for each} \quad i=1,2,...,n.
+\]
+Then for any $\varepsilon > 0$, there exists $N(\varepsilon)$ such that
+\[
+|x_i^{(j)}-x_i^{(m)}| <\frac{\varepsilon}{2}\quad \text{for all}\quad i \quad \text{and for all}\quad j,m > N(\varepsilon).
+\]
+Taking the limit as $m\rightarrow\infty$, we have
+\[
+|x_i^{(j)}-x_i| \leq \frac{\varepsilon}{2}\quad \text{for all}\quad i \quad \text{and for all}\quad j > N(\varepsilon).
+\]
+Thus,
+\[
+\max_{1\leq i \leq n}|x_i^{(j)}-x_i| \leq \frac{\varepsilon}{2}\quad \text{for all}\quad j > N(\varepsilon),
+\]
+which means that
+\[
+\lim_{j\rightarrow\infty}||\vecx^{(j)}-\vecx||_\infty \leq \frac{\varepsilon}{2} < \varepsilon.
+\]
+\end{proof}
+
+\begin{theorem}
+For each $\vecx \in \mathbb{R}^n$:
+\begin{itemize}
+\item[a.] $||\vecx||_\infty \leq ||\vecx||_2 \leq \sqrt{n}||\vecx||_\infty$
+\item[b.] $||\vecx||_2 \leq ||\vecx||_1 \leq \sqrt{n}||\vecx||_2$
+\item[c.] $||\vecx||_\infty \leq ||\vecx||_1 \leq n||\vecx||_\infty$
+\end{itemize} 
+\end{theorem}
+
+\begin{proof}
+We give the proof for $(a.)$:  
+\[
+||\vecx||_2 = ||\vecx||_\infty \left(\sum_{i=1}^n\frac{x_i^2}{||\vecx||_\infty^2}\right)^{1/2} \leq ||\vecx||_\infty\sqrt{n},
+\]
+because $x_i/||\vecx||_\infty \leq 1$ for all $i$.
+
+Moreover, there is a $i$ such that $||\vecx||_\infty=|x_i|$, therefore
+\[
+\left(\sum_{i=1}^n\frac{x_i^2}{||\vecx||_\infty^2}\right)^{1/2}\geq 1
+\]
+and
+\[
+||\vecx||_2 = ||\vecx||_\infty \left(\sum_{i=1}^n\frac{x_i^2}{||\vecx||_\infty^2}\right)^{1/2} \geq ||\vecx||_\infty.
+\]
+\end{proof}
+
+Note: As a corollary of this theorem, convergence in the $l_1, l_2,$ and $l_\infty$ norms is equivalent.
+
+
+\section{Matrix Norms}
+
+We need to extend our definitions to include matrices.
+\begin{definition}
+A \textit{Matrix Norm} on the set of all $n \times n$ matrices is a real-valued function $||\cdot||$ defined on this set that satisfies the following properties for all $n \times n$ matrices $A$ and $B$ and all real numbers $\alpha$:
+\begin{enumerate}
+\item $|| A|| \geq 0$ 
+\item $|| A|| = 0$ iff $A = 0$ (all zero entries)
+\item $|| \alpha A|| = |\alpha| ||A||$ (scalar multiplication)
+\item $|| A + B|| \leq ||A|| + ||B||$ (triangle inequality)
+\end{enumerate}
+In this course, in the case of square matrices, we will deal with submultiplicative norms, which also satisfy
+\begin{enumerate}
+\item[5.] $|| AB|| \leq ||A||\, ||B||$
+\end{enumerate}
+\end{definition}
+
+\vspace*{1em}
+
+The following theorem is offered without proof:
+\begin{theorem} (Natural or Induced Matrix Norm)\\
+If $||\cdot||$ is a vector norm on $\mathbb{R}^n$, then
+\[
+||A|| = \max_{||\vecx|| =1} ||A\vecx||
+\]
+is a matrix norm.
+\end{theorem}
+
+\vspace*{1em}
+
+The natural norm describes how a matrix stretches unit vectors
+relative to that norm.
+For any $\vecy \ne 0$, $\vecx = \vecy/||\vecy||$ is a unit vector, and
+\[
+\max_{||\vecx||=1}||Ax|| = \max_{||\vecy||\ne 0}\left\Vert A\frac{\vecy}{||\vecy||}\right\Vert = \max_{||\vecy||\ne 0}\frac{||A\vecy||}{||\vecy||}.
+\] 
+
+\vspace*{1em}
+\underline{\textbf{Common Norms}}
+
+\begin{itemize}
+\item $
+||A||_1 = \displaystyle{\max_{1\leq j\leq n}}\displaystyle{\sum_{i=1}^m}|a_{ij}|$ = largest absolute column sum.
+\item $||A||_\infty = \displaystyle{\max_{1\leq i\leq m}}\displaystyle{\sum_{i=1}^n}|a_{ij}|$ = largest absolute row sum. 
+\item In the special case of the Euclidean norm, the induced matrix norm is the \textit{Spectral Norm}.
+The spectral norm of a matrix $A$ is the largest singular value of $A$; i.e. the square root of the largest eigenvalue of the positive-semidefinite matrix $A^*A$:
+\[
+||A||_2 = \sqrt{\lambda_{max}(A^* A)} = \sigma_{max}(A).
+\]
+It can be shown that
+\[
+||A||_2 \leq \left(\sum_{i=1}^m\sum_{j=1}^n |a_{ij}|^2\right)^{1/2} = ||A||_F,
+\]
+where the right-hand side is the Frobenius norm, or $L_{2,2}$ norm.
+The equality holds if and only if the matrix $A$ is a rank-one matrix or a zero matrix.
+\end{itemize}
+\pagebreak
+
+\begin{example}
+Consider 
+\[
+A = \left(\begin{array}{cc}
+2 & 0  \\ -1 & 1 
+\end{array}
+\right).
+\]
+Then
+\begin{itemize}
+\item[i.] $||A||_1 = 3$
+\item[ii.] $||A||_\infty = 2$
+\item[iii.] $||A||_2 = \sqrt{3+\sqrt{5}} \approx 2.2882$
+\end{itemize}
+\end{example}
+
+\begin{center}$-----------------$\end{center}
+\vspace*{1em}
+
+
+\underline{\textbf{Convergence and Spectral Radius}}
+
+\begin{definition}
+An $n\times n$ matrix $A$ is convergent if
+\[
+\lim_{k\rightarrow\infty}(A^k)_{ij} = 0,
+\]
+for each  $i,j=1,2,...,n$.
+\end{definition}
+
+\vspace*{1em}
+
+\begin{example}
+Consider 
+\[
+A = \left(\begin{array}{cc}
+\frac{1}{2} & 0 \\ \frac{1}{4} & \frac{1}{2}
+\end{array}
+\right).
+\]
+We can see that
+\[
+A^k =\left(\begin{array}{cc}
+ \frac{1}{2^k} & 0 \\ \frac{k}{2^{k+1}} & \frac{1}{2^k}
+\end{array}
+\right) \rightarrow 0
+\]
+as $k\rightarrow \infty$.
+\end{example}
+
+\begin{center}$-----------------$\end{center}
+\vspace*{1em}
+
+\begin{definition}
+The spectral radius, $\rho(A)$, of a matrix $A$ is defined by
+\[
+\rho(A) = \max |\lambda|,
+\]
+where $\lambda$ is an eigenvalue of $A$. 
+\end{definition}
+
+\vspace*{1em}
+
+The spectral radius provides a valuable measure of the eigenvalues, which helps determine if a numerical scheme will converge.
+
+\vspace*{1em}
+
+\begin{theorem}
+If $A \in \mathbb{R}^{n\times n}$, then $\rho(A)\leq ||A||$ for any natural norm $||\cdot||$.
+\end{theorem}
+
+\begin{proof}
+Let $||\vecx||$ be a unit eigenvector of $A$ with respect to the eigenvalue $\lambda$. Then
+\[
+|\lambda| = |\lambda|\, ||\vecx|| = ||\lambda\vecx|| = ||Ax|| \leq ||A||\, ||x|| = ||A||.
+\]
+Thus,
+\[
+\rho(A) = \max|\lambda|\leq ||A||.
+\]
+If $A$ is symmetric, then $\rho(A) = ||A||_2$.
+\end{proof}
+
+\vspace*{1em}
+
+The following theorem is given here without proof. It will be used to prove Gelfand's Formula.
+\begin{theorem}
+Let $A\in \mathbb{C}^{n\times n}$ with spectral radius $\rho(A)$; then $\rho(A)<1$ iff
+\[
+\lim_{k\rightarrow\infty} A^k = 0.
+\]
+Moreover, if $\rho(A)>1$ , $||A^k||$ is not bounded for increasing values of $k$.
+\end{theorem}
+
+\begin{theorem}
+(Gelfand's Formula)
+
+For any matrix norm $||\cdot||$, we have
+\[
+\rho(A) = \lim_{k\rightarrow\infty} ||A^k||^{1/k}.
+\]
+\end{theorem}
+\begin{proof}
+For any $\varepsilon>0$ we construct the following two matrices:
+\[
+A_{\pm} = \frac{1}{\rho(A)\pm\varepsilon}A.
+\]
+Then
+\[
+\rho(A_{\pm}) = \frac{\rho(A)}{\rho(A)\pm\varepsilon},
+\]
+which implies that $\rho(A_+) < 1 < \rho(A_-)$.
+
+Using Theorem \textbf{6}, there exists $N_+ \in \mathbb{N}$ such that $\forall$ $k\geq N_+$, we have $||A_+^k|| <1$ and therefore
+\[
+\forall\,\, k \geq N_+ \quad ||A^k|| < (\rho(A)+\varepsilon)^k,
+\]
+and
+\[
+\forall\,\, k \geq N_+ \quad ||A^k||^{1/k} < \rho(A)+\varepsilon.
+\]
+
+Applying Theorem \textbf{6} to $A_-$ implies that $||A_-^k||$ is not bounded and there exists $N_- \in \mathbb{N}$ such that $\forall$ $k\geq N_-$ we have $||A_-^k|| >1$ and therefore 
+\[
+\forall\,\, k \geq N_- \quad ||A^k|| > (\rho(A)-\varepsilon)^k,
+\]
+and
+\[
+\forall\,\, k \geq N_- \quad ||A^k||^{1/k} > \rho(A)-\varepsilon.
+\]
+
+Let $N = max\{N_+,N_-\}$, then we have that $\forall$ $\varepsilon>0$, there is $N\in\mathbb{N}$ such that $\forall$ $k\geq N$
+\[
+\rho(A)-\varepsilon < ||A^k||^{1/k} < \rho(A) + \varepsilon
+\]
+which implies that
+\[
+\lim_{k\rightarrow\infty}||A^k||^{1/k} = \rho(A).
+\]
+\end{proof}
+
+Finally, we have the following result, offered without proof:
+\begin{theorem}
+The following statements are equivalent:
+\begin{itemize}
+\item[a.] $A$ is a convergent matrix
+\item[b.] $\displaystyle{\lim_{n\rightarrow\infty}}||A^n|| = 0$ for some natural norm\item[c.] $\displaystyle{\lim_{n\rightarrow\infty}}||A^n|| = 0$ for all natural norms
+\item[d.] $\rho(A)<1$
+\item[e.] $\displaystyle{\lim_{n\rightarrow\infty}}A^n\vecx = 0$ for every $\vecx$
+\end{itemize}
+\end{theorem}
+
+
+
+\end{document}
