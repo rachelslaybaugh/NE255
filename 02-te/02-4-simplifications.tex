@@ -177,77 +177,72 @@ And, if we have an isotropic source
 \[2\pi S(z, E, \mu, t) \rightarrow \frac{S(z, E, t)}{2}\:. \]
 
 \subsection*{Combination}
-If we combine one-speed, time-independent, isotropic source, one-dimensional, and azimuthally symmetric, we get
+If we combine one-speed, time-independent, isotropic source, one-dimensional, and azimuthally-symmetric, we get
 \begin{align*}
 \mu \frac{\partial \psi(z, \mu)}{\partial z} &+ \Sigma_t(z)\psi(z, \mu) = \\
 &\frac{\nu\Sigma_f(z) }{2}\phi(z) + 2\pi\int_{-1}^1 d\mu'\: \Sigma_s(z, \mu_0)\psi(z, \mu')  + \frac{S(z)}{2} \:.
 \end{align*}
 
-% \vec{r} switched to x
-%\begin{align*}
-%\frac{1}{v}\frac{\partial \psi(x, \vOmega, t)}{\partial t} &+ 
-%\bigl(\Omega_x \frac{\partial}{\partial x} + \cancel{\Omega_y \frac{\partial}{\partial y}} + \cancel{\Omega_z \frac{\partial}{\partial z}} \bigr)\psi(x, \vOmega, t) +
-%\Sigma_t \psi(x, \vOmega, t) = \nonumber\\
+\subsection*{Scattering}
+Our favorite friend, double differential scattering, can be simplified. When we can't simplify it, we at least need to represent it in a way we can numerically manage. Let's start by recalling
+\[\Sigma_s(\vec{r}, E', \vOmega' \rightarrow E, \vOmega) = \Sigma_s(\vec{r},E') f_s(E', \vOmega' \rightarrow E, \vOmega)\:.\]
+We can represent the fractional probability as a product of two independent fractional probabilities (Which is technically an assumption, but is well-supported by reality):
+\[f_s(E', \vOmega' \rightarrow E, \vOmega) = f_{sE}(E' \rightarrow E) f_{s\Omega}(\vOmega'  \rightarrow \vOmega)\:.\]
+%
+In the \textbf{monoenergetic} case, $f_{sE}(E \rightarrow E') = 1$ and with \textbf{isotropic scattering}, $f_{s\Omega}(\vOmega'  \rightarrow \vOmega) = \dfrac{1}{4\pi}$, which would combine to give $\Sigma_s(\vec{r}, E', \vOmega' \rightarrow E, \vOmega) = \dfrac{\Sigma_s(\vec{r})}{4 \pi}$.
+
+If \textbf{scattering is not isotropic}, what do we do? There are several approaches, but this one makes the most sense to me (different from Duderstadt and Hamilton).
+
+We expand the scattering cross section in Legendre Polynomials, which are a sequence of orthogonal polynomials:
+%
+\[P_n(x) = \frac{1}{2^n n!}\frac{d^n}{dx^n} \bigl[\bigl( x^2 -1 \bigr)^n\bigr]\:,\]
+as follows
+\[\Sigma_s(\vOmega' \cdot \vOmega) = \sum_{l=0}^{\infty} \frac{2l+1}{4\pi} \Sigma_{sl} P_l(\vOmega')P_l(\vOmega) = \sum_{l=0}^{\infty} \frac{2l+1}{4\pi} \Sigma_{sl} P_l(\mu_0)\:. \]
+%
+We get the scattering expansion coefficients from the orthogonality of Legendre Polynomials:
+\[
+\Sigma_{sl} = 2\pi \int_{-1}^1 d\mu_0 \: P_l(\mu_0)\Sigma_s(\mu_0) \:.
+\]
+%
+Legendre polynomials are solutions to Legendre's differential equations,
+\[\frac{d}{dx}\bigl[(1 - x^2) \frac{d}{dx} P_n(x) \bigr] + n(n+1)P_n(x) = 0\:,\]
+and have these properties:
+\begin{gather*}
+\int_{-1}^{1}P_n(x)P_m(x)dx = 
+\frac{2}{2n+1}\delta_{n,m}= \quad\frac{2}{2n+1}\text{if n = m,} \quad 0\text{ if n $\neq$ m.}\\
+\therefore P_0(\mu) = 1 \\
+P_1(\mu) = \mu\:.
+\end{gather*}
+%
+We can see the first several polynomials in \autoref{fig:legendre}.
+\begin{figure}[h!]
+    \begin{center}
+    \includegraphics[keepaspectratio, width = 3.5 in]{Legendrepolynomials}
+    \end{center}
+    \caption{Legendre polynomials}
+    \label{fig:legendre}
+\end{figure}
+
+%&l=0 \text{ is isotropic; (note } P_0 (\vOmega) = 1 \text{)}\\
+%&\qquad \Sigma_s(\vOmega' \cdot \vOmega) \cong \frac{1}{4\pi}\Sigma_{s0} \\
 %%
-%& \int_{4\pi} d\vOmega' \Sigma_s(\vOmega' \rightarrow \vOmega) \psi(x, \vOmega', t)  + 
-%\frac{\nu \Sigma_f}{4\pi} \int_{4\pi} d\vOmega' \psi(x,  \vOmega', t) + s(x, \vOmega, t)%+ Q(x, \vOmega, t) \nonumber
+%&l=1 \text{ is linearly isotropic; (note } P_1 (\vOmega) = \vOmega \text{)}\\
+%&\qquad \Sigma_s(\vOmega' \cdot \vOmega) \cong \frac{1}{4\pi}\bigl( \Sigma_{s0} + 3\vOmega' \vOmega \Sigma_{s1} \bigr) 
 %\end{align*}
 
+We're going to \textbf{assume that scattering is at most linearly anisotropic}, so we will stop expanding here.
 
-%\begin{minipage}{0.3\textwidth}
-%\begin{figure}[H]
-%\includegraphics[height=1.5in]{AzimuthalSymmetry}
-%%\caption{\label{fig:FixedCondition} Fixed Condition}
-%\end{figure}
-%\end{minipage} \hfill
-%\begin{minipage}{0.65\textwidth}
+Substitute the $l=1$ linearly anisotropic truncation into the equation and use some of our identities:
 %
-%\end{minipage}
+\begin{align*}
+\frac{1}{4\pi} \int_{4\pi}  \vOmega &d\vOmega \int_{4\pi} d\vOmega'\: \bigl[\Sigma_{s0} + 3\vOmega' \vOmega \Sigma_{s1} \bigr] \psi(\vec{r}, \vOmega', t) = \nonumber\\
 %
-%Using this idea we can write things more cleanly:
-%%
-%% switch to just \mu
-%\begin{align*}
-%\frac{1}{v_0}\frac{\partial \psi(x, \vOmega, t)}{\partial t} &+ 
-%\mu \frac{\partial}{\partial x}\psi(x, \vOmega, t) +
-%\Sigma_t \psi(x, \vOmega, t) = \nonumber\\
-%%
-%& \int_0^{2\pi} d\phi \int_{4\pi} d\vOmega' \Sigma_s(\vOmega' \cdot \vOmega) \frac{\psi(x, \mu', t)}{2\pi}  + 
-%\frac{1}{4\pi} \nu \Sigma_f \int_0^{2\pi} d\phi \psi(x, \mu, t) + s(x, \mu, t)% 2\pi Q(x, \mu, t)
-%\end{align*}
+& \underbrace{\frac{1}{4\pi} \int_{4\pi} d\vOmega \:\vOmega}_{0}  \underbrace{\int_{4\pi} d\vOmega'\:  \Sigma_{s0}\psi(\vec{r}, \vOmega', t)}_{\Sigma_{s0} \phi(\vec{r},t)} +
 %
-%If \textbf{scattering is also isotropic}:
-%\[\Sigma_s(\vOmega' \cdot \vOmega) = \frac{\Sigma_s}{4\pi} \]
+\frac{1}{4\pi} \underbrace{\int_{4\pi} d\vOmega \:\vOmega \vOmega}_{4\pi/3 \bar{\bar{I}}} \underbrace{\int_{4\pi} d\vOmega'\: \vOmega' 3  \Sigma_{s1}\psi(\vec{r}, \vOmega', t)}_{3\Sigma_{s1} \vec{J}(\vec{r},t)} \\
 %
-%And we get the 1-group, 1-D, isotropic neutron TE:
-%%
-%% scattering is now iso, add in sources
-%\begin{align*}
-%\frac{1}{v_0}\frac{\partial \psi(x, \mu, t)}{\partial t} &+ 
-%\mu \frac{\partial}{\partial x}\psi(x, \mu, t) +
-%\Sigma_t \psi(x, \mu, t) = \nonumber\\
-%%
-%& \frac{1}{2} \Sigma_s \int_{-1}^{1} d\mu' \psi(x, \mu', t)  
-%+  \frac{1}{2} \bigl( \nu \Sigma_f \phi(x, t) + S(x, t) \bigr)
-%\end{align*}
-%
-%%---------------------------------------------
-%\subsection*{Steady State}
-%If we get rid of time dependence.
-%%
-%\begin{equation}
-%\mu \frac{\partial}{\partial x}\psi(x, \mu) +
-%\Sigma_t \psi(x, \mu) = \frac{1}{2} \Sigma_s \int_{-1}^{1} d\mu' \psi(x, \mu')  
-%+  \frac{1}{2} \bigl( \nu \Sigma_f \phi(x) + S(x) \bigr) \nonumber
-%\end{equation}
-%
-%
-%And very finally - we can have the unrealistic case of \textbf{purely absorbing media}:
-%%
-%\begin{equation}
-%\mu \frac{\partial}{\partial x}\psi(x, \mu) +
-%\Sigma_a \psi(x, \mu) = \frac{1}{2} \bigl( \nu \Sigma_f \phi(x) + S(x) \bigr) \nonumber
-%\end{equation}
+&= \boxed{\Sigma_{s1} \vec{J}(\vec{r},t)}
+\end{align*}
 
 
 \end{document}
