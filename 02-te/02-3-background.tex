@@ -83,9 +83,9 @@ here $y$ and $x$ are typically $\alpha$, $\beta$, or $\gamma$ and $Q$ is energy.
 
 \item Inelastic scattering $(n,n')$: \ce{^1_0 n} + \ce{^A_Z X} $\rightarrow$ (\ce{^A_Z X$^*$}) $\rightarrow$ \ce{^1_0 n} + \ce{^A_Z X} + $\gamma$
 
-\item Radiative capture (absorption) $(n,\gamma)$: \ce{^1_0 n} + \ce{^A_Z X} $\rightarrow$ (\ce{^A_Z X$^*$}) $\rightarrow$ \ce{^A_Z X} + $\gamma$
+\item Radiative capture (absorption) $(n,\gamma)$: \ce{^1_0 n} + \ce{^A_Z X} $\rightarrow$ (\ce{^A_Z X$^*$}) $\rightarrow$ \ce{^{A+1}_Z X} + $\gamma$
 
-\item Fission (absorption) $(n,f)$: $(n,\gamma)$: \ce{^1_0 n} + \ce{^A_Z X} $\rightarrow$ \ce{^{A1}_{Z1} X} + \ce{^{A2}_{Z2} X} + (a few)\ce{^1_0 n}
+\item Fission (absorption) $(n,f)$: \ce{^1_0 n} + \ce{^A_Z X} $\rightarrow$ \ce{^{A1}_{Z1} X} + \ce{^{A2}_{Z2} X} + (a few)\ce{^1_0 n}
 
 \item Charged-Particle Reactions (absorption): $(n,\alpha)$ \ce{^1_0 n} + \ce{^A_Z X} $\rightarrow$ \ce{^{A-3}_{Z-2} Y} + \ce{^{4}_{2} He}; \\
 \hspace*{17 em}$(n,p)$  \ce{^1_0 n} + \ce{^A_Z X} $\rightarrow$ \ce{^{A}_{Z-1} Y} + \ce{^1_1 p}
@@ -209,7 +209,7 @@ n(\vec{r}, \vec{v}, t) &= \frac{m}{v}n(\vec{r}, E, \vOmega, t)
 
 \item \textbf{angular flux}: $\psi(\vec{r}, E, \vOmega, t) \equiv v n(\vec{r}, E, \vOmega, t)$ [neutrons / (cm$^2$ s MeV steradian)] can be thought of as path length per unit volume about $\vec{r}$ passed by neutrons with energies...
 
-\item \textbf{scalar flux}: $\phi(\vec{r},E,t) \equiv v N(\vec{r},E,t)$ [neutrons / (cm$^2$ s MeV)] can be thought of as the number of neutrons that penetrate a sphere of 1 cm$62$ cross sectional area at $\vec{r}$ with energies in $dE$ about $E$ at time $t$.
+\item \textbf{scalar flux}: $\phi(\vec{r},E,t) \equiv v N(\vec{r},E,t)$ [neutrons / (cm$^2$ s MeV)] can be thought of as the number of neutrons that penetrate a sphere of 1 cm$^2$ cross sectional area at $\vec{r}$ with energies in $dE$ about $E$ at time $t$.
 %
 \[= \int_{4\pi} d\vOmega\: \psi(\vec{r}, E, \vOmega, t) \]
 
@@ -219,7 +219,7 @@ n(\vec{r}, \vec{v}, t) &= \frac{m}{v}n(\vec{r}, E, \vOmega, t)
 
 \item \textbf{angular current density} or partial current: $\vec{j}(\vec{r}, E, \vOmega, t) = \vec{v} n(\vec{r}, E, \vOmega, t)$; 
 
-$\vec{j}(\vec{r}, E, \vOmega, t) \cdot \hat{e}\: dA\: dE\: d\vOmega$ is the expected number of particles crossing $dA$ along unit direction $\hat{e}$ with energy in $[E, E + dE]$ and direction in $[\vOmega, \vOmega + d\vOmega]$ at time $t$.
+$\vec{j}(\vec{r}, E, \vOmega, t) \cdot \hat{e}\: dA\: dE\: d\vOmega$ is the expected number of particles crossing $dA$ per second along unit direction $\hat{e}$ with energy in $[E, E + dE]$ and direction in $[\vOmega, \vOmega + d\vOmega]$ at time $t$.
 
 \item \textbf{net current}: $\vec{J}(\vec{r}, E, t) $ is the net \# of particles crossing a unit area per second along a direction normal to that area with energies in $[E, E + dE]$ at time $t$.
 \[\vec{J}(\vec{r}, E, t) = \int_{4\pi} d\vOmega\: \vOmega \psi(\vec{r}, E, \vOmega, t)\]
@@ -229,7 +229,7 @@ $\vec{j}(\vec{r}, E, \vOmega, t) \cdot \hat{e}\: dA\: dE\: d\vOmega$ is the expe
 %-----------------------------------------
 \subsection*{Assumptions}
 \begin{enumerate}
-\item Particles are point objects ($\lambda = h/(mv))$ is small compared to the atomic diameter): its state is fully described by its location, velocity vector, and a given time. This ignores rotation and quantum effects.
+\item Particles are point objects ($\lambda = h/(mv)$) is small compared to the atomic diameter): its state is fully described by its location, velocity vector, and a given time. This ignores rotation and quantum effects.
 
 \item Neutral particles travel in straight lines between collisions.
 
@@ -345,7 +345,7 @@ with no change in energy. Finally, performing the outscattering integral:
 \end{align}
 
 We can easily generalize this equation to include nuclear fission.
-To do that, we must revisit our treatment of $\Sigma_a$; there are two main processes responsible for the absorption of particles in the system: \textit{radiative capture} and \textit{nuclear fission}. Now, we define
+To do that, we must revisit our treatment of $\Sigma_a$; there are two main processes responsible for the absorption of particles in the system: \textit{radiative capture} and \textit{nuclear fission} (note that we're ignoring (n,xn) reactions for the time being). Now, we define
 \begin{align*}
 \Sigma_\gamma(\rvec,E)ds = \textrm{probability of capture}
 \end{align*}
@@ -464,7 +464,7 @@ In steady-state reactor calculations, one often sees a version of these equation
 \psi(\rvec,\omvec')d\omvec'\,,\nonumber\\
 &\psi(\rvec_s,\omvec) = 0, \hspace{0.5 cm} \textbf{n} \cdot \omvec <0\,.
 \end{align*}
-These equations always have the zero solution $\psi = 0$; the goal is to find the largest value of $k$ such that a nonzero solution $\psi$ exists. The resulting $k$ is called the \textit{criticality} (or \textit{criticality eigenvalue}) of the system. If a system has a fissile region, it can be shown that $k$ always exists, and the corresponding (eigenfunction) $\psi$ is unique and positive.
+These equations always have the zero solution $\psi = 0$; the goal is to find the largest value of $k$ such that a nonzero solution $\psi$ exists. The resulting $k$ is called the \textit{criticality} (or \textit{criticality eigenvalue}) of the system. If a system has a fissionable region, it can be shown that $k$ always exists, and the corresponding (eigenfunction) $\psi$ is unique and positive.
 
 
 \end{document}
