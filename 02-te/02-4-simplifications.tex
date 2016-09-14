@@ -90,7 +90,7 @@ Assume all particles are at the same speed, $\vec{v} = v_0 \cdot \vOmega$. Thus
 n(\vec{r}, v, \vOmega, t) &= n(\vec{r}, \vOmega, t) \delta(v - v_0) \\
 \Sigma_s(E' \rightarrow E, \vOmega' \rightarrow \vOmega) &= \Sigma_s(E, \vOmega' \rightarrow \vOmega)\delta(E' - E)
 \end{align*}
-
+%
 Now we can remove E integration and E dependence:
 %
 \begin{align*}
@@ -117,7 +117,7 @@ It is often the case that an external source is (or we can approximate it as) is
 
 %---------------------------------------------
 \subsection*{One Dimensional and Rotational (Azimuthal) Symmetry}
-We'd like to simplify even farther by only worrying about one dimension, so we'll get rid of $x$ and $y$. Let's remind ourselves of how phase-space looks:
+We also often simplify by only worrying about fewer dimensions. Here we'll look at just one: we'll get rid of $x$ and $y$. Let's remind ourselves of how phase-space looks (see \autoref{fig:phase_space}):
 \begin{figure}[h!]
     \begin{center}
     \includegraphics[keepaspectratio, width = 4 in]{phase-space}
@@ -128,33 +128,60 @@ We'd like to simplify even farther by only worrying about one dimension, so we'l
 
 We first assume that \textbf{things only vary in the $z$ dimension}, so $\vec{r} \rightarrow z$, e.g.\\ $\psi(\vec{r}, E, \vOmega, t) \rightarrow \psi(z, E, \vOmega, t)$
 
-We next assume (which is often true) that our systems is \textbf{azimuthally symmetric}, which means that the scattering only depends on the angle of the scattering cosine, $\mu =\vOmega' \cdot \vOmega$, because it is symmetric about the azimuthal direction. We can use this assumption to simplify two things. 
+We next assume (which is often true) that our systems is \textbf{azimuthally symmetric} (see \autoref{fig:azimuthal}), which means that the scattering only depends on the angle of the scattering cosine, $\mu =\vOmega' \cdot \vOmega$, because it is symmetric about the azimuthal direction ($\varphi$). We can use this assumption to simplify two things. 
 \begin{figure}[h!]
     \begin{center}
     \includegraphics[keepaspectratio, width = 3 in]{azimuthal}
     \end{center}
     \caption{Azimuthal symmetry}
-    \label{fig:phase_space}
+    \label{fig:azimuthal}
 \end{figure}
 
-We will use these terms:
-$d\vOmega = \sin(\theta) d\theta d\varphi = d\mu d\varphi; \quad \mu = \cos(\theta)$ so $d\mu = \sin(\theta)\:; \quad \Omega_x = \cos(\theta) = \mu\:.$
+We will use these terms in our simplifications:\\
+$d\vOmega = \sin(\theta) d\theta d\varphi = d\mu d\varphi; \quad \mu = \cos(\theta)\,$ so $d\mu = \sin(\theta)\:; \quad \Omega_x = \cos(\theta) = \mu\:.$
 \begin{align*}
 \int_{4 \pi} d\vOmega &= \int_0^{2\pi} d\varphi \int_{-\pi/2}^{\pi/2} \sin(\theta) d\theta =  \int_0^{2\pi} d\varphi \int_{-1}^1 d\mu = 4\pi \\
-\psi(z,\vOmega,E,t) d\vOmega &= \psi(z,\varphi, \mu,E,t) d\varphi  d\mu
+\psi(z,\vOmega,E,t) d\vOmega &= \psi(z,\varphi, \mu,E,t) d\varphi  d\mu =  \psi(z, \mu,E,t) d\varphi  d\mu 
 \end{align*}
-
-With azimuthal symmetry we can rewrite the scattering cross section since it is no longer a function of $\theta$.
+%
+With azimuthal symmetry we can rewrite the scattering cross section since it is no longer a function of $\varphi$.
 \[\Sigma_s(z, \vOmega' \rightarrow \vOmega) \rightarrow \Sigma_s(z, \vOmega' \cdot \vOmega) = \Sigma_s(z, \mu) \:.\]
 
-Further, we can execute the angular integration over $\theta$ since nothing depends on it anymore:
+Further, we can execute the angular integration over $\varphi$ since nothing depends on it anymore. For example:
 \begin{align*}
-\int_{4 \pi} d\vOmega\: \psi(z, \vOmega, E, t) &=   \int_{-1}^1 d\mu \int_0^{2\pi} d\varphi \:\psi(z, \vOmega, E, t) \\
+\int_{4 \pi} d\vOmega\: \psi(z, \vOmega, E, t) &=   \int_0^{2\pi} d\varphi \int_{-1}^1 d\mu \:\psi(z, \vOmega, E, t) \\
 &= 2 \pi \int_{-1}^1 d\mu \:\psi(z, \vOmega, E, t)\\
 \psi(z, \mu, E, t) &= \frac{1}{2 \pi}\psi(z, \vOmega, E, t)\:.
 \end{align*}
+%
+The next simplification is in the streaming term:
+\[\vOmega \cdot \nabla \psi(\vec{r}, \vOmega, E, t) \rightarrow \Omega_z \frac{\partial \psi(z, \vOmega, E, t)}{\partial z} = \mu \frac{\partial \psi(z, \vOmega, E, t)}{\partial z} \]
+%
+We can combine all of this into a 1-D equation, using $\mu_0 = \vOmega \cdot \vOmega'$:
+\begin{align*}
+\frac{1}{v}\frac{\partial \psi}{\partial t}(z,E,\omvec,t) &+ \Omega_z \frac{\partial \psi(z, \vOmega, E, t)}{\partial z} + \Sigma_t(z)\psi(z, \vOmega, E, t)  \\
+&= \frac{\chi(E)}{4 \pi} \int_0^{\infty} dE'\int_{4 \pi} d\vOmega'\:  \nu(E')\Sigma_f(z,E',t)\psi(z, \vOmega', E', t)  \\
+&+ \int_0^{\infty} dE' \int_{4 \pi} d\vOmega'\: \Sigma_s(z, \mu_0)\psi(z, \vOmega', E', t) + S(z, E, \vOmega, t)\:,
+\end{align*}
+%
+which we can then integrate over the $\varphi$ component of angle:
+\begin{align*}
+\frac{1}{v}\frac{\partial \psi}{\partial t}(z,E,\omvec,t) &+ \mu \frac{\partial \psi(z, \mu, E, t)}{\partial z} + \Sigma_t(z)\psi(z, \mu, E, t) \\
+&= 2\pi\frac{\chi(E)}{4 \pi} \int_0^{\infty} dE' \: \nu(E')\Sigma_f(z,E',t) \int_{-1}^1 d\mu'\: \psi(z, \mu', E', t) \\
+&+ 2\pi\int_0^{\infty} dE' \int_{-1}^1 d\mu'\: \Sigma_s(z, \mu_0)\psi(z, \mu', E', t)  + 2\pi S(z, E, \mu, t)
+\end{align*}
+%
+The fission terms becomes
+\[\frac{\chi(E)}{2} \int_0^{\infty} dE'\:  \nu(E')\Sigma_f(z,E',t)\underbrace{\phi(z, E', t)}_{\text{scalar flux}}\:. \]
+And, if we have an isotropic source
+\[2\pi S(z, E, \mu, t) \rightarrow \frac{S(z, E, t)}{2}\:. \]
 
-
+\subsection*{Combination}
+If we combine one-speed, time-independent, isotropic source, one-dimensional, and azimuthally symmetric, we get
+\begin{align*}
+\mu \frac{\partial \psi(z, \mu)}{\partial z} &+ \Sigma_t(z)\psi(z, \mu) = \\
+&\frac{\nu\Sigma_f(z) }{2}\phi(z) + 2\pi\int_{-1}^1 d\mu'\: \Sigma_s(z, \mu_0)\psi(z, \mu')  + \frac{S(z)}{2} \:.
+\end{align*}
 
 % \vec{r} switched to x
 %\begin{align*}
