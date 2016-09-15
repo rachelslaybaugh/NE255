@@ -184,29 +184,27 @@ If we combine one-speed, time-independent, isotropic source, one-dimensional, an
 \end{align*}
 
 \subsection*{Scattering}
-Our favorite friend, double differential scattering, can be simplified. When we can't simplify it, we at least need to represent it in a way we can numerically manage. Let's start by recalling
+Our favorite friend, double differential scattering, can be simplified. Let's start by recalling
 \[\Sigma_s(\vec{r}, E', \vOmega' \rightarrow E, \vOmega) = \Sigma_s(\vec{r},E') f_s(E', \vOmega' \rightarrow E, \vOmega)\:.\]
 We can represent the fractional probability as a product of two independent fractional probabilities (Which is technically an assumption, but is well-supported by reality):
 \[f_s(E', \vOmega' \rightarrow E, \vOmega) = f_{sE}(E' \rightarrow E) f_{s\Omega}(\vOmega'  \rightarrow \vOmega)\:.\]
 %
 In the \textbf{monoenergetic} case, $f_{sE}(E \rightarrow E') = 1$ and with \textbf{isotropic scattering}, $f_{s\Omega}(\vOmega'  \rightarrow \vOmega) = \dfrac{1}{4\pi}$, which would combine to give $\Sigma_s(\vec{r}, E', \vOmega' \rightarrow E, \vOmega) = \dfrac{\Sigma_s(\vec{r})}{4 \pi}$.
 
-If \textbf{scattering is not isotropic}, what do we do? There are several approaches, but this one makes the most sense to me (different from Duderstadt and Hamilton).
+If \textbf{scattering is not isotropic}, what do we do? That is,  when we can't simplify so easily, we at least need to represent it in a way we can numerically manage. There are several approaches, but this one makes the most sense to me (different from Duderstadt and Hamilton). 
 
 We expand the scattering cross section in Legendre Polynomials, which are a sequence of orthogonal polynomials:
 %
 \[P_n(x) = \frac{1}{2^n n!}\frac{d^n}{dx^n} \bigl[\bigl( x^2 -1 \bigr)^n\bigr]\:,\]
 as follows
-\[\Sigma_s(\vOmega' \cdot \vOmega) = \sum_{l=0}^{\infty} \frac{2l+1}{4\pi} \Sigma_{sl} P_l(\vOmega')P_l(\vOmega) = \sum_{l=0}^{\infty} \frac{2l+1}{4\pi} \Sigma_{sl} P_l(\mu_0)\:. \]
+\[\Sigma_s(\vOmega' \cdot \vOmega) = \sum_{l=0}^{\infty} \frac{2l+1}{4\pi} \Sigma_{sl} P_l(\mu_0) = \sum_{l=0}^{\infty} \frac{2l+1}{4\pi} \Sigma_{sl} P_l(\vOmega')P_l(\vOmega) \:. \]
 %
-We get the scattering expansion coefficients from the orthogonality of Legendre Polynomials:
-\[
-\Sigma_{sl} = 2\pi \int_{-1}^1 d\mu_0 \: P_l(\mu_0)\Sigma_s(\mu_0) \:.
-\]
-%
+(Note that we used the Legendre Addition Thoerem, which uses spherical harmonics. You can learn more here:\\\href{https://en.wikipedia.org/wiki/Legendre_polynomials}{https://en.wikipedia.org/wiki/Legendre\_polynomials}\\ \href{https://en.wikipedia.org/wiki/Spherical_harmonics}{https://en.wikipedia.org/wiki/Spherical\_harmonics},\\
+but for now just take my word for the fact that this works). 
+
 Legendre polynomials are solutions to Legendre's differential equations,
 \[\frac{d}{dx}\bigl[(1 - x^2) \frac{d}{dx} P_n(x) \bigr] + n(n+1)P_n(x) = 0\:,\]
-and have these properties:
+and are orthogonal on $[-1,1]$:
 \begin{gather*}
 \int_{-1}^{1}P_n(x)P_m(x)dx = 
 \frac{2}{2n+1}\delta_{n,m}= \quad\frac{2}{2n+1}\text{if n = m,} \quad 0\text{ if n $\neq$ m.}\\
@@ -221,28 +219,37 @@ We can see the first several polynomials in \autoref{fig:legendre}.
     \end{center}
     \caption{Legendre polynomials}
     \label{fig:legendre}
+    %https://en.wikipedia.org/wiki/Legendre_polynomials
 \end{figure}
 
-%&l=0 \text{ is isotropic; (note } P_0 (\vOmega) = 1 \text{)}\\
-%&\qquad \Sigma_s(\vOmega' \cdot \vOmega) \cong \frac{1}{4\pi}\Sigma_{s0} \\
-%%
-%&l=1 \text{ is linearly isotropic; (note } P_1 (\vOmega) = \vOmega \text{)}\\
-%&\qquad \Sigma_s(\vOmega' \cdot \vOmega) \cong \frac{1}{4\pi}\bigl( \Sigma_{s0} + 3\vOmega' \vOmega \Sigma_{s1} \bigr) 
-%\end{align*}
-
-We're going to \textbf{assume that scattering is at most linearly anisotropic}, so we will stop expanding here.
-
-Substitute the $l=1$ linearly anisotropic truncation into the equation and use some of our identities:
-%
+We get the scattering expansion coefficients from the orthogonality of Legendre Polynomials. Any function can be expanded on the interval $-1 \leq x \leq 1$
+\[
+f(x) = \sum_{l=0}^{\infty} \frac{2n+1}{2} f_n P_n(x)
+\]
+To find $f_n$, multiply by $P_l$ and integrate over $(-1,1)$:
 \begin{align*}
-\frac{1}{4\pi} \int_{4\pi}  \vOmega &d\vOmega \int_{4\pi} d\vOmega'\: \bigl[\Sigma_{s0} + 3\vOmega' \vOmega \Sigma_{s1} \bigr] \psi(\vec{r}, \vOmega', t) = \nonumber\\
-%
-& \underbrace{\frac{1}{4\pi} \int_{4\pi} d\vOmega \:\vOmega}_{0}  \underbrace{\int_{4\pi} d\vOmega'\:  \Sigma_{s0}\psi(\vec{r}, \vOmega', t)}_{\Sigma_{s0} \phi(\vec{r},t)} +
-%
-\frac{1}{4\pi} \underbrace{\int_{4\pi} d\vOmega \:\vOmega \vOmega}_{4\pi/3 \bar{\bar{I}}} \underbrace{\int_{4\pi} d\vOmega'\: \vOmega' 3  \Sigma_{s1}\psi(\vec{r}, \vOmega', t)}_{3\Sigma_{s1} \vec{J}(\vec{r},t)} \\
-%
-&= \boxed{\Sigma_{s1} \vec{J}(\vec{r},t)}
+\int_{-1}^1 dx\: f(x) P_l(x) &= \sum_{l=0}^{\infty} \frac{2n+1}{2} f_n\int_{-1}^1 dx\:  P_n(x) P_l(x)\\
+\therefore f_l &= \int_{-1}^1 dx\: f(x) P_l(x)\\
+\text{and }\Sigma_{sl} &= 2\pi \int_{-1}^1 d\mu_0 \: P_l(\mu_0)\Sigma_s(\mu_0)\:.
 \end{align*}
+
+All of that was to say, we can actually deal with scattering when it's \textit{not} isotropic by expressing the scattering cross section as an expansion in Legendre polynomials. In our simplified transport equation, this looks like:
+\begin{align*}
+\mu \frac{\partial \psi(z, \mu)}{\partial z} &+ \Sigma_t(z)\psi(z, \mu) = \\
+&\frac{\nu\Sigma_f(z) }{2}\phi(z) +  \sum_{l=0}^{\infty} \frac{2l+1}{2} \Sigma_{sl}(z) \int_{-1}^1 d\mu'\: P_l(\mu_0) \psi(z, \mu')  + \frac{S(z)}{2} \:.
+\end{align*}
+%
+In reality, we truncate the expansion at some point. Some common truncations:
+\begin{align*}
+&l=0 \text{ is isotropic; (note } P_0 (\vOmega) = 1 \text{)}\\
+&\qquad \Sigma_s(\vOmega' \cdot \vOmega) \cong \frac{1}{4\pi}\Sigma_{s0} \\
+%
+&l=1 \text{ is linearly isotropic; (note } P_1 (\vOmega) = \vOmega \text{)}\\
+&\qquad \Sigma_s(\vOmega' \cdot \vOmega) \cong \frac{1}{4\pi}\bigl( \Sigma_{s0} + 3\vOmega' \vOmega \Sigma_{s1} \bigr) 
+\end{align*}
+%
+In describing representations of the TE, people commonly describe call out the scattering by saying the $P_n$ expansion of scattering. 
+
 
 
 \end{document}
