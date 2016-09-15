@@ -68,7 +68,7 @@ Recall that last time we created a full version of the transport equation that l
 \end{align}
 What does each term describe?
 
-We talked a little bit about boundary and initial conditions, and I was teaching from a non-updated version of the notes. Here's what I missed: (see notes posted online, which are now up-to-date)...
+Today we'll cover some common ways to simplify this equation as well as how to treat scattering.
 
 %----------------------------------------------
 \section*{Simplified Forms}
@@ -138,7 +138,7 @@ We next assume (which is often true) that our systems is \textbf{azimuthally sym
 \end{figure}
 
 We will use these terms in our simplifications:\\
-$d\vOmega = \sin(\theta) d\theta d\varphi = d\mu d\varphi; \quad \mu = \cos(\theta)\,$ so $d\mu = \sin(\theta)\:; \quad \Omega_x = \cos(\theta) = \mu\:.$
+$d\vOmega = \sin(\theta) d\theta d\varphi = d\mu d\varphi; \quad \mu = \cos(\theta)\,$ so $d\mu = \sin(\theta)d\theta\:; \quad \Omega_z = \cos(\theta) = \mu\:.$
 \begin{align*}
 \int_{4 \pi} d\vOmega &= \int_0^{2\pi} d\varphi \int_{-\pi/2}^{\pi/2} \sin(\theta) d\theta =  \int_0^{2\pi} d\varphi \int_{-1}^1 d\mu = 4\pi \\
 \psi(z,\vOmega,E,t) d\vOmega &= \psi(z,\varphi, \mu,E,t) d\varphi  d\mu =  \psi(z, \mu,E,t) d\varphi  d\mu 
@@ -148,14 +148,11 @@ With azimuthal symmetry we can rewrite the scattering cross section since it is 
 \[\Sigma_s(z, \vOmega' \rightarrow \vOmega) \rightarrow \Sigma_s(z, \vOmega' \cdot \vOmega) = \Sigma_s(z, \mu) \:.\]
 
 Further, we can execute the angular integration over $\varphi$ since nothing depends on it anymore. For example:
-\begin{align*}
-\int_{4 \pi} d\vOmega\: \psi(z, \vOmega, E, t) &=   \int_0^{2\pi} d\varphi \int_{-1}^1 d\mu \:\psi(z, \vOmega, E, t) \\
-&= 2 \pi \int_{-1}^1 d\mu \:\psi(z, \vOmega, E, t)\\
-\psi(z, \mu, E, t) &= \frac{1}{2 \pi}\psi(z, \vOmega, E, t)\:.
-\end{align*}
+\[
+\int_{4 \pi} d\vOmega\: \psi(z, \vOmega, E, t) =   \int_0^{2\pi} d\varphi \int_{-1}^1 d\mu \:\psi(z, \vOmega, E, t) = 2 \pi \int_{-1}^1 d\mu \:\psi(z, \mu, E, t)\:.\]
 %
 The next simplification is in the streaming term:
-\[\vOmega \cdot \nabla \psi(\vec{r}, \vOmega, E, t) \rightarrow \Omega_z \frac{\partial \psi(z, \vOmega, E, t)}{\partial z} = \mu \frac{\partial \psi(z, \vOmega, E, t)}{\partial z} \]
+\[\vOmega \cdot \nabla \psi(\vec{r}, \vOmega, E, t) \rightarrow \Omega_z \frac{\partial \psi(z, \mu, E, t)}{\partial z} = \mu \frac{\partial \psi(z, \mu, E, t)}{\partial z} \]
 %
 We can combine all of this into a 1-D equation, using $\mu_0 = \vOmega \cdot \vOmega'$:
 \begin{align*}
@@ -166,15 +163,13 @@ We can combine all of this into a 1-D equation, using $\mu_0 = \vOmega \cdot \vO
 %
 which we can then integrate over the $\varphi$ component of angle:
 \begin{align*}
-\frac{1}{v}\frac{\partial \psi}{\partial t}(z,E,\omvec,t) &+ \mu \frac{\partial \psi(z, \mu, E, t)}{\partial z} + \Sigma_t(z)\psi(z, \mu, E, t) \\
-&= 2\pi\frac{\chi(E)}{4 \pi} \int_0^{\infty} dE' \: \nu(E')\Sigma_f(z,E',t) \int_{-1}^1 d\mu'\: \psi(z, \mu', E', t) \\
-&+ 2\pi\int_0^{\infty} dE' \int_{-1}^1 d\mu'\: \Sigma_s(z, \mu_0)\psi(z, \mu', E', t)  + 2\pi S(z, E, \mu, t)
+\frac{1}{v}\frac{\partial \psi}{\partial t}(z,E,\mu,t) &+ \mu \frac{\partial \psi(z, \mu, E, t)}{\partial z} + \Sigma_t(z)\psi(z, \mu, E, t) \\
+&= 2\pi\frac{\chi(E)}{4 \pi} \int_0^{\infty} dE' \: \nu(E')\Sigma_f(z,E') \int_{-1}^1 d\mu'\: \psi(z, \mu', E', t) \\
+&+ 2\pi\int_0^{\infty} dE' \int_{-1}^1 d\mu'\: \Sigma_s(z, \mu_0)\psi(z, \mu', E', t)  + S(z, E, \mu, t)
 \end{align*}
 %
-The fission terms becomes
-\[\frac{\chi(E)}{2} \int_0^{\infty} dE'\:  \nu(E')\Sigma_f(z,E',t)\underbrace{\phi(z, E', t)}_{\text{scalar flux}}\:. \]
-And, if we have an isotropic source
-\[2\pi S(z, E, \mu, t) \rightarrow \frac{S(z, E, t)}{2}\:. \]
+Note that the fission terms becomes
+\[\frac{\chi(E)}{2} \int_0^{\infty} dE'\:  \nu(E')\Sigma_f(z,E')\underbrace{\phi(z, E', t)}_{\text{scalar flux}}\:. \]
 
 \subsection*{Combination}
 If we combine one-speed, time-independent, isotropic source, one-dimensional, and azimuthally-symmetric, we get
