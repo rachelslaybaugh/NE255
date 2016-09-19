@@ -1,0 +1,129 @@
+\documentclass[12pt]{article}
+\usepackage[top=1in, bottom=1in, left=1in, right=1in]{geometry}
+
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage{amssymb}
+%% The amsthm package provides extended theorem environments
+\usepackage{amsthm}
+\usepackage{epsfig}
+\usepackage{times}
+\renewcommand{\ttdefault}{cmtt}
+\usepackage{amsmath}
+\usepackage{graphicx} % for graphics files
+
+% Draw figures yourself
+\usepackage{tikz} 
+
+% writing elements
+\usepackage{mhchem}
+
+\usepackage{paralist}
+
+% The float package HAS to load before hyperref
+\usepackage{float} % for psuedocode formatting
+\usepackage{xspace}
+
+% from Denovo Methods Manual
+\usepackage{mathrsfs}
+\usepackage[mathcal]{euscript}
+\usepackage{color}
+\usepackage{array}
+
+\usepackage[pdftex]{hyperref}
+\usepackage[parfill]{parskip}
+
+% math syntax
+\newcommand{\nth}{n\ensuremath{^{\text{th}}} }
+\newcommand{\ve}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\Macro}{\ensuremath{\Sigma}}
+\newcommand{\rvec}{\ensuremath{\vec{r}}}
+\newcommand{\omvec}{\ensuremath{\hat{\Omega}}}
+\newcommand{\vOmega}{\ensuremath{\hat{\Omega}}}
+%---------------------------------------------------------------------------
+%---------------------------------------------------------------------------
+\begin{document}
+\begin{center}
+{\bf NE 255, Fa16 \\
+Solution Context and Tools\\
+September 20, 2016}
+\end{center}
+
+\setlength{\unitlength}{1in}
+\begin{picture}(6,.1) 
+\put(0,0) {\line(1,0){6.25}}         
+\end{picture}
+
+We've started looking a little bit at how to play around with the transport equation. To venture much farther in thinking about solving the transport equation, it helps to remember what we're applying it to, how we might attack actually solving it, and some other bits of information that we use. 
+
+As mentioned, we'll mostly focus on reactors in this class. A nuclear reactor is a three-dimensional structure consisting of complicated geometrical shapes made of variety of materials.	
+
+\begin{compactitem} 
+\item A unit cell usually consists of a fuel rod, gap, cladding and
+corresponding moderator. It is usually surrounded by similar
+cells. A fuel rod consists of fuel pellets.	
+
+\item A fuel assembly usually consists of several hundred fuel rods
+(fuel cells).	
+
+\item A reactor core consists of several hundred fuel assemblies.	
+
+\item Fuel assemblies and fuel rods are usually arranged in square or
+hexagonal lattice.	
+
+\item Instead of fuel pellets, the fuel could be in the form of coated fuel
+particles (TRISO particles).	
+
+\item Coated fuel particles could be arranged into fuel compacts or
+pebbles (Pebble Bed Reactor).	
+\end{compactitem}
+%
+(switch to ppt for image examples)
+
+\vspace{-1 em}
+\subsection*{Solution Context}%
+\begin{figure}[h!]
+    \begin{center}
+    \includegraphics[keepaspectratio, width = 4.5 in]{solver-map}
+    \end{center}
+    %\caption{Legendre polynomials}
+    \label{fig:context}
+\end{figure}
+%
+We have many different types of geometries and physics going on with the systems we're interested in. However, we take the same fundamental approach no matter what. Each component is incredibly important, but let's take a moment to talk about \textbf{Nuclear Data}.
+
+We need a description of all of the physical interactions happening inside a nuclear reactor that we can use in our equation. An \textit{evaluated nuclear data file} is a collection of various data enabling to reconstruct, for each isotope, its cross-section's 
+\begin{compactitem}
+\item general information
+\item resonance parameters 
+\item angular distribution for emitted particles 
+\item energy distribution for emitted particles 
+\item energy-angle distribution for emitted particles 
+\item thermal neutron scattering law data 
+\item radioactivity and fission-product yield data 
+\item multiplicities for radioactive nuclide production 
+\item cross-sections for radioactive nuclide production
+\end{compactitem}
+
+There are many evaluations coming from various countries such as: USA, Europe, Japan, Russia, China, \dots Getting from experimental data (what we have of it) + theory (however accurate that is) to data that can actually be used in a code is no small feat. And, that process is sort of a mess...
+\begin{figure}[h!]
+    \begin{center}
+    \includegraphics[keepaspectratio, width = 6 in]{data-notes}
+    \end{center}
+    \caption{Notes from a meeting where someone tried to explain this to me}
+    \label{fig:datanotes}
+\end{figure}
+\begin{figure}[h!]
+    \begin{center}
+    \includegraphics[keepaspectratio, width = 4.5 in]{hurst-code-map}
+    \end{center}
+    \caption{A more coherent (but less comprehensive) set}
+    \label{fig:hurstfig}
+\end{figure}
+
+We won't go through all of this, but I think it's important to have context about what this is and how confusing it can be. There is a lot of data and many formats. In computation you will pretty much only need to interface with ENDF and its equivalents. 
+
+The data that we use is complicated, and can be quite different depending on the application we're interested in.
+
+\end{document}
