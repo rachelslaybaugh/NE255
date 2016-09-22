@@ -163,13 +163,13 @@ In order of increasing accuracy\textit{ and} increasing runtime:
 \begin{tabu}{| l | X | X |}
   \hline
   & Monte Carlo         & Deterministic \\\hline
-              % -----------------------
+    % -----------------------
     Strengths & * General geometry    & * Fast \\
               & * Continuous Energy   & * Global Solution\\
               & * Continuous in Angle & * Solution is of same quality everywhere\\
               & * Inherently 3-D      & * Inputs can be pretty simple \\
               & * Easy to parallelize on CPUs & \\\hline
-% -----------------------
+    % -----------------------
     Weaknesses & * Slow & * Variable discretization governs solution quality \\
                & * Might be memory intensive & * Might be memory intensive \\
                & * Solutions have statistical error & * Solution contains truncation error\\
@@ -182,8 +182,5 @@ In order of increasing accuracy\textit{ and} increasing runtime:
 We tend to think of Monte Carlo as ``benchmark quality" and highly flexible. \\
 What is one major hazard of Monte Carlo?\\
 What is the biggest challenge of using MC for detailed design?
-
-
-
 
 \end{document}
