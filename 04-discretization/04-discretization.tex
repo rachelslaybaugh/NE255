@@ -85,13 +85,21 @@ Integrate the equation from $t=t_{n-1}$ to $t = t_n$, where we will use the foll
 \Delta t &= t_{n} - t_{n-1}\\
 \bar{\psi}(\vec{r}, E ,\vOmega) &= \frac{1}{\Delta t} \int_{t_{n-1}}^{t_n} dt\: \psi(\vec{r}, E ,\vOmega, t)
 \end{align*}
-(Note that this integration is functionally ignoring what actually happens in the integration by giving us a time-averaged angular flux; we don't care about more details than that).
+(Note: we're not specifying what actually happens in the integration; we're generically defining a time-averaged angular flux).
 
-To update the equation we simply convert each term to this time-averaged angular flux \textit{except} the term containing a time derivative. We need to handle that specially by using \textit{First Order Backward Difference}: 
+We also need to handle the time derivative term so that we can approximate it on a time grid. We will use \textit{First Order Backward Difference} (more on that later): 
 \[
-\frac{1}{v} \int_{t_{n-1}}^{t_n} dt\:\frac{\partial \psi}{\partial t}(\rvec,E,\omvec,t) = \frac{1}{v}\frac{\psi_n(\vec{r}, E ,\vOmega) - \psi_{n-1}(\vec{r}, E ,\vOmega)}{\Delta t}
+\frac{1}{v} \frac{\partial \psi}{\partial t}(\rvec,E,\omvec,t) = \frac{1}{v}\frac{\psi_n(\vec{r}, E ,\vOmega) - \psi_{n-1}(\vec{r}, E ,\vOmega)}{\Delta t}
 \]
-Combining all of that we get the following:
+To get the time behavior of the solution, we integrate the entire transport equation over each time step
+\[
+\int_{t_{n-1}}^{t_n} dt\: [\cdot]
+\]
+noting
+\[
+\int_{t_{n-1}}^{t_n} dt\: \bigl(\frac{1}{v}\frac{\psi_n(\vec{r}, E ,\vOmega) - \psi_{n-1}(\vec{r}, E ,\vOmega)}{\Delta t}\bigr) = \frac{1}{v}\frac{\psi_n(\vec{r}, E ,\vOmega) - \psi_{n-1}(\vec{r}, E ,\vOmega)}{\Delta t}
+\]
+which gives
 \begin{align*}
 \frac{1}{v}&\frac{\psi_n(\vec{r}, E ,\vOmega) - \psi_{n-1}(\vec{r}, E ,\vOmega)}{\Delta t} 
 + \omvec\cdot  \nabla  \bar{\psi}(\vec{r}, E ,\vOmega) 
@@ -115,7 +123,7 @@ We substitute this in to get
 \bar{\psi}(\vec{r}, E' ,\vOmega')
 +\bar{S}(\rvec, E, \omvec)
 \end{align*}
-
+We solve this for $n=1, \dots, N$ and $\psi_0$ is given (initial value problem!).
 
 %---------------------------------------------------------------------------
 \subsubsection*{Aside about Finite Difference}

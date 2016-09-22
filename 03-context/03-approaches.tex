@@ -69,7 +69,7 @@ Inside the box of computational methods, we have two main categories:
 %
 Everything we've done so far applies to both methods (we've only simplified the equation). Each method has its own benefits and challenges. We'll talk a bit about \textbf{deterministic first}. Here, the discretization methods are a big part of the strategy, followed by parallelization.
 
-The size of the problems (which impacts memory and parallelization performance) is government by discretization. The quality and behavior of solutions is also governed by discretization. To get more accurate fluxes, typical transport problems today are three-dimensional, have up to thousands $\times$ thousands $\times$ thousands of mesh points, use up to $\sim$150 energy groups, include accurate expansions of scattering terms, and are solved over many directions. 
+The size of the problems (which impacts memory and parallelization performance) is governed by discretization. The quality and behavior of solutions is also governed by discretization. To get more accurate fluxes, typical transport problems today are three-dimensional, have up to thousands $\times$ thousands $\times$ thousands of mesh points, use up to $\sim$150 energy groups, include accurate expansions of scattering terms, and are solved over many directions. 
 %
 \begin{table}[!h]
 \caption{Meaning and Range of Indices Used in Transport Discretization}
@@ -103,7 +103,7 @@ With \textbf{Monte Carlo}, we sample the physics of every single interaction of 
 \subsubsection*{Diffusion Equation}
 Note: in this class we're skipping the diffusion equation. That is what we use in NE155. Just to say a few words:
 
-The diffusion equation removes the dependence and gives only $\phi$ as a solution. Nuclear reactions and thus interaction rates only depend on the scalar flux, so maybe that's sufficient.
+The diffusion equation removes the angle dependence and gives only $\phi$ as a solution. Nuclear reactions and thus interaction rates only depend on the scalar flux, so maybe that's sufficient.
 
 The diffusion equation is derived by starting with the transport equation and \textbf{integrating over all angles}. In the derivation we make the following assumptions
 \begin{compactitem}
