@@ -161,6 +161,68 @@ f'(x_0) &= \frac{f(x_0) - f(x_0 - h)}{h} + \frac{1}{2}hf''(\mu)
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
 \subsection*{Energy Discretization}
+We'd also like to handle the energy dimension by breaking continuous energy into groups:
+\begin{center}
+\begin{tikzpicture}
+\draw (-.25,0)--(1.25,0);
+\draw[dotted] (1.25,0)--(2.75,0);
+\draw (2.75,0)--(5.25,0);
+\draw[dotted] (5.25,0)--(6.75,0);
+\draw (6.75,0)--(8.25,0);
+%\draw (4,0)--(5.25,0);
+\draw (0,-.25)--(0,.25);
+\draw (1,-.25)--(1,.25);
+%\draw (2,-.25)--(2,.25);
+\draw (3,-.25)--(3,.25);
+\draw (4,-.25)--(4,.25);
+\draw (5,-.25)--(5,.25);
+\draw (7,-.25)--(7,.25);
+\draw (8,-.25)--(8,.25);
+\node[below] at (0,-.25) {$E_G$};
+\node[below] at (1,-.25) {$E_{G-1}$};
+\node[below] at (3,-.25) {$E_{g+1}$};
+\node[below] at (4,-.25) {$E_g$};
+\node[above] at (4.5, .25) {group g};
+\node[below] at (5,-.25) {$E_{g-1}$};
+\node[below] at (7,-.25) {$E_{1}$};
+\node[below] at (8,-.25) {$E_0$};
+\end{tikzpicture}
+\end{center}
+%
+We will use the following definitions:
+\begin{align*}
+\psi_g(\rvec, \vOmega) &\equiv \int_{E_g}^{E_{g-1}} dE\: \psi(\rvec, \vOmega, E) \qquad
+\phi_g(\rvec) \equiv \int_{E_g}^{E_{g-1}} dE\: \phi(\rvec,  E)\\
+S_g(\rvec, \vOmega) &\equiv \int_{E_g}^{E_{g-1}} dE\: S(\rvec, \vOmega, E) \qquad
+\chi_g \equiv \int_{E_g}^{E_{g-1}} dE\: \chi(E)
+\end{align*}
+%
+To perform these integrals, we need to introduce approximations. We \textit{assume the each item is separable in energy}. For example:
+\[
+\psi(\vec{r}, \vOmega, E) \approx f(E)\psi_g(\vec{r}, \vOmega)\:, \quad E_g < E \leq E_{g-1}\:,
+\]
+where $f(E)$ is normalized such that $\int_g dE\: f(E) = 1$.
+
+Before we can integrate the whole transport equation over energy, we will need a way to create multigroup cross sections. Options for how to do that in more detail are covered in NE250, so we will do the most common/generic here: weight with the angular flux,
+\begin{align*}
+\Sigma_{tg}(\vec{r}) &\equiv \frac{\int_{E_g}^{E_{g-1}} dE\: \Sigma_t(\rvec, E) f(E)}{\int_{E_g}^{E_{g-1}} dE\: f(E)} = \frac{\int_{E_g}^{E_{g-1}} dE\: \Sigma_t(\rvec, E) \psi(\rvec, \vOmega, E)}{\int_{E_g}^{E_{g-1}} dE\: \psi(\rvec, \vOmega, E)} \\
+&\text{similarly for fission}\\
+\Sigma_{s,gg'}(\vOmega' \cdot \vOmega) & \equiv \frac{\int_{E_g}^{E_{g-1}} dE \int_{E_g'}^{E_{g'-1}} dE' \: \Sigma_s(E'\rightarrow E, \vOmega' \cdot \vOmega) f(E')}{\int_{E_g'}^{E_{g'-1}} dE' \: f(E')}\\
+& \equiv \frac{\int_{E_g}^{E_{g-1}} dE \int_{E_g'}^{E_{g'-1}} dE' \: \Sigma_s(E'\rightarrow E, \vOmega' \cdot \vOmega) \psi(\rvec, \vOmega', E')}{\int_{E_g'}^{E_{g'-1}} dE' \: \psi(\rvec, \vOmega', E')}
+\end{align*}
+%
+If we use all of those definitions and integrate the TE over energy, we get
+\begin{align*}
+[\vOmega \cdot \nabla + \Sigma_{tg}(\vec{r})]\psi_g(\vec{r}, \vOmega) =&  
+\sum_{g'=1}^G \int_{4 \pi} d\vOmega'\: \Sigma_{s,gg'}(\vec{r}, \vOmega' \cdot \vOmega) \psi_{g'}(\vec{r}, \vOmega')\\
+&+\frac{\chi_g}{4 \pi}\sum_{g'=1}^G \nu\Sigma_{fg'}(\vec{r}) \phi_{g'}(\vec{r}) + q_g(\vec{r}, \vOmega)
+\end{align*}
+This is exact in the magical case where (1) the separability in energy holds and (2) the cross sections are constant within each energy group. 
+
+
+%---------------------------------------------------------------------------
+%---------------------------------------------------------------------------
+\subsection*{Angular Discretization}
 
 
 \end{document}
