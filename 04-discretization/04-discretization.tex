@@ -48,7 +48,7 @@
 \begin{center}
 {\bf NE 255, Fa16 \\
 Equation Discretization\\
-September 22, 2016}
+September 22 and 27, 2016}
 \end{center}
 
 \setlength{\unitlength}{1in}
@@ -223,6 +223,17 @@ This is exact in the magical case where (1) the separability in energy holds and
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
 \subsection*{Angular Discretization}
+And the complicated one: angle. We have two main approaches, \textbf{Discrete Ordinates} ($S_N$) and \textbf{Spherical Harmonics} (which we simplify to Legendre polynomials and thus call $P_N$, not to be confused with the scattering expansion).
 
+\subsubsection*{Discrete Ordinates}
+The idea of discrete ordinates approximation is that the TE is only valid along a selected set of angles $\mu_n$, and we apply a compatible quadrature approximation to the integral term.
+\begin{align*}
+\mu_n \frac{\partial \psi_n}{\partial x} &+ \Sigma_t(x)\psi_n(x,\mu_n) = \sum_{l=0}^L (2l+1) \Sigma_{s,l}(x) P_l(\mu_n)\phi_l(x) + S(x,\mu_n)\\
+\psi_n(x) &= \psi(x,\mu_n)\\
+\phi(x) &=  \frac{1}{2}\sum_{n=1}^N w_n \psi_n(x)\\
+\phi_l(x) &= \frac{1}{2}\sum_{n=1}^N w_n P_l(\mu_n)\psi_n(x)\\
+w_n > 0& \quad \sum_n w_n = 2
+\end{align*}
+The collection of $\mu_n, w_n$ is known as the angular quadrature set.
 
 \end{document}
