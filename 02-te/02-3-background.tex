@@ -367,7 +367,7 @@ Of this number, $\nu(E)[1-M(E)]$ are \textit{prompt} fission neutrons (being emi
 Assuming (for simplicity) that the number of delayed neutrons emitted by fission is very small [$M(E)<<1$], we can neglect the delayed neutron terms and rewrite
 the transport equation as
 \begin{align}
-&\frac{1}{v}\frac{\partial \psi}{\partial t}(\rvec,E,\omvec,t) + 
+&\underbrace{\frac{1}{v}\frac{\partial \psi}{\partial t}(\rvec,E,\omvec,t)}_{\text{time rate of change}} + 
 \underbrace{\omvec\cdot  \nabla \psi(\rvec,E,\omvec,t)}_{\text{streaming loss rate}} +
  \underbrace{\Sigma_t(\rvec,E)\psi(\rvec,E,\omvec,t) }_{\text{total interaction loss rate}}
 \\& \quad\quad\quad\quad =
