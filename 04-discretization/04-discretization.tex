@@ -40,8 +40,17 @@
 \newcommand{\ve}[1]{\ensuremath{\mathbf{#1}}}
 \newcommand{\Macro}{\ensuremath{\Sigma}}
 \newcommand{\rvec}{\ensuremath{\vec{r}}}
+\newcommand{\vecr}{\ensuremath{\vec{r}}}
 \newcommand{\omvec}{\ensuremath{\hat{\Omega}}}
 \newcommand{\vOmega}{\ensuremath{\hat{\Omega}}}
+\newcommand{\even}{\ensuremath{\phi^g}}
+\newcommand{\odd}{\ensuremath{\vartheta^g}}
+\newcommand{\evenp}{\ensuremath{\phi^{g'}}}
+\newcommand{\oddp}{\ensuremath{\vartheta^{g'}}}
+\newcommand{\Sn}{\ensuremath{S_N} }
+\newcommand{\Ye}[2]{\ensuremath{Y^e_{#1}(\vOmega_#2)}}
+\newcommand{\sigg}[1]{\ensuremath{\Macro^{gg'}_{s\,#1}}}
+\newcommand{\psig}{\ensuremath{\psi^g}}
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
 \begin{document}
@@ -165,6 +174,9 @@ We now sub in $a$ and $b$. This gives the first order ($O(h)$) Backwards Differe
 f'(x_0) &= \frac{f(x_0) - f(x_0 - h)}{h} + \frac{1}{2}hf''(\mu)
 \end{align*}
 
+A note about what points to choose: you want to think about how your equations transmit information. 
+A perturbation of the initial (or boundary) data of an \textit{elliptic or parabolic} equation is felt at once by essentially all points in the domain.
+The solutions of hyperbolic equations are ``wave-like." If a disturbance is made in the initial data of a hyperbolic differential equation, then not every point of space feels the disturbance at once.
 
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
@@ -219,29 +231,169 @@ Before we can integrate the whole transport equation over energy, we will need a
 & \equiv \frac{\int_{E_g}^{E_{g-1}} dE \int_{E_g'}^{E_{g'-1}} dE' \: \Sigma_s(E'\rightarrow E, \vOmega' \cdot \vOmega) \psi(\rvec, \vOmega', E')}{\int_{E_g'}^{E_{g'-1}} dE' \: \psi(\rvec, \vOmega', E')}
 \end{align*}
 %
-If we use all of those definitions and integrate the TE over energy, we get
+If we use all of those definitions and integrate the TE over energy, we get $g = 0,\dots, G$:
 \begin{align*}
 [\vOmega \cdot \nabla + \Sigma_{tg}(\vec{r})]\psi_g(\vec{r}, \vOmega) =&  
 \sum_{g'=1}^G \int_{4 \pi} d\vOmega'\: \Sigma_{s,gg'}(\vec{r}, \vOmega' \cdot \vOmega) \psi_{g'}(\vec{r}, \vOmega')\\
 &+\frac{\chi_g}{4 \pi}\sum_{g'=1}^G \nu\Sigma_{fg'}(\vec{r}) \phi_{g'}(\vec{r}) + q_g(\vec{r}, \vOmega)
 \end{align*}
-This is exact in the magical case where (1) the separability in energy holds and (2) the cross sections are constant within each energy group. 
+Giving $G+1$ coupled equations. 
+
+These equations are \textbf{exact} in the magical case where (1) the separability in energy holds and (2) the cross sections are constant within each energy group. 
 
 
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
 \subsection*{Angular Discretization}
-And the complicated one: angle. We have two main approaches, \textbf{Discrete Ordinates} ($S_N$) and \textbf{Spherical Harmonics} (which we simplify to Legendre polynomials and thus call $P_N$, not to be confused with the scattering expansion).
+And the complicated one: angle. We have two main approaches, \textbf{Discrete Ordinates} ($S_N$) and \textbf{Spherical Harmonics} (which we often simplify to Legendre polynomials and thus call $P_N$, not to be confused with the scattering expansion).
 
 \subsubsection*{Discrete Ordinates}
-The idea of discrete ordinates approximation is that the TE is only valid along a selected set of angles $\mu_n$, and we apply a compatible quadrature approximation to the integral term.
+The idea of discrete ordinates approximation is that the we change $\omvec$ from continuous to discrete ($\omvec \rightarrow \omvec_n; n = 1,\dots,N)$. Now the TE is only valid along a selected set of angles $\vOmega_n$, and we apply a compatible quadrature (integration approximation) to the integral term. 
+
+Before we get too far into that, we're going to look at \textit{Spherical Harmonics} and how they relate to Legendre polynomials. This will allow us to do angular expansions in three dimensions (derived from the Exnihilo manual and Wikipedia). 
+
+The addition theorem of Spherical Harmonics can be used to evaluate the
+Legendre function, $P_l(\vOmega'\cdot\vOmega)$,
+\begin{equation}
+  P_l(\vOmega'\cdot\vOmega) = \frac{4\pi}{2l+1}\sum_{m=-l}^l
+  Y_{lm}(\vOmega)Y^{\ast}_{lm}(\vOmega')\:,
+\end{equation}
+where the $Y_{lm}$ are
+\begin{equation}
+  Y_{lm}(\theta,\varphi) = (-1)^m\sqrt
+  {
+    \frac{2l+1}{4\pi}\frac{(l-m)!}{(l+m)!}
+  }\,
+  P_{lm}(\cos\theta)\mathrm{e}^{im\varphi}\:,
+  \label{eq:complete-spherical-harmonics}
+\end{equation}
+where the $P_{lm}$ are the \textit{associated Legendre Polynomials}.These are the solutions to
+\[
+(1-x^{2}){\frac {d^{2}}{dx^{2}}}P_{\ell }^{m}(x)-2x{\frac {d}{dx}}P_{\ell }^{m}(x)+\left[\ell (\ell +1)-{\frac {m^{2}}{1-x^{2}}}\right]P_{\ell }^{m}(x)=0\:,\]
+where the indices $l$ and $m$ are referred to as the degree and order of the associated Legendre polynomial, respectively. [before we had called $l$ $n$ and negleced $m$. This equation has nonzero solutions that are nonsingular on $[-1, 1]$ only if $l$ and $m$ are integers with $0 \leq m \leq l$. When in addition $m$ is even, the function is a polynomial. When $m$ is zero, these functions are identical to the Legendre polynomials. They are not polynomials when $m$ is odd, despite the name. 
+%https://en.wikipedia.org/wiki/Associated_Legendre_polynomials
+
+Everything in our equations must be real; therefore, we can follow a methodology that shows expands a real-valued function using complex Spherical Harmonics.  First,
+the expansion is split into positive and negative components of $m$,
+\begin{equation}
+  P_l(\vOmega'\cdot\vOmega) = \frac{4\pi}{2l+1}
+  \Bigl[
+  Y_{l0}(\vOmega)Y_{l0}(\vOmega') +
+  \sum_{m=1}^l
+  \bigl(Y_{lm}(\vOmega)Y^{\ast}_{lm}(\vOmega') +
+  Y_{l-m}(\vOmega)Y^{\ast}_{l-m}(\vOmega')\bigr)\Bigr]\:.
+\end{equation}
+
+Examining the $m=0$ term gives the following result
+\begin{equation}
+  Y_{l0} = \sqrt{\frac{2l+1}{4\pi}}\,P_{l0} = Y^e_{l0}\:,
+\end{equation}
+where
+\begin{align}
+  Y^e_{lm} &= D_{lm}P_{lm}\cos (m\varphi)\:,\label{eq:Ye}\\
+  Y^o_{lm} &= D_{lm}P_{lm}\sin (m\varphi)\:,\label{eq:Yo}\\
+  D_{lm} &= (-1)^m\sqrt{(2-\delta_{m0})\frac{2l+1}{4\pi}
+    \frac{(l-m)!}{(l+m)!}}\:.
+\end{align}
+
+Expanding the Spherical Harmonics into real and imaginary components, the sum over $m>0$ becomes
+\begin{equation}
+  \sum_{m=1}^l\Bigl(
+  \hat{Y}^e_{lm}(\vOmega)\hat{Y}^e_{lm}(\vOmega') +
+  \hat{Y}^o_{lm}(\vOmega)\hat{Y}^o_{lm}(\vOmega') +
+  \hat{Y}^e_{l-m}(\vOmega)\hat{Y}^e_{l-m}(\vOmega') +
+  \hat{Y}^o_{l-m}(\vOmega)\hat{Y}^o_{l-m}(\vOmega')\Bigr)\:,
+\end{equation}
+where the imaginary terms have been set to zero because our values must be
+real. Using (derivation skipped for brevity)
+\begin{align}
+ \hat{Y}^e_{l-m} &= (-1)^{-m}\hat{Y}^e_{lm} \equiv (-1)^m\hat{Y}^e_{lm} \:\text{ and}\\
+ \hat{Y}^o_{l-m} &= -(-1)^m\hat{Y}^o_{lm}\:,
+\end{align}
+the summation becomes
+\begin{equation}
+  \sum_{m=1}^l\Bigl(
+  2\hat{Y}^e_{lm}(\vOmega)\hat{Y}^e_{lm}(\vOmega') +
+  2\hat{Y}^o_{lm}(\vOmega)\hat{Y}^o_{lm}(\vOmega')\Bigr)
+\end{equation}
+Comparing Eqs.~(\ref{eq:hat-Ye}) and (\ref{eq:hat-Yo}) with Eqs.~(\ref{eq:Ye})
+and (\ref{eq:Yo}) leads to the following relationships,
+\begin{equation}
+  \hat{Y}^e_{lm} = \frac{1}{\sqrt{2}}Y^e_{lm}\:,\quad
+  \hat{Y}^o_{lm} = \frac{1}{\sqrt{2}}Y^o_{lm}\:.
+\end{equation}
+After applying these equations in the $m>0$ terms and combining with the $m=0$
+term described above, the expression for $P_l(\vOmega\cdot\vOmega')$ is
+\begin{equation}
+  P_l(\vOmega'\cdot\vOmega) = \frac{4\pi}{2l+1}
+  \Bigl[
+  Y^e_{l0}(\vOmega)Y^e_{l0}(\vOmega') +
+  \sum_{m=1}^l
+  \bigl(Y^e_{lm}(\vOmega)Y^e_{lm}(\vOmega') +
+  Y^o_{lm}(\vOmega)Y^o_{lm}(\vOmega')\bigr)\Bigr]\:,
+  \label{eq:P_l(mu_o)}
+\end{equation}
+
+We now define
+\begin{alignat}{3}
+  \even_{lm} &= \int_{4\pi}Y^e_{lm}(\vOmega)\psi^g(\vOmega)\:d\vOmega\:,
+  \quad& m\ge 0\:,\label{eq:even-flux}\\
+  %%
+  \odd_{lm} &= \int_{4\pi}Y^o_{lm}(\vOmega)\psi^g(\vOmega)\:d\vOmega\:,
+  \quad& m>0\:,\label{eq:odd-flux}
+\end{alignat}
+which follows directly from Eqs.~(\ref{eq:even_moment}) and
+(\ref{eq:odd_moment}). 
+
+We can use these terms to expand our scattering and external sources for multi-D and any degree of Anisotroy. The scattering source becomes
+\begin{equation}
+  q^g_{s}(\ve{r},\vOmega) = \sum_{g'=0}^G
+  \sum_{l=0}^N
+  \sigg{l}(\ve{r})
+  \Bigl[
+  Y^e_{l0}(\vOmega)\evenp_{l0}(\ve{r}) +
+  \sum_{m=1}^l
+  \bigl(
+  Y^e_{lm}(\vOmega)\evenp_{lm}(\ve{r}) +
+  Y^o_{lm}(\vOmega)\oddp_{lm}(\ve{r})
+  \bigr)\Bigr]\:.
+  \label{eq:mg-scattering-source}
+\end{equation}
+Equation~(\ref{eq:mg-scattering-source}) is the multigroup anisotropic
+scattering source that is defined by the order of the Legendre expansion,
+$P_N$, of the scattering.  For a given $P_N$ order, $(N+1)^2$ moments are
+required to integrate the scattering operator.  The moments in
+Eqs.~(\ref{eq:even-flux}) and (\ref{eq:odd-flux}) are the \textit{angular flux moments} or, simply, flux moments.
+  
+Applying the same methodology
+gives the expansion of the external source
+\begin{equation}
+  q^g_e(\vOmega) = \sum_{l=0}^{N}\Bigl[
+  Y^e_{l0}(\vOmega)q^g_{l0} +
+  \sum_{m=1}^{l}
+  \bigr(
+  Y^e_{lm}(\vOmega)q^g_{lm} + Y^o_{lm}(\vOmega)s^g_{lm}\bigr)
+  \Bigr]\:,
+  \label{eq:mg-external-source}
+\end{equation}
+where the spatial dependence has been suppressed.  The even and odd source
+moments are defined
+\begin{alignat}{3}
+  q^g_{lm} &= \int_{4\pi}Y^e_{lm}(\vOmega)q^g_e(\vOmega)\:d\vOmega\:,
+  \quad&m\ge 0\:,\label{eq:even-source}\\
+  s^g_{lm} &= \int_{4\pi}Y^o_{lm}(\vOmega)q^g_e(\vOmega)\:d\vOmega\:,
+  \quad&m>0\:.\label{eq:odd-source}
+\end{alignat}
+
+
+We write one equation for each angle in the set (dropping energy dependence and fission for simplicity)
 \begin{align*}
-\mu_n \frac{\partial \psi_n}{\partial x} &+ \Sigma_t(x)\psi_n(x,\mu_n) = \sum_{l=0}^L (2l+1) \Sigma_{s,l}(x) P_l(\mu_n)\phi_l(x) + S(x,\mu_n)\\
-\psi_n(x) &= \psi(x,\mu_n)\\
-\phi(x) &=  \frac{1}{2}\sum_{n=1}^N w_n \psi_n(x)\\
-\phi_l(x) &= \frac{1}{2}\sum_{n=1}^N w_n P_l(\mu_n)\psi_n(x)\\
-w_n > 0& \quad \sum_n w_n = 2
+\vOmega_n \cdot \nabla \psi_n(\vecr) &+ \Sigma_t(\vecr)\psi_n(\vecr) = \sum_{l=0}^L (2l+1) \Sigma_{s,l}(x) P_l(\mu_n)\phi_l(x) + S_n(\vecr)\\
+\psi_n(\vecr) &\equiv \psi(\vecr,\vOmega_n) \qquad S_n(\vecr) \equiv S(\vecr,\vOmega_n)\\
+\phi(\vecr) &=  \int_{4\pi} d\vOmega\:\psi(\vecr,\vOmega) = \sum_{n=1}^N w_n \psi_n(\vecr)\\
+%\phi_l(\vecr) &= \frac{1}{2}\sum_{n=1}^N w_n P_l(\vOmega_n)\psi_n(\vecr)\\
+%w_n > 0& \quad \sum_n w_n = 2
 \end{align*}
-The collection of $\mu_n, w_n$ is known as the angular quadrature set.
+The collection of $\vOmega_n, w_n$ is known as the angular quadrature set. The $w_n$ are the integration weights that go with the angles to create an integration. The angle-weight combination dictates the accuracy of the integration.
 
 \end{document}
