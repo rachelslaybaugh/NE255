@@ -381,11 +381,11 @@ Eqs.~(\ref{eq:even-flux}) and (\ref{eq:odd-flux}) are the \textit{angular flux m
   
 Applying the same methodology gives the expansion of the \textbf{external source}
 \begin{equation}
-  q^g_e(\vOmega) = \sum_{l=0}^{N}\Bigl[
-  Y^e_{l0}(\vOmega)q^g_{l0} +
+  q^g_e((\vec{r}), \vOmega) = \sum_{l=0}^{N}\Bigl[
+  Y^e_{l0}(\vOmega)q^g_{l0}(\vec{r}) +
   \sum_{m=1}^{l}
   \bigr(
-  Y^e_{lm}(\vOmega)q^g_{lm} + Y^o_{lm}(\vOmega)s^g_{lm}\bigr)
+  Y^e_{lm}(\vOmega)q^g_{lm}(\vec{r}) + Y^o_{lm}(\vOmega)s^g_{lm}(\vec{r})\bigr)
   \Bigr]\:,
   \label{eq:mg-external-source}
 \end{equation}
@@ -412,14 +412,41 @@ We put alllll of that together to get
   Y^o_{lm}(\vOmega)\oddp_{lm}(\vec{r})
   \bigr)\Bigr]\\
 &+\sum_{l=0}^{N}\Bigl[
-  Y^e_{l0}(\vOmega)q^g_{l0} +
+  Y^e_{l0}(\vOmega)q^g_{l0}(\vec{r}) +
   \sum_{m=1}^{l}
   \bigr(
-  Y^e_{lm}(\vOmega)q^g_{lm} + Y^o_{lm}(\vOmega)s^g_{lm}\bigr)
+  Y^e_{lm}(\vOmega)q^g_{lm}(\vec{r}) + Y^o_{lm}(\vOmega)s^g_{lm}(\vec{r})\bigr)
   \Bigr]
 \end{align*}
 The $S_N$ method will be conservative if the quadrature set effectively
 integrates the even and odd Spherical Harmonics.
 
 The thing that you solve for is the flux moments, and then you reconstruct that flux at the end.
+
+\subsubsection*{Azimuthal Symmetry}
+This all gets simpler if we have azimuthal symmetry. In that case, $m=0$ and 
+\[
+  Y_{l0}(\theta,\varphi) = (-1)^0\sqrt
+  {
+    \frac{2l+1}{4\pi}\frac{(l-0)!}{(l+0)!}
+  }\,
+  P_{l0}(\cos\theta)\mathrm{e}^{i0\varphi} = \frac{2l+1}{4\pi}P_{l}(\cos\theta),
+\]
+then 
+\begin{align*}
+\vOmega_a \cdot \nabla \psi^g_a(\vecr) &+ \Sigma^g_t(\vecr)\psi^g_a(\vecr)  \\
+&=\sum_{g'=0}^G
+  \sum_{l=0}^N
+  \sigg{l}(\vec{r})
+  \bigl(
+  Y^e_{l}(\vOmega) \evenp_{l}(\vec{r}) \bigr)
++\sum_{l=0}^{N}\bigl(
+  Y^e_{l}(\vOmega)q^g_{l}(\vecr)\bigr)\\
+  %
+ &=\sum_{g'=0}^G
+  \sum_{l=0}^N \sigg{l}(\vec{r})\bigl(\frac{2l+1}{4\pi}P_{l}(\cos\theta)\evenp_{l}(\vec{r}) \bigr)
+  + \sum_{l=0}^{N}\bigl(\frac{2l+1}{4\pi}P_{l}(\cos\theta)q^g_{l}(\vecr)\bigr)
+\end{align*}
+which is equivalent to what we did in the simplification class.
+
 \end{document}
