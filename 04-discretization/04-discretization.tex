@@ -181,7 +181,7 @@ The solutions of hyperbolic equations are ``wave-like." If a disturbance is made
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
 \section*{Energy Discretization}
-We'd also like to handle the energy dimension by breaking continuous energy into groups:
+We'd also like to handle the energy dimension by breaking continuous energy into $G$ groups, where group $g$ is [$E_{g}, E_{g-1}$]:
 \begin{center}
 \begin{tikzpicture}
 \draw (-.25,0)--(1.25,0);
@@ -199,7 +199,7 @@ We'd also like to handle the energy dimension by breaking continuous energy into
 \draw (7,-.25)--(7,.25);
 \draw (8,-.25)--(8,.25);
 \node[below] at (0,-.25) {$E_G$};
-\node[below] at (1,-.25) {$E_{G-1}$};
+\node[below] at (1,-.25) {$E_{G}$};
 \node[below] at (3,-.25) {$E_{g+1}$};
 \node[below] at (4,-.25) {$E_g$};
 \node[above] at (4.5, .25) {group g};
@@ -209,7 +209,7 @@ We'd also like to handle the energy dimension by breaking continuous energy into
 \end{tikzpicture}
 \end{center}
 %
-We will use the following definitions:
+We will solve for group-averaged values in each energy bin using the following definitions:
 \begin{align*}
 \psi_g(\rvec, \vOmega) &\equiv \int_{E_g}^{E_{g-1}} dE\: \psi(\rvec, \vOmega, E) \qquad
 \phi_g(\rvec) \equiv \int_{E_g}^{E_{g-1}} dE\: \phi(\rvec,  E)\\
@@ -223,21 +223,21 @@ To perform these integrals, we need to introduce approximations. We \textit{assu
 \]
 where $f(E)$ is normalized such that $\int_g dE\: f(E) = 1$.
 
-Before we can integrate the whole transport equation over energy, we will need a way to create multigroup cross sections. Options for how to do that in more detail are covered in NE250, so we will do the most common/generic here: weight with the angular flux,
+Next, we need a way to create multigroup cross sections. Options for how to do that in more detail are covered in NE 250. Here we will do the most common/generic approach: weight with the angular flux,
+\[\Sigma_{tg}(\vec{r}) \equiv \frac{\int_{E_g}^{E_{g-1}} dE\: \Sigma_t(\rvec, E) f(E)}{\int_{E_g}^{E_{g-1}} dE\: f(E)} = \frac{\int_{E_g}^{E_{g-1}} dE\: \Sigma_t(\rvec, E) \psi(\rvec, \vOmega, E)}{\int_{E_g}^{E_{g-1}} dE\: \psi(\rvec, \vOmega, E)}\]
+We do the same thing for fission (not shown here). Scattering requires an extra integral:
 \begin{align*}
-\Sigma_{tg}(\vec{r}) &\equiv \frac{\int_{E_g}^{E_{g-1}} dE\: \Sigma_t(\rvec, E) f(E)}{\int_{E_g}^{E_{g-1}} dE\: f(E)} = \frac{\int_{E_g}^{E_{g-1}} dE\: \Sigma_t(\rvec, E) \psi(\rvec, \vOmega, E)}{\int_{E_g}^{E_{g-1}} dE\: \psi(\rvec, \vOmega, E)} \\
-&\text{similarly for fission}\\
 \Sigma_{s,gg'}(\vOmega' \cdot \vOmega) & \equiv \frac{\int_{E_g}^{E_{g-1}} dE \int_{E_g'}^{E_{g'-1}} dE' \: \Sigma_s(E'\rightarrow E, \vOmega' \cdot \vOmega) f(E')}{\int_{E_g'}^{E_{g'-1}} dE' \: f(E')}\\
 & \equiv \frac{\int_{E_g}^{E_{g-1}} dE \int_{E_g'}^{E_{g'-1}} dE' \: \Sigma_s(E'\rightarrow E, \vOmega' \cdot \vOmega) \psi(\rvec, \vOmega', E')}{\int_{E_g'}^{E_{g'-1}} dE' \: \psi(\rvec, \vOmega', E')}
 \end{align*}
-%
-If we use all of those definitions and integrate the TE over energy, we get $g = 0,\dots, G$:
+
+If we use all of those definitions, we can write a transport equation for each group, $g = 1,\dots, G$:
 \begin{align*}
 [\vOmega \cdot \nabla + \Sigma_{tg}(\vec{r})]\psi_g(\vec{r}, \vOmega) =&  
 \sum_{g'=1}^G \int_{4 \pi} d\vOmega'\: \Sigma_{s,gg'}(\vec{r}, \vOmega' \cdot \vOmega) \psi_{g'}(\vec{r}, \vOmega')\\
 &+\frac{\chi_g}{4 \pi}\sum_{g'=1}^G \nu\Sigma_{fg'}(\vec{r}) \phi_{g'}(\vec{r}) + q_g(\vec{r}, \vOmega)
 \end{align*}
-Giving $G+1$ coupled equations. 
+Giving $G$ coupled equations. Note that the coupling may cause iteration because of the exchange of particles between energy groups (upscattering!). 
 
 These equations are \textbf{exact} in the magical case where (1) the separability in energy holds and (2) the cross sections are constant within each energy group. 
 
