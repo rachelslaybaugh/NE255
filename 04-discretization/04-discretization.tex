@@ -316,8 +316,7 @@ the summation becomes
   2\hat{Y}^e_{lm}(\vOmega)\hat{Y}^e_{lm}(\vOmega') +
   2\hat{Y}^o_{lm}(\vOmega)\hat{Y}^o_{lm}(\vOmega')\Bigr)
 \end{equation}
-Comparing Eqs.~(\ref{eq:hat-Ye}) and (\ref{eq:hat-Yo}) with Eqs.~(\ref{eq:Ye})
-and (\ref{eq:Yo}) leads to the following relationships,
+Skipping some steps, we also have the following relationships,
 \begin{equation}
   \hat{Y}^e_{lm} = \frac{1}{\sqrt{2}}Y^e_{lm}\:,\quad
   \hat{Y}^o_{lm} = \frac{1}{\sqrt{2}}Y^o_{lm}\:.
@@ -339,13 +338,11 @@ We now define
   \even_{lm} &= \int_{4\pi}Y^e_{lm}(\vOmega)\psi^g(\vOmega)\:d\vOmega\:,
   \quad& m\ge 0\:,\label{eq:even-flux}\\
   %%
-  \odd_{lm} &= \int_{4\pi}Y^o_{lm}(\vOmega)\psi^g(\vOmega)\:d\vOmega\:,
+  \odd_{lm} &= \int_{4\pi}Y^o_{lm}(\vOmega)\psi^g(\vOmega)\:d\vOmega\:.
   \quad& m>0\:,\label{eq:odd-flux}
 \end{alignat}
-which follows directly from Eqs.~(\ref{eq:even_moment}) and
-(\ref{eq:odd_moment}). 
 
-We can use these terms to expand our scattering and external sources for multi-D and any degree of Anisotroy. The scattering source becomes
+We can use these terms to expand our scattering and external sources for multi-D and any degree of Anisotroy. The \textbf{scattering source} becomes
 \begin{equation}
   q^g_{s}(\ve{r},\vOmega) = \sum_{g'=0}^G
   \sum_{l=0}^N
@@ -365,8 +362,7 @@ $P_N$, of the scattering.  For a given $P_N$ order, $(N+1)^2$ moments are
 required to integrate the scattering operator.  The moments in
 Eqs.~(\ref{eq:even-flux}) and (\ref{eq:odd-flux}) are the \textit{angular flux moments} or, simply, flux moments.
   
-Applying the same methodology
-gives the expansion of the external source
+Applying the same methodology gives the expansion of the \textbf{external source}
 \begin{equation}
   q^g_e(\vOmega) = \sum_{l=0}^{N}\Bigl[
   Y^e_{l0}(\vOmega)q^g_{l0} +
