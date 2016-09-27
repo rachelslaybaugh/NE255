@@ -79,7 +79,7 @@ Start from the general time-dependent NTE without delayed neutrons, with 7 indep
 \\&\quad\quad\quad\quad\quad\quad\quad\quad+S(\rvec, E, \omvec,t)\nonumber.
 \end{align}
 
-\subsection*{Time}
+\section*{Time}
 Discretize the time interval $[0, T]$ into $N$ timesteps:
 %
 \begin{figure}[h!]
@@ -180,7 +180,7 @@ The solutions of hyperbolic equations are ``wave-like." If a disturbance is made
 
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
-\subsection*{Energy Discretization}
+\section*{Energy Discretization}
 We'd also like to handle the energy dimension by breaking continuous energy into groups:
 \begin{center}
 \begin{tikzpicture}
@@ -244,14 +244,26 @@ These equations are \textbf{exact} in the magical case where (1) the separabilit
 
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
-\subsection*{Angular Discretization}
-And the complicated one: angle. We have two main approaches, \textbf{Discrete Ordinates} ($S_N$) and \textbf{Spherical Harmonics} (which we often simplify to Legendre polynomials and thus call $P_N$, not to be confused with the scattering expansion).
+\section*{Angular Discretization}
+And the complicated one: angle. We have two main approaches, \textbf{Discrete Ordinates} and \textbf{Spherical Harmonics} (which we often simplify to Legendre polynomials and thus call $P_N$, not to be confused with the scattering expansion).
 
-\subsubsection*{Discrete Ordinates}
-The idea of discrete ordinates approximation is that the we change $\omvec$ from continuous to discrete ($\omvec \rightarrow \omvec_n; n = 1,\dots,N)$. Now the TE is only valid along a selected set of angles $\vOmega_n$, and we apply a compatible quadrature (integration approximation) to the integral term. 
+\subsection*{Discrete Ordinates}
+The discrete ordinates approximation is a collocation method in angle. A collocation method is a solution method for ODEs, PDEs, and integral equations. Choose a finite-dimensional space of candidate solutions, such as polynomials up to a certain degree, and a number of points within the domain, called collocation points. Select the solution that satisfies the equation at those points within that space. 
+%https://en.wikipedia.org/wiki/Collocation_method
 
-Before we get too far into that, we're going to look at \textit{Spherical Harmonics} and how they relate to Legendre polynomials. This will allow us to do angular expansions in three dimensions (derived from the Exnihilo manual and Wikipedia). 
+For us, the collocation points are the discrete angles that we choose ($\omvec \rightarrow \omvec_a; n = 1,\dots,n)$ and the solution space is the flux. 
+The TE is only valid along the selected set of angles $\vOmega_a$. We apply a compatible quadrature (integration approximation) to the integral term. We write one equation for each angle in the set (dropping energy dependence and fission for simplicity; the source contains scattering and external):
+\begin{align*}
+\vOmega_a \cdot \nabla \psi_a(\vecr) &+ \Sigma_t(\vecr)\psi_a(\vecr) = Q_a(\vec{r})\\
+\psi_a(\vecr) &\equiv \psi(\vecr,\vOmega_a) \qquad Q_a(\vecr) \equiv Q(\vecr,\vOmega_a)\\
+\int_{4\pi} d\vOmega\: &= \sum_{a=1}^n w_a = 4\pi \\
+\phi(\vecr) &=  \int_{4\pi} d\vOmega\:\psi(\vecr,\vOmega) = \sum_{a=1}^n w_a \psi_a(\vecr)
+\end{align*}
+The collection ($\vOmega_a, w_a$) is known as the angular quadrature set. The $w_a$ are the integration weights that go with the angles to create an integration. The angle-weight combination + number of angles dictates the accuracy of the integration. The quadrature we choose also dictates the number of unknowns. For Level symmetric, the most common and what people usually mean by $S_{N}$, we get $n=N(N+2)$ unknowns. 
 
+However, we still need to explain what's going on in the sources. To do that, we're going to look at \textit{Spherical Harmonics} and how they relate to Legendre Polynomials. This will allow us to do angular expansions in three dimensions (derived from the Exnihilo manual and Wikipedia). 
+
+\subsubsection*{Spherical Harmonics}
 The addition theorem of Spherical Harmonics can be used to evaluate the
 Legendre function, $P_l(\vOmega'\cdot\vOmega)$,
 \begin{equation}
@@ -267,13 +279,13 @@ where the $Y_{lm}$ are
   P_{lm}(\cos\theta)\mathrm{e}^{im\varphi}\:,
   \label{eq:complete-spherical-harmonics}
 \end{equation}
-where the $P_{lm}$ are the \textit{associated Legendre Polynomials}.These are the solutions to
+and the $P_{lm}$ are the \textit{associated Legendre Polynomials}. These are the solutions to
 \[
 (1-x^{2}){\frac {d^{2}}{dx^{2}}}P_{\ell }^{m}(x)-2x{\frac {d}{dx}}P_{\ell }^{m}(x)+\left[\ell (\ell +1)-{\frac {m^{2}}{1-x^{2}}}\right]P_{\ell }^{m}(x)=0\:,\]
-where the indices $l$ and $m$ are referred to as the degree and order of the associated Legendre polynomial, respectively. [before we had called $l$ $n$ and negleced $m$. This equation has nonzero solutions that are nonsingular on $[-1, 1]$ only if $l$ and $m$ are integers with $0 \leq m \leq l$. When in addition $m$ is even, the function is a polynomial. When $m$ is zero, these functions are identical to the Legendre polynomials. They are not polynomials when $m$ is odd, despite the name. 
+where the indices $l$ and $m$ are referred to as the degree and order of the associated Legendre polynomial, respectively. [before we had called $l$ $n$ and negleced $m$. When $m$ is zero, these functions are identical to the Legendre polynomials.
 %https://en.wikipedia.org/wiki/Associated_Legendre_polynomials
 
-Everything in our equations must be real; therefore, we can follow a methodology that shows expands a real-valued function using complex Spherical Harmonics.  First,
+We're going to use Spherical Harmonics to expand our scattering and external source. Everything in our equations must be real; therefore, we can follow a methodology that shows expands a real-valued function using complex Spherical Harmonics.  First,
 the expansion is split into positive and negative components of $m$,
 \begin{equation}
   P_l(\vOmega'\cdot\vOmega) = \frac{4\pi}{2l+1}
@@ -333,29 +345,34 @@ term described above, the expression for $P_l(\vOmega\cdot\vOmega')$ is
   \label{eq:P_l(mu_o)}
 \end{equation}
 
-We now define
+\subsubsection*{Sources}
+We can use these terms to expand our scattering and external sources (adding energy indexing back in) for multi-D and any degree of anisotropy. The \textbf{scattering source}:
+
+
+\begin{align}
+q^g_{s}(\ve{r},\vOmega) &= \sum_{g'=1}^G \sum_{l=0}^{N} \frac{2l+1}{4 \pi} \Sigma^{gg'}_{sl}(\vecr) \int_{-1}^1 d\mu'\: P_l(\vOmega \cdot \vOmega') \psi(\vecr, \vOmega')\\
+  q^g_{s}(\vec{r},\vOmega) &= \sum_{g'=0}^G
+  \sum_{l=0}^N
+  \sigg{l}(\vec{r})
+  \Bigl[
+  Y^e_{l0}(\vOmega)\evenp_{l0}(\vec{r}) +
+  \sum_{m=1}^l
+  \bigl(
+  Y^e_{lm}(\vOmega)\evenp_{lm}(\vec{r}) +
+  Y^o_{lm}(\vOmega)\oddp_{lm}(\vec{r})
+  \bigr)\Bigr]\:,
+  \label{eq:mg-scattering-source}
+\end{align}
+where
 \begin{alignat}{3}
   \even_{lm} &= \int_{4\pi}Y^e_{lm}(\vOmega)\psi^g(\vOmega)\:d\vOmega\:,
   \quad& m\ge 0\:,\label{eq:even-flux}\\
   %%
-  \odd_{lm} &= \int_{4\pi}Y^o_{lm}(\vOmega)\psi^g(\vOmega)\:d\vOmega\:.
-  \quad& m>0\:,\label{eq:odd-flux}
+  \odd_{lm} &= \int_{4\pi}Y^o_{lm}(\vOmega)\psi^g(\vOmega)\:d\vOmega\:,
+  \quad& m>0\:.\label{eq:odd-flux}
 \end{alignat}
 
-We can use these terms to expand our scattering and external sources for multi-D and any degree of Anisotroy. The \textbf{scattering source} becomes
-\begin{equation}
-  q^g_{s}(\ve{r},\vOmega) = \sum_{g'=0}^G
-  \sum_{l=0}^N
-  \sigg{l}(\ve{r})
-  \Bigl[
-  Y^e_{l0}(\vOmega)\evenp_{l0}(\ve{r}) +
-  \sum_{m=1}^l
-  \bigl(
-  Y^e_{lm}(\vOmega)\evenp_{lm}(\ve{r}) +
-  Y^o_{lm}(\vOmega)\oddp_{lm}(\ve{r})
-  \bigr)\Bigr]\:.
-  \label{eq:mg-scattering-source}
-\end{equation}
+
 Equation~(\ref{eq:mg-scattering-source}) is the multigroup anisotropic
 scattering source that is defined by the order of the Legendre expansion,
 $P_N$, of the scattering.  For a given $P_N$ order, $(N+1)^2$ moments are
@@ -381,15 +398,28 @@ moments are defined
   \quad&m>0\:.\label{eq:odd-source}
 \end{alignat}
 
-
-We write one equation for each angle in the set (dropping energy dependence and fission for simplicity)
+We put alllll of that together to get
 \begin{align*}
-\vOmega_n \cdot \nabla \psi_n(\vecr) &+ \Sigma_t(\vecr)\psi_n(\vecr) = \sum_{l=0}^L (2l+1) \Sigma_{s,l}(x) P_l(\mu_n)\phi_l(x) + S_n(\vecr)\\
-\psi_n(\vecr) &\equiv \psi(\vecr,\vOmega_n) \qquad S_n(\vecr) \equiv S(\vecr,\vOmega_n)\\
-\phi(\vecr) &=  \int_{4\pi} d\vOmega\:\psi(\vecr,\vOmega) = \sum_{n=1}^N w_n \psi_n(\vecr)\\
-%\phi_l(\vecr) &= \frac{1}{2}\sum_{n=1}^N w_n P_l(\vOmega_n)\psi_n(\vecr)\\
-%w_n > 0& \quad \sum_n w_n = 2
+\vOmega_a \cdot \nabla \psi^g_a(\vecr) &+ \Sigma^g_t(\vecr)\psi^g_a(\vecr) = \\
+&\sum_{g'=0}^G
+  \sum_{l=0}^N
+  \sigg{l}(\vec{r})
+  \Bigl[
+  Y^e_{l0}(\vOmega)\evenp_{l0}(\vec{r}) +
+  \sum_{m=1}^l
+  \bigl(
+  Y^e_{lm}(\vOmega)\evenp_{lm}(\vec{r}) +
+  Y^o_{lm}(\vOmega)\oddp_{lm}(\vec{r})
+  \bigr)\Bigr]\\
+&+\sum_{l=0}^{N}\Bigl[
+  Y^e_{l0}(\vOmega)q^g_{l0} +
+  \sum_{m=1}^{l}
+  \bigr(
+  Y^e_{lm}(\vOmega)q^g_{lm} + Y^o_{lm}(\vOmega)s^g_{lm}\bigr)
+  \Bigr]
 \end{align*}
-The collection of $\vOmega_n, w_n$ is known as the angular quadrature set. The $w_n$ are the integration weights that go with the angles to create an integration. The angle-weight combination dictates the accuracy of the integration.
+The $S_N$ method will be conservative if the quadrature set effectively
+integrates the even and odd Spherical Harmonics.
 
+The thing that you solve for is the flux moments, and then you reconstruct that flux at the end.
 \end{document}
