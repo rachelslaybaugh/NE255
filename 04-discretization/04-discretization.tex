@@ -251,7 +251,7 @@ And the complicated one: angle. We have two main approaches, \textbf{Discrete Or
 The discrete ordinates approximation is a collocation method in angle. A collocation method is a solution method for ODEs, PDEs, and integral equations. Choose a finite-dimensional space of candidate solutions, such as polynomials up to a certain degree, and a number of points within the domain, called collocation points. Select the solution that satisfies the equation at those points within that space. 
 %https://en.wikipedia.org/wiki/Collocation_method
 
-For us, the collocation points are the discrete angles that we choose ($\omvec \rightarrow \omvec_a; n = 1,\dots,n)$ and the solution space is the flux. 
+For us, the collocation points are the discrete angles that we choose ($\omvec \rightarrow \omvec_a; a = 1,\dots,n)$ and the solution space is the flux. 
 The TE is only valid along the selected set of angles $\vOmega_a$. We apply a compatible quadrature (integration approximation) to the integral term. We write one equation for each angle in the set (dropping energy dependence and fission for simplicity; the source contains scattering and external):
 \begin{align*}
 \vOmega_a \cdot \nabla \psi_a(\vecr) &+ \Sigma_t(\vecr)\psi_a(\vecr) = Q_a(\vec{r})\\
@@ -263,7 +263,7 @@ The collection ($\vOmega_a, w_a$) is known as the angular quadrature set. The $w
 
 However, we still need to explain what's going on in the sources. To do that, we're going to look at \textit{Spherical Harmonics} and how they relate to Legendre Polynomials. This will allow us to do angular expansions in three dimensions (derived from the Exnihilo manual and Wikipedia). 
 
-\subsubsection*{Spherical Harmonics}
+\subsubsection*{About Spherical Harmonics}
 The addition theorem of Spherical Harmonics can be used to evaluate the
 Legendre function, $P_l(\vOmega'\cdot\vOmega)$,
 \begin{equation}
@@ -282,10 +282,10 @@ where the $Y_{lm}$ are
 and the $P_{lm}$ are the \textit{associated Legendre Polynomials}. These are the solutions to
 \[
 (1-x^{2}){\frac {d^{2}}{dx^{2}}}P_{\ell }^{m}(x)-2x{\frac {d}{dx}}P_{\ell }^{m}(x)+\left[\ell (\ell +1)-{\frac {m^{2}}{1-x^{2}}}\right]P_{\ell }^{m}(x)=0\:,\]
-where the indices $l$ and $m$ are referred to as the degree and order of the associated Legendre polynomial, respectively. [before we had called $l$ $n$ and negleced $m$. When $m$ is zero, these functions are identical to the Legendre polynomials.
+where the indices $l$ and $m$ are referred to as the degree and order of the associated Legendre polynomial, respectively [before we had called $l$ $n$ and negleced $m$]. When $m$ is zero, these functions are identical to the Legendre polynomials.
 %https://en.wikipedia.org/wiki/Associated_Legendre_polynomials
 
-We're going to use Spherical Harmonics to expand our scattering and external source. Everything in our equations must be real; therefore, we can follow a methodology that shows expands a real-valued function using complex Spherical Harmonics.  First,
+We're going to use Spherical Harmonics to expand our scattering and external source. Everything in our equations must be real; therefore, we can follow a methodology that shows expands a real-valued function using complex Spherical Harmonics ($Y^*$ indicates complex conjugate).  First,
 the expansion is split into positive and negative components of $m$,
 \begin{equation}
   P_l(\vOmega'\cdot\vOmega) = \frac{4\pi}{2l+1}
@@ -295,12 +295,13 @@ the expansion is split into positive and negative components of $m$,
   \bigl(Y_{lm}(\vOmega)Y^{\ast}_{lm}(\vOmega') +
   Y_{l-m}(\vOmega)Y^{\ast}_{l-m}(\vOmega')\bigr)\Bigr]\:.
 \end{equation}
+Next, we're going to go through a bunch of mathematical maneuvers to get rid of the negative $m$ components and the complex conjugate values. The motivation is ease of analysis and handling. 
 
-Examining the $m=0$ term gives the following result
+First, we'll simplify the $m=0$ term:
 \begin{equation}
   Y_{l0} = \sqrt{\frac{2l+1}{4\pi}}\,P_{l0} = Y^e_{l0}\:,
 \end{equation}
-where
+where we have used the idea that we can separate a spherical harmonic into even and odd components using the $e^{ix}$ identity,
 \begin{align}
   Y^e_{lm} &= D_{lm}P_{lm}\cos (m\varphi)\:,\label{eq:Ye}\\
   Y^o_{lm} &= D_{lm}P_{lm}\sin (m\varphi)\:,\label{eq:Yo}\\
@@ -308,7 +309,13 @@ where
     \frac{(l-m)!}{(l+m)!}}\:.
 \end{align}
 
-Expanding the Spherical Harmonics into real and imaginary components, the sum over $m>0$ becomes
+We will make this substitution (for the sake of avoiding having constants floating around)
+\begin{equation}
+  \hat{Y}^e_{lm} = \frac{1}{\sqrt{2}}Y^e_{lm}\:,\quad
+  \hat{Y}^o_{lm} = \frac{1}{\sqrt{2}}Y^o_{lm}\:.
+\end{equation}
+
+Next, we expand the Spherical Harmonics into real and imaginary components. The sum over $m>0$ then becomes 
 \begin{equation}
   \sum_{m=1}^l\Bigl(
   \hat{Y}^e_{lm}(\vOmega)\hat{Y}^e_{lm}(\vOmega') +
@@ -317,22 +324,21 @@ Expanding the Spherical Harmonics into real and imaginary components, the sum ov
   \hat{Y}^o_{l-m}(\vOmega)\hat{Y}^o_{l-m}(\vOmega')\Bigr)\:,
 \end{equation}
 where the imaginary terms have been set to zero because our values must be
-real. Using (derivation skipped for brevity)
+real. 
+
+Next, we use these relationships to get rid of the $-m$s: 
 \begin{align}
  \hat{Y}^e_{l-m} &= (-1)^{-m}\hat{Y}^e_{lm} \equiv (-1)^m\hat{Y}^e_{lm} \:\text{ and}\\
  \hat{Y}^o_{l-m} &= -(-1)^m\hat{Y}^o_{lm}\:,
 \end{align}
-the summation becomes
+and then the summation becomes
 \begin{equation}
   \sum_{m=1}^l\Bigl(
   2\hat{Y}^e_{lm}(\vOmega)\hat{Y}^e_{lm}(\vOmega') +
   2\hat{Y}^o_{lm}(\vOmega)\hat{Y}^o_{lm}(\vOmega')\Bigr)
 \end{equation}
 Skipping some steps, we also have the following relationships,
-\begin{equation}
-  \hat{Y}^e_{lm} = \frac{1}{\sqrt{2}}Y^e_{lm}\:,\quad
-  \hat{Y}^o_{lm} = \frac{1}{\sqrt{2}}Y^o_{lm}\:.
-\end{equation}
+
 After applying these equations in the $m>0$ terms and combining with the $m=0$
 term described above, the expression for $P_l(\vOmega\cdot\vOmega')$ is
 \begin{equation}
@@ -341,16 +347,15 @@ term described above, the expression for $P_l(\vOmega\cdot\vOmega')$ is
   Y^e_{l0}(\vOmega)Y^e_{l0}(\vOmega') +
   \sum_{m=1}^l
   \bigl(Y^e_{lm}(\vOmega)Y^e_{lm}(\vOmega') +
-  Y^o_{lm}(\vOmega)Y^o_{lm}(\vOmega')\bigr)\Bigr]\:,
-  \label{eq:P_l(mu_o)}
+  Y^o_{lm}(\vOmega)Y^o_{lm}(\vOmega')\bigr)\Bigr]\:.
+    \label{eq:P_l(mu_o)}
 \end{equation}
 
-\subsubsection*{Sources}
+\subsubsection*{Representing Sources with Spherical Harmonics}
 We can use these terms to expand our scattering and external sources (adding energy indexing back in) for multi-D and any degree of anisotropy. The \textbf{scattering source}:
 
-
 \begin{align}
-q^g_{s}(\ve{r},\vOmega) &= \sum_{g'=1}^G \sum_{l=0}^{N} \frac{2l+1}{4 \pi} \Sigma^{gg'}_{sl}(\vecr) \int_{-1}^1 d\mu'\: P_l(\vOmega \cdot \vOmega') \psi(\vecr, \vOmega')\\
+q^g_{s}(\vec{r},\vOmega) &= \sum_{g'=1}^G \sum_{l=0}^{N} \frac{2l+1}{4 \pi} \Sigma^{gg'}_{sl}(\vecr) \int_{4\pi} d\vOmega'\: P_l(\vOmega \cdot \vOmega') \psi_g(\vecr, \vOmega')\\
   q^g_{s}(\vec{r},\vOmega) &= \sum_{g'=0}^G
   \sum_{l=0}^N
   \sigg{l}(\vec{r})
@@ -398,6 +403,7 @@ moments are defined
   \quad&m>0\:.\label{eq:odd-source}
 \end{alignat}
 
+\subsubsection*{Discrete Ordinates Equations}
 We put alllll of that together to get
 \begin{align*}
 \vOmega_a \cdot \nabla \psi^g_a(\vecr) &+ \Sigma^g_t(\vecr)\psi^g_a(\vecr) = \\
@@ -430,7 +436,7 @@ This all gets simpler if we have azimuthal symmetry. In that case, $m=0$ and
   {
     \frac{2l+1}{4\pi}\frac{(l-0)!}{(l+0)!}
   }\,
-  P_{l0}(\cos\theta)\mathrm{e}^{i0\varphi} = \frac{2l+1}{4\pi}P_{l}(\cos\theta),
+  P_{l0}(\cos\theta)\mathrm{e}^{i0\varphi} = \sqrt{\frac{2l+1}{4\pi}}P_{l}(\cos\theta),
 \]
 then 
 \begin{align*}
@@ -444,8 +450,8 @@ then
   Y^e_{l}(\vOmega)q^g_{l}(\vecr)\bigr)\\
   %
  &=\sum_{g'=0}^G
-  \sum_{l=0}^N \sigg{l}(\vec{r})\bigl(\frac{2l+1}{4\pi}P_{l}(\cos\theta)\evenp_{l}(\vec{r}) \bigr)
-  + \sum_{l=0}^{N}\bigl(\frac{2l+1}{4\pi}P_{l}(\cos\theta)q^g_{l}(\vecr)\bigr)
+  \sum_{l=0}^N \sigg{l}(\vec{r})\bigl(\sqrt{\frac{2l+1}{4\pi}}P_{l}(\cos\theta)\evenp_{l}(\vec{r}) \bigr)
+  + \sum_{l=0}^{N}\bigl(\sqrt{\frac{2l+1}{4\pi}}P_{l}(\cos\theta)q^g_{l}(\vecr)\bigr)
 \end{align*}
 which is equivalent to what we did in the simplification class.
 
