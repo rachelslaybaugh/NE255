@@ -455,4 +455,38 @@ then
 \end{align*}
 which is equivalent to what we did in the simplification class.
 
+%-----------------------------------------
+\subsubsection*{Discrete Ordinates Considerations}
+Two main things to consider in discrete ordinates: \textit{quadrature choice} and \textit{Ray Effects}. 
+
+\textbf{Level Symmetric} quadrature uses the same set of $N/2$ positive values of direction cosines with respect to each of the three axes. That is, for each level $n$ we set $\mu_a = \eta_a = \xi_a$. We describe a level $a$ as the ordinate set that has cosine $\mu_a$ with respect to the $x$ axis. Note that with this setup no axis has preferential treatment. \autoref{fig:levelsym} shows $S_6$. We see there are $6/2 = 3$ values of each direction cosine, and each one is the same wrt each axis. We have $N(N+2)$ quadratures points over the sphere, and that divided by 8 per octant (in this case 48 and 6, respectively). 
+\begin{figure}[h!]
+    \begin{center}
+    \includegraphics[keepaspectratio, width = 2.5 in]{level-sym}
+    \end{center}
+    \caption{$S_6$ quadrature}
+    \label{fig:levelsym}
+\end{figure}
+
+Because of the symmetry constraints not all of the $\mu_n$ are independent. In fact, there is only one degree of freedom because of all of the constraints. Choosing $\mu_1$ sets all of the other values as follows:
+\[
+\mu_i^2 = \mu_1^2 + \frac{2(1 - 3\mu_1^2)}{N-2}(i-1)\:.
+\]
+See 4-2 of Lewis and Miller for details. Selecting a $\mu_1$ near the poles will cause clustering at the poles, and so on. 
+
+Further, we need to select weights to perform the integration. These meet the requirement
+\[
+\sum_{a=1}^{N(N+2)/8} w_a = 1\:.
+\]
+In the $S_2$ approximation, we only have one choice. For higher values we still have some choices. 
+
+A common choice is to choose weights and angles that correctly integrate as many Legendre Polynomials as possible. These are showin in Table 4-1 in L\&M and are technically called the $LQ_N$ set.
+
+
+%-----------------------------------------
+%-----------------------------------------
+\subsection*{Spherical Harmonics, $P_N$ Method}
+As mentioned, the other approach is 
+
+
 \end{document}
