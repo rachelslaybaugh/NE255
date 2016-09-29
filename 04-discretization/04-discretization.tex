@@ -480,8 +480,19 @@ Further, we need to select weights to perform the integration. These meet the re
 \]
 In the $S_2$ approximation, we only have one choice. For higher values we still have some choices. 
 
-A common choice is to choose weights and angles that correctly integrate as many Legendre Polynomials as possible. These are showin in Table 4-1 in L\&M and are technically called the $LQ_N$ set.
+A common choice is to choose weights and angles that correctly integrate as many Legendre Polynomials as possible. These are show in in Table 4-1 in L\&M and are technically called the $LQ_N$ set. There are other $S_N$ versions that have reduced symmetry or relaxation of requirements in other ways. For example, if we don't require all of the cosines to lie on the $N/2$ levels we can maintain rotational symmetry and have equal weights. 
 
+Another common quadrature is \textbf{Gauss-Legendre}. An $n$-point Gaussian quadrature rule is constructed to yield an exact result for polynomials of degree $2n - 1$ or less by a suitable choice of the points $x_i$ and weights $w_i$ for $i = 1, \dots, n$. Common weighting functions include $w(x)= 1/\sqrt{1-x^2}$ (Chebyshev-Gauss) $w(x)=e^{-x^{2}}$ (Gauss-Hermite).
+In general, the $n$-th polynomial normalized to give $P_n(1) = 1$, the $i$-th Gauss node, $x_i$, is the $i$-th root of $P_n$; its weight is given by
+\[ 
+w_{i}={\frac {2}{\left(1-x_{i}^{2}\right)[P'_{n}(x_{i})]^{2}}}.
+\]
+    %https://en.wikipedia.org/wiki/Gaussian_quadrature
+    
+    
+\textbf{Ray Effects}: ray effects come from the fact that the discrete ordinates method is exact at particular angles, but we cannot say anything about the accuracy at points off of those angles. Consider a point source in a large medium of helium gas. Consider that you've chosen $S_2$. What is the flux going to look like? Consider now that you've chosen $S_14$. What will the flux look like now? It is not very accurate in either case because there is nothing to scatter the neutrons from the angles in question. These are ray effects. 
+
+There are "fix-up" solutions to deal with this. The best approach is probably generating a first collided flux, stopping the calculation, and starting again with the first collision source as the source. This takes the point source, smears it across the space, and allows a diffuse starting source. This functionally improves quite a bit over straight $S_N$ in situations that have unfavorable transport characteristics.
 
 %-----------------------------------------
 %-----------------------------------------
