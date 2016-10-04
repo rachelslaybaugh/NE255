@@ -1,0 +1,86 @@
+\documentclass[12pt]{article}
+\usepackage[top=1in, bottom=1in, left=1in, right=1in]{geometry}
+
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage{amssymb}
+%% The amsthm package provides extended theorem environments
+\usepackage{amsthm}
+\usepackage{epsfig}
+\usepackage{times}
+\renewcommand{\ttdefault}{cmtt}
+\usepackage{amsmath}
+\usepackage{graphicx} % for graphics files
+\usepackage{tabu}
+
+% Draw figures yourself
+\usepackage{tikz} 
+
+% writing elements
+\usepackage{mhchem}
+
+\usepackage{paralist}
+
+% The float package HAS to load before hyperref
+\usepackage{float} % for psuedocode formatting
+\usepackage{xspace}
+
+% from Denovo Methods Manual
+\usepackage{mathrsfs}
+\usepackage[mathcal]{euscript}
+\usepackage{color}
+\usepackage{array}
+
+\usepackage[pdftex]{hyperref}
+\usepackage[parfill]{parskip}
+
+% math syntax
+\newcommand{\nth}{n\ensuremath{^{\text{th}}} }
+\newcommand{\ve}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\Macro}{\ensuremath{\Sigma}}
+\newcommand{\rvec}{\ensuremath{\vec{r}}}
+\newcommand{\vecr}{\ensuremath{\vec{r}}}
+\newcommand{\omvec}{\ensuremath{\hat{\Omega}}}
+\newcommand{\vOmega}{\ensuremath{\hat{\Omega}}}
+\newcommand{\even}{\ensuremath{\phi^g}}
+\newcommand{\odd}{\ensuremath{\vartheta^g}}
+\newcommand{\evenp}{\ensuremath{\phi^{g'}}}
+\newcommand{\oddp}{\ensuremath{\vartheta^{g'}}}
+\newcommand{\Sn}{\ensuremath{S_N} }
+\newcommand{\Ye}[2]{\ensuremath{Y^e_{#1}(\vOmega_#2)}}
+\newcommand{\sigg}[1]{\ensuremath{\Macro^{gg'}_{s\,#1}}}
+\newcommand{\psig}{\ensuremath{\psi^g}}
+%---------------------------------------------------------------------------
+%---------------------------------------------------------------------------
+\begin{document}
+\begin{center}
+{\bf NE 255, Fa16 \\
+Equation Discretization\\
+October 6, 2016}
+\end{center}
+
+\setlength{\unitlength}{1in}
+\begin{picture}(6,.1) 
+\put(0,0) {\line(1,0){6.25}}         
+\end{picture}
+
+So far we've dealt with
+\begin{compactitem}
+\item Discretization of \textit{time} using finite difference method (Taylor expand points and combine)
+\item Discretization of \textit{energy} using the multigroup approximation, where we assume group-integrated values. 
+\item Expanding sources, in particular scattering, in spherical harmonics, which we can reduce to Legendre Polynomials in the case of azimuthal symmetry.
+\item Discretization of \textit{angle} using either 
+  \begin{compactitem}
+  \item $S_N$: get solutions along specific angle sets (quadrature points), use corresponding quadrature weights to integrate over angle
+  \item $P_N$: expand the angular flux in spherical harmonics, which we only do in 1-D so Legendre polynomials in practice, and solve a set of coupled equations for each expansion term (with closure relations at $n=0 and n=N+1$).
+  \item $SP_N$: WORDS
+  \end{compactitem}
+\end{compactitem}
+
+When we do all of this we get $t=0,\dots, T$ equations in time, $g=0,\dots,G$ equations in energy, and a number of equations that depends on which angular approach we take. However, we still have one major item to deal with...
+
+\section*{Space}
+
+
+\end{document}

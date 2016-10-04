@@ -57,7 +57,7 @@
 \begin{center}
 {\bf NE 255, Fa16 \\
 Equation Discretization\\
-September 22 and 27, 2016}
+September 22, 27, and 29, 2016}
 \end{center}
 
 \setlength{\unitlength}{1in}
@@ -209,7 +209,7 @@ We'd also like to handle the energy dimension by breaking continuous energy into
 \end{tikzpicture}
 \end{center}
 %
-We will solve for group-averaged values in each energy bin using the following definitions:
+We will solve for group-integrated values in each energy bin using the following definitions:
 \begin{align*}
 \psi_g(\rvec, \vOmega) &\equiv \int_{E_g}^{E_{g-1}} dE\: \psi(\rvec, \vOmega, E) \qquad
 \phi_g(\rvec) \equiv \int_{E_g}^{E_{g-1}} dE\: \phi(\rvec,  E)\\
@@ -628,11 +628,6 @@ We get poor representation of $\psi$ near vacuum boundaries. We can use Double $
 With discrete ordinates, errors can be removed through spatial integration. The physical oscillations in the flux will balance out, and the magnitudes are pretty correct. Further, you can visually see ray effects--so you can tell that something is going on. You can increase the order, and you can see what might or might not be trustworthy. 
 
 With $P_N$ the errors are often in magnitude rather than shape, so it is much more difficult to assess whether your solution is correct. (in complex geometries it is also sometimes hard to tell for ray effects). 
-
-%---------------------------------------------------------------------------
-%---------------------------------------------------------------------------
-\section*{Spatial Discretization}
-
 
 
 \end{document}
