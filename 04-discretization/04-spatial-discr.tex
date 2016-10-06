@@ -116,15 +116,22 @@ There are \textit{many} spatial discretization choices out there. What you choos
 We'll talk about cell balance and finite element methods; in nuclear we have specific versions of these. For example, Denovo, the 3-D Cartesian mesh deterministic code from ORNL, offers these choices:
 \begin{compactitem}
 \item Simplified P$_N$: finite volume 
-\item Discrete ordinates: step characteristics (SC) in 2- or 3-D, which can be written as a cell balance or finite element scheme
+\item Discrete ordinates: weighted diamond difference (WDD) without flux fixup is equivalent to a Crank-Nicolson method; cell balance.
+\item Discrete ordinates: weighted diamond difference with flux fixup to zero (WDD-FF)  is a nonlinear method; cell balance 
+\item Discrete ordinates: theta weighted diamond difference (TWD)  is a nonlinear method; cell balance
+\item Discrete ordinates: linear discontinuous (LD) is a Galerkin method formed from the basis set $\{1,x,y,z\}$; FEM 
 \item Discrete ordinates: bilinear discontinuous (BLD) in 2-D; FEM
-\item Discrete ordinates: linear discontinuous (LD); FEM 
-\item Discrete ordinates: trilinear discontinuous (TLD); FEM
-\item Discrete ordinates: theta weighted diamond difference (TWD); cell balance.
-\item Discrete ordinates: weighted diamond difference (WDD) without flux fixup; cell balance.
-\item Discrete ordinates: weighted diamond difference with flux fixup to zero (WDD-FF); cell balance
+\item Discrete ordinates: trilinear discontinuous (TLD) is a Galerkin method formed from the basis set $\{1,x,y,z,xy,yz,xz,xyz\}$ and maintains the asymptotic diffusion limit on the grid used in Denovo; FEM
+\item Discrete ordinates: step characteristics (SC) in 2- or 3-D does not produce negative fluxes and does not have oscillatory behavior; can be written as a cell balance or finite element scheme
 \end{compactitem}
 The WDD, WDD-FF, TWD, LD, BLD, and TLD schemes are all second-order, and the SC scheme is first-order.
+
+----------------------\\
+Aside\\ 
+\emph{Galerkin Methods}: Converts a continuous problem to a discrete problem - equivalent to converting the equation to a weak formulation. Typically one gives some constraints on the function space to characterize the space with a finite set of basis functions.\\
+
+To get the \emph{weak form}: rewrite a differential equation such that the equation does not contain any derivatives of the solution. You can then find solutions that are actually not differentiable. Derivatives in the original equation may not all exist, but nevertheless satisfy the equation in some specifically defined way.\\ %Wikipedia.
+--------------------------
 
 LANL's PARTISN has similar choices, but their new Capsaesin code has tetrahedral mesh and uses XXXX. INL's RattleSNake uses finite element methods for YYYY.
 
@@ -180,6 +187,7 @@ $\ve{L}^{-1}$ is regularly referred to as a \textit{sweep} in the nuclear
 engineering and transport communities.  
 
 
+%--------------------------------------------------------------
 \subsection*{Finite Difference}
 Finite Difference gives pointwise values on a grid.
 
@@ -191,16 +199,19 @@ We're actually going to skip this formulation; I suspect you can figure it out.
 
 \subsection*{Finite Volume}
 Finite Volume methods approximate the average integral on a reference volume. This handles discontinuities much better--why might that be? If cell boundaries line up with material boundaries and we integrate half way into each cell, we capture the impact of the neighboring materials. Thus, the cell-balance equation can be derived by integrating Eq.~(\ref{eq:spatial_transport}) over the mesh cell in
-Fig.~\ref{fig:mesh-cell-sn}. 
+Fig.~\ref{fig:mesh-cell-sn}, which yields
+a statement of conservation of particles within the mesh cell. 
 
-%We will use \textit{central difference} to approximate our spatial derivative, where 2nd order central diff is:
-%\[f'(x_0) = \frac{f(x_0 + h) - f(x_0 - h)}{2h} - \frac{1}{6}h^2 f'''(c_i)\:.\]
-%If we switch that to our system and note $x_{i+1/2} - x_i \equiv h/2$ and $x_{i+1/2} - x_{i-1/2} \equiv \Di$ then we can see
-%\begin{align*}
-%\frac{\partial \psi}{\partial x} &= \frac{\psi_{i+1/2} - \psi_{i-1/2}}{\Di} - \frac{1}{6}\bigl(\frac{\Di}{2}\bigr)^2 f'''(c_i)\: \:,\\
-%%
-%\int_{x_{i-1/2}}^{x_{i+1/2}} dx \:\frac{\partial \psi}{\partial x} &\approx \frac{\psi_{i+1/2} - \psi_{i-1/2}}{\Di} \:.
-%\end{align*}
+
+\subsubsection*{Weighted Diamond Difference}
+We will use \textit{central difference} to approximate our spatial derivative, where 2nd order central diff is:
+\[f'(x_0) = \frac{f(x_0 + h) - f(x_0 - h)}{2h} - \frac{1}{6}h^2 f'''(c_i)\:.\]
+If we switch that to our system and note $x_{i+1/2} - x_i \equiv h/2$ and $x_{i+1/2} - x_{i-1/2} \equiv \Di$ then we can see
+\begin{align*}
+\frac{\partial \psi}{\partial x} &= \frac{\psi_{i+1/2} - \psi_{i-1/2}}{\Di} - \frac{1}{6}\bigl(\frac{\Di}{2}\bigr)^2 f'''(c_i)\: \:,\\
+%
+\int_{x_{i-1/2}}^{x_{i+1/2}} dx \:\frac{\partial \psi}{\partial x} &\approx \frac{\psi_{i+1/2} - \psi_{i-1/2}}{\Di} \:.
+\end{align*}
 To integrate the differential term, we will note
 \[
 \int_{x_{i-1/2}}^{x_{i+1/2}} dx \:\frac{\partial \psi}{\partial x}  = \int_{x_{i-1/2}}^{x_{i+1/2}} \partial \psi = \psi_{i+1/2} - \psi_{i-1/2} \:.
@@ -226,7 +237,7 @@ equation with this closure yields the following system of equations,
       \frac{2}{(1\pm\alpha_i)}\frac{|\mu|}{\Di}\bar{\psi}_{i\mp1/2} +
       \frac{2}{(1\pm\alpha_j)}\frac{|\eta|}{\Dj}\bar{\psi}_{j\mp1/2} +
       \frac{2}{(1\pm\alpha_k)}\frac{|\xi|}{\Dk}\bar{\psi}_{k\mp1/2}}{
-      \sigma_{ijk} + \frac{2}{(1\pm\alpha_i)}\frac{|\mu|}{\Di} +
+      \Sigma_{ijk} + \frac{2}{(1\pm\alpha_i)}\frac{|\mu|}{\Di} +
       \frac{2}{(1\pm\alpha_j)}\frac{|\eta|}{\Dj} +
       \frac{2}{(1\pm\alpha_k)}\frac{|\xi|}{\Dk} }\:,\\
     %%
@@ -254,8 +265,305 @@ until all the outgoing fluxes are greater than or equal to zero.  This method
 is nonlinear in that the corrected solution of Eq.~(\ref{eq:wdd}) depends on
 $\psi$.
 
+\subsubsection*{Theta Weighted Diamond}
+Another nonlinear cell-balance scheme is TWD.  This scheme
+uses the incoming fluxes to calculate weighting factors that permit the
+calculation of cell-centered and outgoing fluxes that vary smoothly between
+the step and diamond-difference approximations.  The weighting factors are
+calculated from the following system of equations,
+\begin{equation}
+  \begin{aligned}
+    \mu\gtrless0\:,\,\eta\gtrless0\:,\,\xi\gtrless0\\
+    %%
+    1-a &= \frac{s_{ijk}V\theta_s + (|\eta|B\bar{\psi}_{j\mp1/2} +
+      |\xi|C\bar{\psi}_{k\mp1/2})\theta + |\mu|A\bar{\psi}_{i\mp1/2}}
+    {(\Sigma_{ijk}V
+      + 2|\eta|B + 2|\xi|C)\bar{\psi}_{i\mp1/2}}\:,\\
+    %%
+    1-b &= \frac{s_{ijk}V\theta_s + (|\mu|A\bar{\psi}_{i\mp1/2} +
+      |\xi|C\bar{\psi}_{k\mp1/2})\theta + |\eta|B\bar{\psi}_{j\mp1/2}}
+    {(\Sigma_{ijk}V
+      + 2|\mu|A + 2|\xi|C)\bar{\psi}_{j\mp1/2}}\:,\\
+    %%
+    1-c &= \frac{s_{ijk}V\theta_s + (|\mu|A\bar{\psi}_{i\mp1/2} +
+      |\eta|B\bar{\psi}_{j\mp1/2})\theta + |\xi|C\bar{\psi}_{k\mp1/2}}
+    {(\sigma_{ijk}V + 2|\mu|A + 2|\eta|B)\bar{\psi}_{k\mp1/2}}\:,
+  \end{aligned}
+\end{equation}
+where
+\begin{equation}
+  A = \Delta_j\Delta_k\:,\quad B = \Delta_i\Delta_k\:,\quad C =
+  \Delta_i\Delta_j\:,\quad V = \Delta_i\Delta_j\Delta_k\:.
+\end{equation}
+The theta-weighting factors, $\theta$ and $\theta_s$, are set to values
+between 0 and 1.  By default Denovo uses the \textit{theta-weighted} model
+from the TORT code in which $\theta = \theta_s = 0.9$.
+
+The weighting parameters are bounded between the diamond-difference and step
+approximations,
+\begin{equation}
+  \frac{1}{2}\le\{a,b,c\}\le 1\:.
+\end{equation}
+Using these factors, the cell-centered and outgoing fluxes are
+\begin{equation}
+  \begin{aligned}
+    \psi_{ijk} &= \frac{s_{ijk}V + \frac{|\mu|A}{a}\bar{\psi}_{i\mp1/2} +
+      \frac{|\eta|B}{b}\bar{\psi}_{j\mp1/2} +
+      \frac{|\xi|C}{c}\bar{\psi}_{k\mp1/2}}{s_{ijk}V + \frac{|\mu|A}{a} +
+      \frac{|\eta|B}{b} + \frac{|\xi|C}{c}}\:,\\
+    %%
+    \psi_{i\pm1/2} &= \frac{1}{a}\psi_{ijk}-
+    \frac{(1-a)}{a}\bar{\psi}_{i\mp1/2}\:,\\
+    %%
+    \psi_{j\pm1/2} &= \frac{1}{b}\psi_{ijk}-
+    \frac{(1-b)}{b}\bar{\psi}_{j\mp1/2}\:,\\
+    %%
+    \psi_{k\pm1/2} &= \frac{1}{c}\psi_{ijk}-
+    \frac{(1-c)}{c}\bar{\psi}_{k\mp1/2}\:.
+  \end{aligned}
+  \label{eq:twd}
+\end{equation}
+TWD and WDD-FF produce uniformly positive fluxes when the source, $s_{ijk}$,
+is greater than zero.
 
 
+%--------------------------------------------------------------
+\subsection*{Finite Element}
+Finite element schemes are derived from the weak form of
+Eq.~(\ref{eq:spatial_transport}). We begin the derivation by
+integrating Eq.~(\ref{eq:spatial_transport}) over a single element, $e$, and
+multiplying by a weighting function for the element, $w_{e\,n}$,
+\begin{equation}
+  \int_{V_e} w_{e\,n}(\vOmega\cdot\nabla\psi+\sigma\psi)\,dV =
+  \int_{V_e} w_{e\,n}s\,dV\:,
+\end{equation}
+where the element defined in Fig.~\ref{fig:mesh-cell-sn} has $dV=dxdydz$.  The
+weight functions are defined over the range $n\in[1,N]$ such that the set
+$w_{e\,n}$ is linearly independent.  Furthermore, we make the assumption that
+all elements in the orthogonal grid have equal weight functions, so
+$w_{e\,n}\equiv w_n$.  Applying Green's theorem to the gradient term gives the
+weak form of the transport equation,
+\begin{equation}
+  \oint_{\partial V_e}w_n\hat{\ve{n}}\cdot\vOmega\psi\,dA -
+  \int_{V_e}\vOmega\cdot\nabla w_n\psi\,dV + \int_{V_e} w_n\Sigma_t\psi\,dV_e =
+  \int_{V_e}w_ns\,dV\:, \quad n=1,\ldots,N\:.
+  \label{eq:weak-form}
+\end{equation}
+Now, we expand the angular flux in the following basis,
+\begin{equation}
+  \psi = \sum_{m=1}^{N}b_m(\ve{r})\psi_e^{(m)}\:,\quad
+  \ve{r}\in\partial V_e\:.
+  \label{eq:psi_fe_expansion}
+\end{equation}
+
+Applying the Galerkin finite element approximation in which $w_n=b_n$,
+Eq.~(\ref{eq:weak-form}) becomes
+\begin{equation}
+  \oint_{\partial V_e}b_n\hat{\ve{n}}\cdot\vOmega\psi\,dA -
+  \mathcal{T}\Psi + \Sigma_e\mathcal{M}\Psi = \mathcal{M}S\:,
+  \label{eq:matrix-weak-form}
+\end{equation}
+where the elements of the matrices and vectors are defined
+\begin{equation}
+  \begin{aligned}
+    \left[\mathcal{T}\right]_{nm} &= \int_{V_e}\vOmega\cdot\nabla
+    b_n b_m\,dV\:,\\
+    %%
+    \left[\mathcal{M}\right]_{nm} &= \int_{V_e}b_nb_m\,dV\:, \\
+    %%
+    \Psi &= \begin{pmatrix} \psi_e^{(1)} & \psi_e^{(2)} & \cdots &
+      \psi_e^{(N)}
+    \end{pmatrix}^T\:,\\
+    %%
+    S &= \begin{pmatrix} s_e^{(1)} & s_e^{(2)} & \cdots & s_e^{(N)}
+    \end{pmatrix}^T\:,
+  \end{aligned}
+  \label{eq:weak_form_matrices}
+\end{equation}
+and the source has been expanded in the same basis as the angular flux.  The
+angular fluxes in the surface term come from upwind cells or boundary
+conditions.
+
+The size and composition of the matrices in Eq.~(\ref{eq:matrix-weak-form})
+are dependent on the mesh and the basis functions chosen to represent the
+unknowns.  
+
+\subsubsection*{Linear Discontinuous}
+The LD method defines a basis over the set $\{1, x, y, z\}$ with
+the shape functions \cite{adams_2001},
+\begin{equation}
+  b_1 = 1\:,\quad b_2 = \frac{2(x-x_{ijk})}{\Di}\:,\quad b_3 =
+  \frac{2(y-y_{ijk})}{\Dj}\:,\quad b_4 = \frac{2(z-z_{ijk})}{\Dk}\:.
+  \label{eq:ld_basis}
+\end{equation}
+Using these shape functions in Eq.~(\ref{eq:matrix-weak-form}) and
+analytically evaluating the integrals give the following system of equations,
+\begin{equation}
+  \begin{aligned}
+    \frac{\mu}{\Di}(\psi_{\scriptscriptstyle i+1/2}- \psi_{\scriptscriptstyle
+      i-1/2}) + \frac{\eta}{\Dj}(\psi_{\scriptscriptstyle
+      j+1/2}-\psi_{\scriptscriptstyle j-1/2}) +
+    \frac{\xi}{\Dk}(\psi_{\scriptscriptstyle k+1/2}-\psi_{\scriptscriptstyle
+      k-1/2})
+    + \Sigma_t\psi^a &= s^a\:,\\
+    %%
+    \frac{3\mu}{\Di}(\psi_{\scriptscriptstyle i+1/2}+ \psi_{\scriptscriptstyle
+      i-1/2}-2\psi^a) + \frac{\eta}{\Dj}(\psi_{\scriptscriptstyle
+      j+1/2}^x-\psi_{\scriptscriptstyle j-1/2}^x) +
+    \frac{\xi}{\Dk}(\psi_{\scriptscriptstyle k+1/2}^x-\psi_{\scriptscriptstyle
+      k-1/2}^x) + \Sigma_t\psi^x &= s^x\:,\\
+    %%
+    \frac{\mu}{\Di}(\psi_{\scriptscriptstyle i+1/2}^y-\psi_{\scriptscriptstyle
+      i-1/2}^y) + \frac{3\eta}{\Dj}(\psi_{\scriptscriptstyle
+      j+1/2}+\psi_{\scriptscriptstyle j-1/2}-2\psi^a) +
+    \frac{\xi}{\Dk}(\psi_{\scriptscriptstyle k+1/2}^y-\psi_{\scriptscriptstyle
+      k-1/2}^y) + \Sigma_t\psi^y &= s^y\:,\\
+    %%
+    \frac{\mu}{\Di}(\psi_{\scriptscriptstyle i+1/2}^z-\psi_{\scriptscriptstyle
+      i-1/2}^z) + \frac{\eta}{\Dj}(\psi_{\scriptscriptstyle
+      j+1/2}^z-\psi_{\scriptscriptstyle j-1/2}^z) +
+    \frac{3\xi}{\Dk}(\psi_{\scriptscriptstyle k+1/2}+\psi_{\scriptscriptstyle
+      k-1/2}-2\psi^a) + \Sigma_t\psi^z &= s^z\:.
+  \end{aligned}
+  \label{eq:ld}
+\end{equation}
+Here,
+\begin{equation}
+  \psi_e^{(1)}=\psi^a\:,\quad\psi_e^{(2)}=\psi^x\:,\quad
+  \psi_e^{(3)}=\psi^y\:,\quad\psi_e^{(4)}=\psi^z\:,
+\end{equation}
+such that $\psi^a$ is the average angular flux in the element and
+$\psi^{x|y|z}$ are the slopes in the $(x,y,z)$ directions.  The same notation
+is used for the expanded source, $s$.
+
+Equations~(\ref{eq:psi_fe_expansion}) and (\ref{eq:ld_basis}) are used to
+develop upwind expressions for $\psi$,
+\begin{equation}
+  \psi_{i\pm1/2}=\psi^a\pm\psi^x\:,\quad
+  \psi_{j\pm1/2}=\psi^a\pm\psi^y\:,\quad \psi_{k\pm1/2}=\psi^a\pm\psi^z\:,\quad
+  \{\mu,\eta,\xi\}\gtrless 0\:,
+\end{equation}
+and the upwinded slopes are
+\begin{equation}
+  \psi_{i\pm1/2}^{(y|z)}=\psi^{(y|z)}\:,\quad
+  \psi_{j\pm1/2}^{(x|z)}=\psi^{(x|z)}\:,\quad
+  \psi_{k\pm1/2}^{(x|y)}=\psi^{(x|y)}\:.
+\end{equation}
+For each direction, these expressions are inserted into Eq.~(\ref{eq:ld}), and
+the resulting $4\times4$ system is solved for $\Psi$.  For efficiency, the
+solution to the matrix is precomputed, and $\Psi$ is calculated by evaluating
+four statements.
+
+\subsubsection*{TriLinear Discontinuous}
+The TLD method is the only spatial discretization that maintains the
+asymptotic diffusion limit on the grid used.  The
+TLD equations are derived by expanding $\Psi$ in the basis
+\begin{equation*}
+  \{1,x,y,z,xy,yz,xz,xyz\}\:.
+\end{equation*}
+thus, there are eight unknowns per cell.  We define the unknowns at each node
+of the cell as indicated by the cardinal numbers in Fig.~\ref{fig:mesh-cell-sn}.
+The basis functions are
+\begin{equation}
+  \begin{aligned}
+    b_1 &= \Bigl(\frac{x_{i+1/2}-x}{\Di}\Bigr)
+    \Bigl(\frac{y_{j+1/2}-y}{\Dj}\Bigr) \Bigl(\frac{z_{k+1/2}-z}{\Dk}\Bigr)\:,\\
+    %%
+    b_2 &= \Bigl(\frac{x_{i+1/2}-x}{\Di}\Bigr)
+    \Bigl(\frac{y-y_{j-1/2}}{\Dj}\Bigr) \Bigl(\frac{z_{k+1/2}-z}{\Dk}\Bigr)\:,\\
+    %%
+    b_3 &= \Bigl(\frac{x-x_{i-1/2}}{\Di}\Bigr)
+    \Bigl(\frac{y-y_{j-1/2}}{\Dj}\Bigr) \Bigl(\frac{z_{k+1/2}-z}{\Dk}\Bigr)\:,\\
+    %%
+    b_4 &= \Bigl(\frac{x-x_{i-1/2}}{\Di}\Bigr)
+    \Bigl(\frac{y_{j+1/2}-y}{\Dj}\Bigr) \Bigl(\frac{z_{k+1/2}-z}{\Dk}\Bigr)\:,\\
+    %%
+    b_5 &= \Bigl(\frac{x_{i+1/2}-x}{\Di}\Bigr)
+    \Bigl(\frac{y_{j+1/2}-y}{\Dj}\Bigr) \Bigl(\frac{z-z_{k-1/2}}{\Dk}\Bigr)\:,\\
+    %%
+    b_6 &= \Bigl(\frac{x_{i+1/2}-x}{\Di}\Bigr)
+    \Bigl(\frac{y-y_{j-1/2}}{\Dj}\Bigr) \Bigl(\frac{z-z_{k-1/2}}{\Dk}\Bigr)\:,\\
+    %%
+    b_7 &= \Bigl(\frac{x-x_{i-1/2}}{\Di}\Bigr)
+    \Bigl(\frac{y-y_{j-1/2}}{\Dj}\Bigr) \Bigl(\frac{z-z_{k-1/2}}{\Dk}\Bigr)\:,\\
+    %%
+    b_8 &= \Bigl(\frac{x-x_{i-1/2}}{\Di}\Bigr)
+    \Bigl(\frac{y_{j+1/2}-y}{\Dj}\Bigr) \Bigl(\frac{z-z_{k-1/2}}{\Dk}\Bigr)\:.
+  \end{aligned}
+  \label{eq:tld_basis}
+\end{equation}
+Substituting these into Eq.~(\ref{eq:matrix-weak-form}) and evaluating the
+integrals analytically, we derive the TLD equations for the cells. We are skipping this because it's a mess and waaay more than we need. 
+
+
+%%---------------------------------------------------------------------------%%
+\section{Step Characteristics}
+\label{sec:step-characteristics}
+%%---------------------------------------------------------------------------%%
+
+The primary advantage of the SC scheme is that it produces uniformly positive
+solutions. SC gives positive fluxes as long as the source is positive, and it
+does not require non-linear flux fix-ups like WDD-FF or TWD.  Also, it does
+not suffer from oscillatory behavior like step differencing.  Because of these
+properties, SC is an ideal choice for calculating adjoint importance maps for
+use in hybrid Monte Carlo methods.  However, if very high accuracy is
+required, LD and TLD are better choices because they are second-order methods,
+whereas SC is first-order.
+
+The SC spatial discretization can be derived using the cell-balance or finite
+element formalism.  We will use the slice-balance method originally proposed
+by Lathrop \cite{lathrop_1969}.  First, define a minimum step size through the
+cell defined in Fig.~\ref{fig:mesh-cell-sn},
+\begin{equation}
+  d = \min\left(\frac{\Di}{|\mu|}, \frac{\Dj}{|\eta|},
+    \frac{\Dk}{|\xi|}\right)\:.
+\end{equation}
+We now define a new set of indices, $\{i,j,k\}\rightarrow\{p,q,r\}$, such that
+$p$ is associated with the index of $d$,
+%\begin{equation}
+%  p = \indexx[s(i;j;k)]\:,
+%\end{equation}
+and $\{q,r\}$ are associated with the remaining indices.  The slice fluxes are
+defined
+\begin{equation}
+  \begin{aligned}
+    \psi^m_0 &= \bar{s} + \text{e}^{-\Sigma_t d}(\psi^m_{\text{inc}} -
+    \bar{s})\:,\\ \psi^m_1 &= \bar{s} + \frac{1}{\Sigma_t d}(\psi^m_{\text{inc}}
+    - \psi^m_0)\:,\\ \psi^m_2 &= \bar{s} + \frac{2}{\Sigma_t
+      d}(\psi^m_{\text{inc}} - \psi^m_1)\:,\\ m &= p,q,r\:,
+  \end{aligned}
+  \label{eq:slice-fluxes}
+\end{equation}
+and $\bar{s} = s/\Sigma_t$.  For each slice a normalized distance is defined,
+\begin{equation}
+  \delta_m = \biggl(\frac{|\vOmega|_m}{\Delta_m}\biggr)d\:,
+\end{equation}
+such that $\delta_p = 1$ and $\delta_{q,r}\le 1$.  The areas of each slice are
+\begin{equation}
+  A_{pq} = \frac{\delta_p\delta_r}{2}\:,\quad B_{pq} =
+  \delta_p(1-\delta_r)\:,\quad C_{pp} = (1-\delta_q)(1-\delta_r)\:.
+\end{equation}
+By using these definitions, the outgoing fluxes are
+\begin{equation}
+  \begin{aligned}
+    \psi_p &= A_{qp}\psi_2^q + A_{rp}\psi_2^r + B_{qp}\psi_1^q +
+    B_{rp}\psi_1^r + C_{pp}\psi_0^p\:,\\
+    \psi_q &= A_{pq}\psi_2^p + A_{rq}\psi_2^r + B_{pq}\psi_1^p\:,\\
+    \psi_r &= A_{pr}\psi_2^p + A_{qr}\psi_2^q + B_{pr}\psi_1^p\:.
+  \end{aligned}
+\end{equation}
+Finally, the cell-centered flux is
+\begin{equation}
+  \psi = \bar{s} + \frac{1}{\Sigma_t
+    d}\sum_{m}\delta_m(\psi_\text{inc}^m - \psi_m)\:,\quad m=p,q,r\:.
+  \label{eq:sc-flux}
+\end{equation}
+Because these equations depend inversely on $\Sigma_t d$, we need to handle
+cases where $\Sigma_t d \ll 1$, which includes vacuum regions.  In Denovo,
+when $\Sigma_t d \le 0.025$ we expand $\exp(-\Sigma_t d)$ in a $O(7)$
+Taylor-series.  Using the expansion in Eqs.~(\ref{eq:slice-fluxes}) through
+(\ref{eq:sc-flux}) yields formulas for the outgoing and cell-centered flux
+that do not vary inversely proportional to $\Sigma_t d$.
 
 
 \end{document}
