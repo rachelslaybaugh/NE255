@@ -83,8 +83,8 @@ So far we've dealt with
 \item Discretization of \textit{angle} using either 
   \begin{compactitem}
   \item $S_N$: get solutions along specific angle sets (quadrature points), use corresponding quadrature weights to integrate over angle
-  \item $P_N$: expand the angular flux in spherical harmonics, which we only do in 1-D so Legendre polynomials in practice, and solve a set of coupled equations for each expansion term (with closure relations at $n=0 and n=N+1$).
-  \item $SP_N$: we take the 1-D $P_N$ equations and transform them to 3D by replacing the 1-D diffusion operators with the 3-D diffusion operator and replacing the derivatives at the boundary with the outward normal derivatives. We also replace $\phi_{l'}$ by a vector for odd $l'$.  
+  \item $P_N$: expand the angular flux in spherical harmonics, which we only do in 1-D so Legendre polynomials in practice, and solve a set of coupled equations for each expansion term (with closure relations at $n=0$ and $n=N+1$).
+  \item $SP_N$: we take the 1-D $P_N$ equations and transform them to 3-D by replacing the 1-D diffusion operators with the 3-D diffusion operator and replacing the derivatives at the boundary with the outward normal derivatives. We also replace $\phi_{l'}$ by a vector for odd $l'$.  
   \end{compactitem}
 \end{compactitem}
 
@@ -130,7 +130,14 @@ The WDD, WDD-FF, TWD, LD, BLD, and TLD schemes are all second-order, and the SC 
 Aside\\ 
 \emph{Galerkin Methods}: Converts a continuous problem to a discrete problem - equivalent to converting the equation to a weak formulation. Typically one gives some constraints on the function space to characterize the space with a finite set of basis functions.\\
 
-To get the \emph{weak form}: rewrite a differential equation such that the equation does not contain any derivatives of the solution. You can then find solutions that are actually not differentiable. Derivatives in the original equation may not all exist, but nevertheless satisfy the equation in some specifically defined way.\\ %Wikipedia.
+\emph{weak form}: The main idea of the weak form is to turn the differential equation into an integral equation so as to lessen the burden on the numerical algorithm in evaluating derivatives.
+%https://www.comsol.com/blogs/brief-introduction-weak-form/
+
+A strong form of the governing equations along with boundary conditions states the conditions at every point over a domain that a solution must satisfy. On the other hand a weak form states the conditions that the solution must satisfy in an integral sense. Examples of weak forms are variational formulations or weighted residual formulations. 
+
+Weak  formulations  naturally  promote  computing  approximate  solutions  to  challenging problems, and are 'equivalent' to strong forms.
+%http://homepages.cae.wisc.edu/~suresh/ME964Website/M964Notes/Notes/Strong,Weak,%20FE%20Form%20of%201-DScalar.pdf
+\\
 --------------------------
 
 LANL's PARTISN has similar choices, but their new Capsaicin code has unstructured mesh and uses Discontinuous Finite Element Method (DFEM): Linear, Bars, Triangles, Quadrilaterals, Polygons. They also have an ability to deal with non-convex meshes using Continuous FEM. Finally, they have structured meshes in 3-D with DD and LD.
@@ -208,14 +215,6 @@ a statement of conservation of particles within the mesh cell.
 
 
 \subsubsection*{Weighted Diamond Difference}
-We will use \textit{central difference} to approximate our spatial derivative, where 2nd order central diff is:
-\[f'(x_0) = \frac{f(x_0 + h) - f(x_0 - h)}{2h} - \frac{1}{6}h^2 f'''(c_i)\:.\]
-If we switch that to our system and note $x_{i+1/2} - x_i \equiv h/2$ and $x_{i+1/2} - x_{i-1/2} \equiv \Di$ then we can see
-%\begin{align*}
-%\frac{\partial \psi}{\partial x} &= \frac{\psi_{i+1/2} - \psi_{i-1/2}}{\Di} - \frac{1}{6}\bigl(\frac{\Di}{2}\bigr)^2 f'''(c_i)\: \:,\\
-%%
-%\int_{x_{i-1/2}}^{x_{i+1/2}} dx \:\frac{\partial \psi}{\partial x} &\approx \frac{\psi_{i+1/2} - \psi_{i-1/2}}{\Di} \:.
-%\end{align*}
 To integrate the differential term, we will note
 \[
 \int_{x_{i-1/2}}^{x_{i+1/2}} dx \:\frac{\partial \psi}{\partial x}  = \int_{x_{i-1/2}}^{x_{i+1/2}} \partial \psi = \psi_{i+1/2} - \psi_{i-1/2} \:.
@@ -234,13 +233,20 @@ The diamond-difference method (using Lewis \& Miller) is derived by closing
 Eq.~(\ref{eq:cell-balance}) with a weighted average of the face-edge fluxes, which is
 equivalent to a Crank-Nicolson method in space. 
 \begin{align*}
-\psi_{i} &= \frac{1}{2}\bigl(\alpha_i\psi_{i+1/2}+(1-\alpha_i)\psi_{i-1/2}\bigr)\\
+\psi_{i} &= \frac{1}{2}\bigl((1+\alpha_i)\psi_{i+1/2}+(1-\alpha_i)\psi_{i-1/2}\bigr)\\
 \psi_{i+1/2} &= \frac{2}{(1+\alpha_i)}\psi_{ijk}-
-    \frac{(1-\alpha_i)}{(1+\alpha_i)}\psi_{i-1/2}\\
+    \frac{(1-\alpha_i)}{(1+\alpha_i)}\psi_{i-1/2}\quad \mu>0 \quad \text{when }\psi_{i-1/2}\text{ is incoming}\\
 \psi_{i-1/2} &= \frac{2}{(1-\alpha_i)}\psi_{ijk}-
-    \frac{(1+\alpha_i)}{(1-\alpha_i)}\bar{\psi}_{i+1/2}
+    \frac{(1+\alpha_i)}{(1-\alpha_i)}\psi_{i+1/2}\quad \mu<0 \quad \text{when }\psi_{i+1/2}\text{ is incoming}
 \end{align*}
 The plus/minus depends on direction--going in $\mu>0$ the $\psi_{i-1/2}$ is the flux incoming and $\psi_{i+1/2}$ is outgoing. This flips for $\mu<0$. We will use $\bar{\psi}$ to indicate the incoming fluxes on each face to help us keep track of which direction we're going.
+
+The $\alpha$
+terms are weighting factors such that $\alpha=0$ gives the classic
+diamond-difference equations (the central flux is the average of the incoming and outgoing). $\alpha = \pm 1$ gives the step-difference
+equations in which the center flux is determined entirely from the incoming flux.  Setting $\alpha = \pm 1$ yields a first-order spatial differencing
+scheme.  The default behavior of Denovo for WDD uses $\alpha=0$, which gives
+the diamond-difference method.
 
 Substituting and rearranging the cell-balance
 equation with this closure yields the following system of equations,
@@ -268,14 +274,7 @@ equation with this closure yields the following system of equations,
 \end{equation}
 Now, given incoming boundary conditions, we can march through our spatial mesh along each direction and solve for (1) the cell-center flux and then (2) the outgoing flux in each cell. We use the outgoing flux as the incoming flux for the next cell. [talk through sweep pattern with angle].
 
-The $\alpha$
-terms are weighting factors such that $\alpha=0$ gives the classic
-diamond-difference equations and $\alpha = \pm 1$ gives the step-difference
-equations.  Setting $\alpha = \pm 1$ yields a first-order spatial differencing
-scheme.  The default behavior of Denovo for WDD uses $\alpha=0$, which gives
-the diamond-difference method.
-
-Many codes, like Denovo, provide a version of WDD that can correct negative fluxes.  When the outgoing flux is less than zero, we set the face-edge flux to zero and
+Many codes, like Denovo, provide a version of WDD that \textbf{can correct negative fluxes}.  When the outgoing flux is less than zero, we set the face-edge flux to zero and
 recalculate $\psi_{ijk}$ and the new edge fluxes.  This process is repeated
 until all the outgoing fluxes are greater than or equal to zero.  This method
 is nonlinear in that the corrected solution of Eq.~(\ref{eq:wdd}) depends on
