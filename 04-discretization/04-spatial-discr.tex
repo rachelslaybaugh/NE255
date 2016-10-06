@@ -31,13 +31,20 @@
 \usepackage[mathcal]{euscript}
 \usepackage{color}
 \usepackage{array}
+\usepackage{cite}
+\usepackage{c++}
+\usepackage{tmadd,tmath}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
 \usepackage[pdftex]{hyperref}
 \usepackage[parfill]{parskip}
 
 % math syntax
 \newcommand{\nth}{n\ensuremath{^{\text{th}}} }
-\newcommand{\ve}[1]{\ensuremath{\mathbf{#1}}}
+%\newcommand{\ve}[1]{\ensuremath{\mathbf{#1}}}
 \newcommand{\Macro}{\ensuremath{\Sigma}}
 \newcommand{\rvec}{\ensuremath{\vec{r}}}
 \newcommand{\vecr}{\ensuremath{\vec{r}}}
@@ -51,6 +58,9 @@
 \newcommand{\Ye}[2]{\ensuremath{Y^e_{#1}(\vOmega_#2)}}
 \newcommand{\sigg}[1]{\ensuremath{\Macro^{gg'}_{s\,#1}}}
 \newcommand{\psig}{\ensuremath{\psi^g}}
+\newcommand{\Di}{\ensuremath{\Delta_i}}
+\newcommand{\Dj}{\ensuremath{\Delta_j}}
+\newcommand{\Dk}{\ensuremath{\Delta_k}}
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
 \begin{document}
@@ -81,11 +91,13 @@ So far we've dealt with
 When we do all of this we get $t=0,\dots, T$ equations in time, $g=0,\dots,G$ equations in energy, and a number of equations in angle that depends on which approach we take. However, we still have one major item to deal with...
 
 \section*{Space}
+(Largely from Evans, some from Vuj\'ic)
+
 There are \textit{many} spatial discretization choices out there. What you choose can depend on the geometry and physical properties, as well as if you're using Cartesian or curvilinear formulations. Fundamentally, we can characterize the differencing schemes in a few ways
 \begin{compactitem}
 \item cell balance, which includes
   \begin{compactitem}
-  \item Finite Difference Method (FDM) -- using point-value solution	
+  \item Finite Difference Method (FDM) -- using point value solution	
   \item Finite Volume Method (FVM) -- using cell-averaged value solution
   \end{compactitem}	
 \item finite element (FEM) -- using basis function for expansion:	
@@ -101,7 +113,7 @@ There are \textit{many} spatial discretization choices out there. What you choos
   \end{compactitem}
 \end{compactitem}
 
-We'll talk about cell balance and finite element methods. In nuclear we have specific versions of these. For example, Denovo, the 3-D Cartesian mesh deterministic code from ORNL, offers these choices:
+We'll talk about cell balance and finite element methods; in nuclear we have specific versions of these. For example, Denovo, the 3-D Cartesian mesh deterministic code from ORNL, offers these choices:
 \begin{compactitem}
 \item Simplified P$_N$: finite volume 
 \item Discrete ordinates: step characteristics (SC) in 2- or 3-D, which can be written as a cell balance or finite element scheme
@@ -116,7 +128,133 @@ The WDD, WDD-FF, TWD, LD, BLD, and TLD schemes are all second-order, and the SC 
 
 LANL's PARTISN has similar choices, but their new Capsaesin code has tetrahedral mesh and uses XXXX. INL's RattleSNake uses finite element methods for YYYY.
 
-I'm going to go through $S_N$ methods from Denovo, derived from their methods manual, as this is a very thorough treatment. 
+We'll use the diagram in \autoref{fig:mesh-cell-sn} to think through our discretization schemes.
+\begin{figure}[h!]
+  \begin{center}
+    \input{mesh_cell_sn.pdftex_t}
+  \end{center}
+  \caption{General mesh cell used to derive discrete spatial
+    equations.  The adjacent cell points are given using the notation
+    $N\rightarrow +x$, $F\rightarrow -x$, $L\rightarrow -y$, $R\rightarrow
+    +y$, $B\rightarrow -z$, and $T\rightarrow +z$.}
+  \label{fig:mesh-cell-sn}
+\end{figure}
+
+For any given group, angle, and source, the transport equation can be reduced to
+\begin{equation}
+  \vOmega\cdot\nabla\psi(\ve{r}) + \Sigma_t(\ve{r})\psi(\ve{r}) =
+  s(\ve{r})\:,
+  \label{eq:spatial_transport}
+\end{equation}
+where $s(\ve{r})$ is a total accumulated source.  In operator form, this
+equation is
+\begin{equation}
+  \ve{L}\psi = s\:,
+  \label{eq:spatial_transport_operator}
+\end{equation}
+where $\ve{L}$ is the differential transport operator ($\vOmega\cdot\nabla + \Sigma_t(\ve{r})$).  We will be required to perform operations of the type
+\begin{equation}
+  \psi = \ve{L}^{-1}s\:,
+\end{equation}
+to solve discrete forms of Eq.~(\ref{eq:spatial_transport_operator}).  
+
+DEFINE OPERATOR
+
+For all
+the spatial differencing schemes discussed below, $\ve{L}$ can be \textit{implicitly}
+formed as a lower-left triangular matrix and inverted by ``sweeping'' through
+the mesh in the direction of particle flow.  In effect, the discretized form
+of Eq.~(\ref{eq:spatial_transport}) is solved in each cell.  The outgoing
+fluxes become input to the downwind cells, or in other words, each cell looks
+``upwind'' to find its incoming fluxes.  Once all the incoming fluxes are
+defined on the entering faces of a cell, the outgoing fluxes can be
+calculated, and the process is repeated until the entire mesh is solved for a
+given angle.  For each cell, the entering and exiting faces are defined by
+\begin{align}
+  \vOmega\cdot\ve{n} &< 0\:,\quad (\text{entering
+    face})\label{eq:entering-face}\\ \vOmega\cdot\ve{n} &> 0\:,\quad
+  (\text{exiting face})\label{eq:exiting-face}\:.
+\end{align}
+Mathematically, this is called a \textit{wavefront} solver.  The operation
+$\ve{L}^{-1}$ is regularly referred to as a \textit{sweep} in the nuclear
+engineering and transport communities.  
+
+
+\subsection*{Finite Difference}
+Finite Difference gives pointwise values on a grid.
+
+We (quickly) covered the principles of finite difference when we did time discretization. We used points to approximate derivatives and were able to obtain a corresponding expression for the \textit{Local Truncation Error} (LTE).
+
+A note about \textit{convergence}: the solution of the finite difference equations should converge to the true solution of the PDE as grid spacing (mesh size) goes to zero.	
+
+We're actually going to skip this formulation; I suspect you can figure it out.
+
+\subsection*{Finite Volume}
+Finite Volume methods approximate the average integral on a reference volume. This handles discontinuities much better--why might that be? If cell boundaries line up with material boundaries and we integrate half way into each cell, we capture the impact of the neighboring materials. Thus, the cell-balance equation can be derived by integrating Eq.~(\ref{eq:spatial_transport}) over the mesh cell in
+Fig.~\ref{fig:mesh-cell-sn}. 
+
+%We will use \textit{central difference} to approximate our spatial derivative, where 2nd order central diff is:
+%\[f'(x_0) = \frac{f(x_0 + h) - f(x_0 - h)}{2h} - \frac{1}{6}h^2 f'''(c_i)\:.\]
+%If we switch that to our system and note $x_{i+1/2} - x_i \equiv h/2$ and $x_{i+1/2} - x_{i-1/2} \equiv \Di$ then we can see
+%\begin{align*}
+%\frac{\partial \psi}{\partial x} &= \frac{\psi_{i+1/2} - \psi_{i-1/2}}{\Di} - \frac{1}{6}\bigl(\frac{\Di}{2}\bigr)^2 f'''(c_i)\: \:,\\
+%%
+%\int_{x_{i-1/2}}^{x_{i+1/2}} dx \:\frac{\partial \psi}{\partial x} &\approx \frac{\psi_{i+1/2} - \psi_{i-1/2}}{\Di} \:.
+%\end{align*}
+To integrate the differential term, we will note
+\[
+\int_{x_{i-1/2}}^{x_{i+1/2}} dx \:\frac{\partial \psi}{\partial x}  = \int_{x_{i-1/2}}^{x_{i+1/2}} \partial \psi = \psi_{i+1/2} - \psi_{i-1/2} \:.
+\]
+For the other terms we will use the \textit{midpoint integration rule}. We won't derive that rule here, but know that the midpoint rule comes from open Newton Cotes with Lagrange polynomials (a way to make integration rules) using $n=0$ (which uses one point only):
+\[\int_a^b f(x)dx = \int_{x_{i-1/2}}^{x_{i+1/2}} f(x)dx = hf(x_i) + \frac{h^3}{3}f''(\xi_i)\:.\]
+For us, $x_{i+1/2} - x_{i-1/2} = h \equiv \Di$. Thus, applying $\iiint(\cdot)\,dxdydz$, dividing by differential volume, and separating flux into $x$, $y$, and $z$ components gives,
+\begin{equation}
+  \frac{\mu}{\Delta_i}(\psi_{i+1/2}-\psi_{i-1/2}) +
+  \frac{\eta}{\Dj}(\psi_{j+1/2}-\psi_{j-1/2}) +
+  \frac{\xi}{\Dk}(\psi_{k+1/2}-\psi_{k-1/2}) + \Sigma_{t,ijk}\psi_{ijk} = s_{ijk}\:.
+  \label{eq:cell-balance}
+\end{equation}
+
+The derivation of the WDD equations is described in detail in Lewis \& Miller.  The diamond-difference method is derived by closing
+Eq.~(\ref{eq:cell-balance}) with the average of the face-edge fluxes, which is
+equivalent to a Crank-Nicolson method in space.  Solving the cell-balance
+equation with this closure yields the following system of equations,
+\begin{equation}
+  \begin{aligned} \mu\gtrless0\:,\,\eta\gtrless0\:,\,\xi\gtrless0\\
+    %%
+    \psi_{ijk} &= \frac{s_{ijk} +
+      \frac{2}{(1\pm\alpha_i)}\frac{|\mu|}{\Di}\bar{\psi}_{i\mp1/2} +
+      \frac{2}{(1\pm\alpha_j)}\frac{|\eta|}{\Dj}\bar{\psi}_{j\mp1/2} +
+      \frac{2}{(1\pm\alpha_k)}\frac{|\xi|}{\Dk}\bar{\psi}_{k\mp1/2}}{
+      \sigma_{ijk} + \frac{2}{(1\pm\alpha_i)}\frac{|\mu|}{\Di} +
+      \frac{2}{(1\pm\alpha_j)}\frac{|\eta|}{\Dj} +
+      \frac{2}{(1\pm\alpha_k)}\frac{|\xi|}{\Dk} }\:,\\
+    %%
+    \psi_{i\pm1/2} &= \frac{2}{(1\pm\alpha_i)}\psi_{ijk}-
+    \frac{(1\mp\alpha_i)}{(1\pm\alpha_i)}\bar{\psi}_{i\mp1/2}\:,\\
+    %%
+    \psi_{j\pm1/2} &= \frac{2}{(1\pm\alpha_j)}\psi_{ijk}-
+    \frac{(1\mp\alpha_j)}{(1\pm\alpha_j)}\bar{\psi}_{j\mp1/2}\:,\\
+    %%
+    \psi_{k\pm1/2} &= \frac{2}{(1\pm\alpha_k)}\psi_{ijk}-
+    \frac{(1\mp\alpha_k)}{(1\pm\alpha_k)}\bar{\psi}_{k\mp1/2}\:.
+  \end{aligned}
+  \label{eq:wdd}
+\end{equation}
+Here, the $\bar{\psi}$ are the incoming fluxes on each face.  The $\alpha$
+terms are weighting factors such that $\alpha=0$ gives the classic
+diamond-difference equations and $\alpha = \pm 1$ gives the step-difference
+equations.  Setting $\alpha = \pm 1$ yields a first-order spatial differencing
+scheme.  The default behavior of Denovo for WDD uses $\alpha=0$, which gives
+the diamond-difference method.
+
+Many codes, like Denovo, provide a version of WDD that can correct negative fluxes.  When the outgoing flux is less than zero, we set the face-edge flux to zero and
+recalculate $\psi_{ijk}$ and the new edge fluxes.  This process is repeated
+until all the outgoing fluxes are greater than or equal to zero.  This method
+is nonlinear in that the corrected solution of Eq.~(\ref{eq:wdd}) depends on
+$\psi$.
+
+
 
 
 

@@ -1,0 +1,31 @@
+\begin{picture}(0,0)%
+\includegraphics{mesh_cell_sn.pdf}%
+\end{picture}%
+\setlength{\unitlength}{1579sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(7806,7680)(1486,-7201)
+\put(2476,-6661){\makebox(0,0)[lb]{\smash{{\SetFigFont{5}{6.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$(x_{i+1/2},y_{j-1/2},z_{k-1/2})$}%
+}}}}
+\put(7276,-6661){\makebox(0,0)[lb]{\smash{{\SetFigFont{5}{6.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$(x_{i+1/2},y_{j+1/2},z_{k-1/2})$}%
+}}}}
+\put(5776,-3361){\makebox(0,0)[lb]{\smash{{\SetFigFont{5}{6.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$(x_i,y_j,z_k)$}%
+}}}}
+\put(8476,-661){\makebox(0,0)[lb]{\smash{{\SetFigFont{5}{6.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$(x_{i-1/2},y_{j+1/2},z_{k+1/2})$}%
+}}}}
+\put(7276,-1861){\makebox(0,0)[lb]{\smash{{\SetFigFont{5}{6.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$(x_{i+1/2},y_{j+1/2},z_{k+1/2})$}%
+}}}}
+\put(2476,-1861){\makebox(0,0)[lb]{\smash{{\SetFigFont{5}{6.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$(x_{i+1/2},y_{j-1/2},z_{k+1/2})$}%
+}}}}
+\put(3676,-661){\makebox(0,0)[lb]{\smash{{\SetFigFont{5}{6.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$(x_{i-1/2},y_{j-1/2},z_{k+1/2})$}%
+}}}}
+\put(8476,-5461){\makebox(0,0)[lb]{\smash{{\SetFigFont{5}{6.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$(x_{i-1/2},y_{j+1/2},z_{k-1/2})$}%
+}}}}
+\put(3676,-5461){\makebox(0,0)[lb]{\smash{{\SetFigFont{5}{6.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$(x_{i-1/2},y_{j-1/2},z_{k-1/2})$}%
+}}}}
+\end{picture}%
