@@ -69,18 +69,55 @@ So far we've dealt with
 \begin{compactitem}
 \item Discretization of \textit{time} using finite difference method (Taylor expand points and combine)
 \item Discretization of \textit{energy} using the multigroup approximation, where we assume group-integrated values. 
-\item Expanding sources, in particular scattering, in spherical harmonics, which we can reduce to Legendre Polynomials in the case of azimuthal symmetry.
+\item \textit{Expanding sources}, in particular scattering, in spherical harmonics--which we reduce to Legendre Polynomials in the case of azimuthal symmetry.
 \item Discretization of \textit{angle} using either 
   \begin{compactitem}
   \item $S_N$: get solutions along specific angle sets (quadrature points), use corresponding quadrature weights to integrate over angle
   \item $P_N$: expand the angular flux in spherical harmonics, which we only do in 1-D so Legendre polynomials in practice, and solve a set of coupled equations for each expansion term (with closure relations at $n=0 and n=N+1$).
-  \item $SP_N$: WORDS
+  \item $SP_N$: we take the 1-D $P_N$ equations and transform them to 3D by replacing the 1-D diffusion operators with the 3-D diffusion operator and replacing the derivatives at the boundary with the outward normal derivatives. We also replace $\phi_{l'}$ by a vector for odd $l'$.  
   \end{compactitem}
 \end{compactitem}
 
-When we do all of this we get $t=0,\dots, T$ equations in time, $g=0,\dots,G$ equations in energy, and a number of equations that depends on which angular approach we take. However, we still have one major item to deal with...
+When we do all of this we get $t=0,\dots, T$ equations in time, $g=0,\dots,G$ equations in energy, and a number of equations in angle that depends on which approach we take. However, we still have one major item to deal with...
 
 \section*{Space}
+There are \textit{many} spatial discretization choices out there. What you choose can depend on the geometry and physical properties, as well as if you're using Cartesian or curvilinear formulations. Fundamentally, we can characterize the differencing schemes in a few ways
+\begin{compactitem}
+\item cell balance, which includes
+  \begin{compactitem}
+  \item Finite Difference Method (FDM) -- using point-value solution	
+  \item Finite Volume Method (FVM) -- using cell-averaged value solution
+  \end{compactitem}	
+\item finite element (FEM) -- using basis function for expansion:	
+  \begin{compactitem}
+  \item Piecewise linear: hat functions	
+  \item Piecewise quadratic or cubic basis functions	
+  \item Piecewise higher order Gauss-Legendre polynomials	
+  \end{compactitem}
+\item Spectral and Pseudo Spectral Methods -- using orthogonal global series as the basis function:	
+  \begin{compactitem}
+  \item Fourier series	
+  \item Bessel, Chebyshev, Legendre series
+  \end{compactitem}
+\end{compactitem}
+
+We'll talk about cell balance and finite element methods. In nuclear we have specific versions of these. For example, Denovo, the 3-D Cartesian mesh deterministic code from ORNL, offers these choices:
+\begin{compactitem}
+\item Simplified P$_N$: finite volume 
+\item Discrete ordinates: step characteristics (SC) in 2- or 3-D, which can be written as a cell balance or finite element scheme
+\item Discrete ordinates: bilinear discontinuous (BLD) in 2-D; FEM
+\item Discrete ordinates: linear discontinuous (LD); FEM 
+\item Discrete ordinates: trilinear discontinuous (TLD); FEM
+\item Discrete ordinates: theta weighted diamond difference (TWD); cell balance.
+\item Discrete ordinates: weighted diamond difference (WDD) without flux fixup; cell balance.
+\item Discrete ordinates: weighted diamond difference with flux fixup to zero (WDD-FF); cell balance
+\end{compactitem}
+The WDD, WDD-FF, TWD, LD, BLD, and TLD schemes are all second-order, and the SC scheme is first-order.
+
+LANL's PARTISN has similar choices, but their new Capsaesin code has tetrahedral mesh and uses XXXX. INL's RattleSNake uses finite element methods for YYYY.
+
+I'm going to go through $S_N$ methods from Denovo, derived from their methods manual, as this is a very thorough treatment. 
+
 
 
 \end{document}
