@@ -386,7 +386,7 @@ Eqs.~(\ref{eq:even-flux}) and (\ref{eq:odd-flux}) are the \textit{angular flux m
   
 Applying the same methodology gives the expansion of the \textbf{external source}
 \begin{equation}
-  q^g_e((\vec{r}), \vOmega) = \sum_{l=0}^{N}\Bigl[
+  q^g_e(\vec{r}, \vOmega) = \sum_{l=0}^{N}\Bigl[
   Y^e_{l0}(\vOmega)q^g_{l0}(\vec{r}) +
   \sum_{m=1}^{l}
   \bigr(
@@ -514,6 +514,19 @@ S(x,\mu) = \sum_{l=0}^{\infty} \frac{(2l+1)}{4\pi} P_l(\mu) \sum_{g' \neq g} \Si
 with $\tilde{S}_g(x,\mu)$ being the external and/or fission source for the group. 
 (This is breaking the group summation into the within group component and the scattering across other groups component).\\
 Recall: as long as the series is infinite, we are not introducing any approximations.
+
+------------------------------------\\
+A note on translating between $P_l(\mu_0)$, where $\mu_0 - \vOmega \cdot \vOmega'$, and $P_l(\vOmega')P_l(\vOmega)$:
+\begin{align*}
+\Sigma_s(\vOmega' \cdot \vOmega) &= \sum_{l=0}^{\infty} \frac{2l+1}{4\pi} \Sigma_{sl} P_l(\mu_0) = \sum_{l=0}^{\infty} \frac{2l+1}{4\pi} \Sigma_{sl} P_l(\vOmega')P_l(\vOmega) \\
+%\psi(x, \mu) &\approx \sum_{l=0}^{\infty} \frac{(2l+1)}{4\pi} \phi_l(x)P_l(\mu)\\
+\phi_l(x) &= \int d\mu \: P_{l}(\mu)\psi(x,\mu)\\
+%
+&\sum_{l=0}^{\infty} \frac{2l+1}{4\pi} \Sigma_{sl}(x) \int_{-1}^1 d\mu'\: P_l(\mu_0) \psi(x, \mu') =  \sum_{l=0}^{\infty} \frac{2l+1}{4\pi} \Sigma_{sl}(x) \int_{-1}^1 d\mu'\: P_l(\mu)P_{l}(\mu')\psi(x,\mu') \\
+%
+&\sum_{l=0}^{\infty} \frac{(2l+1)}{4\pi} \Sigma_{s,l}(x) P_l(\mu)\phi_l(x)  = \sum_{l=0}^{\infty} \frac{(2l+1)}{4\pi} \Sigma_{s,l}(x)\int d\mu' \: P_l(\mu)P_{l}  (\mu')\psi(x,\mu')
+\end{align*}
+------------------------------------
 
 We can use the Legendre expansion to make our TE an infinite set of coupled ODEs. We use the flux expansion in the equation, multiply by $P_{l'}(\mu)$ and integrate over $-1 \leq \mu \leq 1$:
 \begin{align*}
