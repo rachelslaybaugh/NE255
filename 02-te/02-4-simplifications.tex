@@ -128,24 +128,17 @@ We also often simplify by only worrying about fewer dimensions. Here we'll look 
 
 We first assume that \textbf{things only vary in the $z$ dimension}, so $\vec{r} \rightarrow z$, e.g.\\ $\psi(\vec{r}, E, \vOmega, t) \rightarrow \psi(z, E, \vOmega, t)$
 
-We next assume (which is often true) that our systems is \textbf{azimuthally symmetric} (see \autoref{fig:azimuthal}), which means that the scattering only depends on the angle of the scattering cosine, $\mu =\vOmega' \cdot \vOmega$, because it is symmetric about the azimuthal direction ($\varphi$). We can use this assumption to simplify two things. 
-\begin{figure}[h!]
-    \begin{center}
-    \includegraphics[keepaspectratio, width = 3 in]{azimuthal}
-    \end{center}
-    \caption{Azimuthal symmetry}
-    \label{fig:azimuthal}
-\end{figure}
+We next assume (which is often true) that our systems is \textbf{azimuthally symmetric}, which means that the scattering is symmetric about the azimuthal direction ($\varphi$). Therefore, scattering only depends on the angle of the scattering cosine, $\mu_0 =\vOmega' \cdot \vOmega$--the angle between where it was heading and where it is heading. We can use this assumption to simplify two things. 
 
 We will use these terms in our simplifications:\\
-$d\vOmega = \sin(\theta) d\theta d\varphi = d\mu d\varphi; \quad \mu = \cos(\theta)\,$ so $d\mu = \sin(\theta)d\theta\:; \quad \Omega_z = \cos(\theta) = \mu\:.$
+$d\vOmega = \sin(\theta) d\theta d\varphi = d\mu d\varphi; \quad \mu = \cos(\theta)\,$ so $d\mu = \sin(\theta)d\theta\:; \quad \Omega_z = \cos(\theta) = \mu$ and recall our new definition $\mu_0 = \vOmega' \cdot \vOmega$.
 \begin{align*}
 \int_{4 \pi} d\vOmega &= \int_0^{2\pi} d\varphi \int_{0}^{\pi} \sin(\theta) d\theta =  \int_0^{2\pi} d\varphi \int_{-1}^1 d\mu = 4\pi \\
 \psi(z,\vOmega,E,t) d\vOmega &= \psi(z,\varphi, \mu,E,t) d\varphi  d\mu =  \psi(z, \mu,E,t) d\varphi  d\mu 
 \end{align*}
 %
 With azimuthal symmetry we can rewrite the scattering cross section since it is no longer a function of $\varphi$.
-\[\Sigma_s(z, \vOmega' \rightarrow \vOmega) \rightarrow \Sigma_s(z, \vOmega' \cdot \vOmega) = \Sigma_s(z, \mu) \:.\]
+\[\Sigma_s(z, \vOmega' \rightarrow \vOmega) \rightarrow \Sigma_s(z, \vOmega' \cdot \vOmega) = \Sigma_s(z, \mu_0) \:.\]
 
 Further, we can execute the angular integration over $\varphi$ since nothing depends on it anymore. For example:
 \[
@@ -154,7 +147,7 @@ Further, we can execute the angular integration over $\varphi$ since nothing dep
 The next simplification is in the streaming term:
 \[\vOmega \cdot \nabla \psi(\vec{r}, \vOmega, E, t) \rightarrow \Omega_z \frac{\partial \psi(z, \mu, E, t)}{\partial z} = \mu \frac{\partial \psi(z, \mu, E, t)}{\partial z} \]
 %
-We can combine all of this into a 1-D equation, using $\mu_0 = \vOmega \cdot \vOmega'$:
+We can combine all of this into a 1-D equation, using $\mu_0 = \vOmega' \cdot \vOmega$:
 \begin{align*}
 \frac{1}{v}\frac{\partial \psi}{\partial t}(z,E,\omvec,t) &+ \Omega_z \frac{\partial \psi(z, \vOmega, E, t)}{\partial z} + \Sigma_t(z)\psi(z, \vOmega, E, t)  \\
 &= \frac{\chi(E)}{4 \pi} \int_0^{\infty} dE'\int_{4 \pi} d\vOmega'\:  \nu(E')\Sigma_f(z,E',t)\psi(z, \vOmega', E', t)  \\
@@ -194,8 +187,9 @@ We expand the scattering cross section in Legendre Polynomials, which are a sequ
 as follows
 \[\Sigma_s(\vOmega' \cdot \vOmega) = \sum_{l=0}^{\infty} \frac{2l+1}{4\pi} \Sigma_{sl} P_l(\mu_0) = \sum_{l=0}^{\infty} \frac{2l+1}{4\pi} \Sigma_{sl} P_l(\vOmega')P_l(\vOmega) \:. \]
 %
-(Note that we used the Legendre Addition Thoerem, which uses spherical harmonics. You can learn more here:\\\href{https://en.wikipedia.org/wiki/Legendre_polynomials}{https://en.wikipedia.org/wiki/Legendre\_polynomials}\\ \href{https://en.wikipedia.org/wiki/Spherical_harmonics}{https://en.wikipedia.org/wiki/Spherical\_harmonics},\\
-but for now just take my word for the fact that this works). 
+(Note that we used the Legendre Addition Thoerem, which uses spherical harmonics. You can learn more here:\\
+\hspace*{2em}\href{https://en.wikipedia.org/wiki/Legendre_polynomials}{https://en.wikipedia.org/wiki/Legendre\_polynomials}\\ \hspace*{2em}\href{https://en.wikipedia.org/wiki/Spherical_harmonics}{https://en.wikipedia.org/wiki/Spherical\_harmonics},\\
+but for now just note that there are identities and manipulations that allow this to be true). 
 
 Legendre polynomials are solutions to Legendre's differential equations,
 \[\frac{d}{dx}\bigl[(1 - x^2) \frac{d}{dx} P_n(x) \bigr] + n(n+1)P_n(x) = 0\:,\]
@@ -225,7 +219,7 @@ To find $f_n$, multiply by $P_l$ and integrate over $(-1,1)$:
 \begin{align*}
 \int_{-1}^1 dx\: f(x) P_l(x) &= \sum_{l=0}^{\infty} \frac{2n+1}{2} f_n\int_{-1}^1 dx\:  P_n(x) P_l(x)\\
 \therefore f_l &= \int_{-1}^1 dx\: f(x) P_l(x)\\
-\text{and }\Sigma_{sl} &= 2\pi \int_{-1}^1 d\mu_0 \: P_l(\mu_0)\Sigma_s(\mu_0)\:.
+\text{and by analogy}\Sigma_{sl} &= 2\pi \int_{-1}^1 d\mu_0 \: P_l(\mu_0)\Sigma_s(\mu_0)\:.
 \end{align*}
 
 All of that was to say, we can actually deal with scattering when it's \textit{not} isotropic by expressing the scattering cross section as an expansion in Legendre polynomials. In our simplified transport equation, this looks like:
