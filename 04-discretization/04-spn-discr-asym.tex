@@ -1,0 +1,261 @@
+\documentclass[12pt]{article}
+\usepackage[top=1in, bottom=1in, left=1in, right=1in]{geometry}
+
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage{amssymb}
+%% The amsthm package provides extended theorem environments
+\usepackage{amsthm}
+\usepackage{epsfig}
+\usepackage{times}
+\renewcommand{\ttdefault}{cmtt}
+\usepackage{amsmath}
+\usepackage{graphicx} % for graphics files
+\usepackage{tabu}
+
+% Draw figures yourself
+\usepackage{tikz} 
+
+% writing elements
+\usepackage{mhchem}
+
+\usepackage{paralist}
+
+% The float package HAS to load before hyperref
+\usepackage{float} % for psuedocode formatting
+\usepackage{xspace}
+
+% from Denovo Methods Manual
+\usepackage{mathrsfs}
+\usepackage[mathcal]{euscript}
+\usepackage{color}
+\usepackage{array}
+\usepackage{bm}
+
+\usepackage[parfill]{parskip}
+
+% math syntax
+\newcommand{\SN}{S$_N$}
+\newcommand{\vd}{\bm{\cdot}} % slightly bold vector dot
+\newcommand{\grad}{\vec{\nabla}} % gradient
+\newcommand{\ud}{\mathop{}\!\mathrm{d}} % upright derivative symbol
+\def\bal#1\nal{\begin{align}#1\end{align}}
+\def\bala#1\nala{\begin{align*}#1\end{align*}}
+\newcommand{\f}{\frac}
+\newcommand{\ux}{\ensuremath{\vec{r}}}
+\newcommand{\un}{{\bm n}}
+\newcommand{\unab}{{\bf \nabla}}
+\newcommand{\ep}{\varepsilon}
+\newcommand{\uom}{\ensuremath{\hat{\Omega}}}
+
+\newcommand{\nth}{n\ensuremath{^{\text{th}}} }
+\newcommand{\ve}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\Macro}{\ensuremath{\Sigma}}
+\newcommand{\rvec}{\ensuremath{\vec{r}}}
+\newcommand{\vecr}{\ensuremath{\vec{r}}}
+\newcommand{\omvec}{\ensuremath{\hat{\Omega}}}
+\newcommand{\vOmega}{\ensuremath{\hat{\Omega}}}
+\newcommand{\even}{\ensuremath{\phi^g}}
+\newcommand{\odd}{\ensuremath{\vartheta^g}}
+\newcommand{\evenp}{\ensuremath{\phi^{g'}}}
+\newcommand{\oddp}{\ensuremath{\vartheta^{g'}}}
+\newcommand{\Sn}{\ensuremath{S_N} }
+\newcommand{\Ye}[2]{\ensuremath{Y^e_{#1}(\vOmega_#2)}}
+\newcommand{\sigg}[1]{\ensuremath{\Macro^{gg'}_{s\,#1}}}
+\newcommand{\psig}{\ensuremath{\psi^g}}
+%---------------------------------------------------------------------------
+%---------------------------------------------------------------------------
+\begin{document}
+\begin{center}
+{\bf NE 255, Fa16 \\
+Simplified P$_N$ Equations - part 2\\
+October 11, 2016}
+\end{center}
+
+\setlength{\unitlength}{1in}
+\begin{picture}(6,.1) 
+\put(0,0) {\line(1,0){6.25}}         
+\end{picture}
+
+There are at least two ways that asymptotic analysis can be used to derive the SP$_N$ equations, both dating back to the early 1990's.
+(I) Pomraning presented a derivation demonstrating that, if the transport solution is locally 1-D, the SP$_N$ solution will asymptotically agree with the transport solution.
+(II) Larsen, Morel, and McGhee derived the SP$_N$ equations for anisotropic scattering that is not highly forward peaked and included energy dependence through the multigroup method.
+Neither of these derivations includes asymptotic boundary conditions.
+
+\section*{Asymptotic Derivation of the SP$_N$ Equations}
+We will study the second approach for isotropic scattering in the one-speed case.
+The derivation when there is anisotropic scattering requires some tensor analysis that is beyond the scope of this class.
+The transport equation is written as
+\bal\label{1}
+&\uom \cdot \unab \psi(\ux,\uom) + \Sigma_t(\ux)\psi(\ux,\uom) = \f{\Sigma_s(\ux)}{4\pi}\phi(\ux) + \frac{Q(\ux)}{4\pi},
+\nal
+where $\phi = \int_{4\pi}\psi d\Omega=$ P$_0$ moment of $\psi$.
+Defining $0<\ep\ll 1$, we scale the parameters in order to consider a \textit{diffusive} system:
+\bala
+\Sigma_t(\ux) &= \f{\sigma_t(\ux)}{\ep},\\
+\Sigma_t(\ux) - \Sigma_s(\ux) &= \Sigma_a(\ux) = \ep\sigma_a(\ux), \\
+Q(\ux) &= \ep q(\ux),
+\nala
+where $\sigma_t$, $\sigma_a$, and $q$ are $O(1)$.
+The physics implied by this scaling is as follows:
+\begin{enumerate}
+\item The system is optically thick ($\Sigma_t >>1$)
+\item The rates of absorption and production due to interior sources are comparable and weak: $\Sigma_a = O(\ep)$ and $Q = O(\ep)$
+\item The infinite medium solution $\phi = Q/\Sigma_a = q/\sigma_a$ is $O(1)$ \item The diffusion length $L = (3\Sigma_t\Sigma_a)^{-1/2}=(3\sigma_t\sigma_a)^{-1/2}$ is $O(1)$
+\item If one introduces this scaling into the standard diffusion approximation, the resulting equation is independent of $\ep$. In other words, the standard diffusion equation is invariant under this scaling. 
+\end{enumerate}
+
+Under this scaling, Eq.~\eqref{1} becomes
+\bala
+\left(1+\f{\ep}{\sigma_t}\uom\cdot\unab\right)\psi = \f{1-\ep^2\sigma_a/\sigma_t}{4\pi}\phi +\f{\ep^2 q}{4\pi\sigma_t}.
+\nala
+We invert the operator on the left-hand side of this equation to obain and expression for $\psi$ in terms of $\phi$ and $q$:
+\bala
+\psi = \left(1+\f{\ep}{\sigma_t}\uom\cdot\unab\right)^{-1}\left[\f{1-\ep^2\sigma_a/\sigma_t}{4\pi}\phi +\f{\ep^2 q}{4\pi\sigma_t}\right].
+\nala
+Since $\ep$ is small, we expand the inverse operator in a power series:
+\bal
+\psi &= \left(1-\ep\left(\f{1}{\sigma_t}\uom\cdot\unab\right) + \ep^2\left(\f{1}{\sigma_t}\uom\cdot\unab\right)^2-\ep^3\left(\f{1}{\sigma_t}\uom\cdot\unab\right)^3+\ep^4\left(\f{1}{\sigma_t}\uom\cdot\unab\right)^4-\right.\label{2}\\
+&\qquad\qquad\left. \ep^5\left(\f{1}{\sigma_t}\uom\cdot\unab\right)^5+\ep^6\left(\f{1}{\sigma_t}\uom\cdot\unab\right)^6+O(\ep^7)\right)\left[\f{1-\ep^2\sigma_a/\sigma_t}{4\pi}\phi +\f{\ep^2 q}{4\pi\sigma_t}\right].\nonumber
+\nal
+Next, we will integrate Eq.~\eqref{2} upon the unit sphere and divide it by $4\pi$.
+We need the following identity:
+\bala
+\f{1}{4\pi}\int_{4\pi}\left(\f{1}{\sigma_t}\uom\cdot\unab\right)^nd\Omega = 
+\f{1+(-1)^n}{2}\f{1}{n+1}\left(\f{1}{\sigma_t}\unab\right)^n,
+\nala
+for $n=0,1,2,...$ .
+Thus, Eq.~\eqref{2} becomes
+\bal\label{3}
+\f{\phi}{4\pi} &= \left(1+ \f{\ep^2}{3}\left(\f{1}{\sigma_t}\unab\right)^2 + \f{\ep^4}{5}\left(\f{1}{\sigma_t}\unab\right)^4
++ \f{\ep^6}{7}\left(\f{1}{\sigma_t}\unab\right)^6 + O(\ep^8)\right)\left[\f{1-\ep^2\sigma_a/\sigma_t}{4\pi}\phi +\f{\ep^2 q}{4\pi\sigma_t}\right].
+\nal
+If there are non-vacuum boundary conditions, then extra terms occur in Eq.~\eqref{3}.
+However, these are $O(e^{-\rho/\ep})$, where $\rho$ is the optical distance to the boundary.
+Thus, in the interior of the system these terms are exponentially small and we will ignore them. 
+\newpage
+
+Now we invert the operator on the right-hand side of this equation and once again expand it in a power series:
+\bala
+\left(1+ \f{\ep^2}{3}\left(\f{1}{\sigma_t}\unab\right)^2 + \f{\ep^4}{5}\left(\f{1}{\sigma_t}\unab\right)^4
++ \f{\ep^6}{7}\left(\f{1}{\sigma_t}\unab\right)^6 + O(\ep^8)\right)^{-1} &= \\
+&\hspace{-17em}1 - \left(\f{\ep^2}{3}\left(\f{1}{\sigma_t}\unab\right)^2 + \f{\ep^4}{5}\left(\f{1}{\sigma_t}\unab\right)^4
++ \f{\ep^6}{7}\left(\f{1}{\sigma_t}\unab\right)^6 + O(\ep^8)\right) + \\
+& \hspace{-9.8em} \left(\f{\ep^4}{9}\left(\f{1}{\sigma_t}\unab\right)^4 + \f{2\ep^6}{15}\left(\f{1}{\sigma_t}\unab\right)^6 + O(\ep^8)\right) -\\
+& \hspace{-3.2em}\left(\f{\ep^6}{27}\left(\f{1}{\sigma_t}\unab\right)^6 + O(\ep^8)\right) =\\
+&\hspace{-17em} = 1-\f{\ep^2}{3}\left(\f{1}{\sigma_t}\unab\right)^2 - \f{4\ep^4}{45}\left(\f{1}{\sigma_t}\unab\right)^4 -
+\f{44\ep^6}{945}\left(\f{1}{\sigma_t}\unab\right)^6 + O(\ep^8) \,.
+\nala
+Thus, Eq.~\eqref{3} becomes
+\bala
+\left(1-\f{\ep^2}{3}\left(\f{1}{\sigma_t}\unab\right)^2 - \f{4\ep^4}{45}\left(\f{1}{\sigma_t}\unab\right)^4 -
+\f{44\ep^6}{945}\left(\f{1}{\sigma_t}\unab\right)^6 + O(\ep^8)\right)\phi = 
+\left(1-\ep^2\sigma_a/\sigma_t\right)\phi +\f{\ep^2 q}{\sigma_t}\,,
+\nala
+or
+\bal\label{4}
+-\sigma_t\left(\f{1}{3}\left(\f{1}{\sigma_t}\unab\right)^2 + \f{4\ep^2}{45}\left(\f{1}{\sigma_t}\unab\right)^4 +
+\f{44\ep^4}{945}\left(\f{1}{\sigma_t}\unab\right)^6 + O(\ep^6)\right)\phi +\sigma_a\phi = q\,.
+\nal
+If we now retain terms of $O(\ep^{2n})$ but discard all higher order terms, we obtain a partial differential equation for $\phi$ of order $2n$.
+This equation is an asymptotic approximation to Eq.~\eqref{3}, but it is \textit{not} any of the simplifieded P$_N$ approximations.
+To derive these approximations, we must rewrite the equation obtained from Eq.~\eqref{4} in an asymptotically equivalent form as either a single second-order
+equation or as a coupled system of second-order equations.
+We will do that now for SP$_1$, SP$_2$, and SP$_3$. 
+
+\subsection*{Diffusion Equation (P$_1$)}
+We delete terms of $O(\ep^2)$ and higher in Eq.~\eqref{4} to get
+\bala
+-\unab\cdot\f{1}{3\sigma_t}\unab\phi + \sigma_a\phi = q.
+\nala
+Multiplying this by $\ep$ and going back to the original unscaled parameters, we get the diffusion equation (P$_1$ or SP$_1$):
+\bala
+-\unab\cdot\f{1}{3\Sigma_t(\ux)}\unab\phi(\ux) + \Sigma_a(\ux)\phi(\ux) = Q(\ux).
+\nala
+
+\subsection*{SP$_2$ Equation}
+We delete terms of $O(\ep^4)$ and higher in Eq.~\eqref{4} and rearrange the terms:
+\bala
+\left(I+\f{4\ep^2}{15}\left(\f{1}{\sigma_t}\unab\right)^2\right)\f{1}{3}\left(\f{1}{\sigma_t}\unab\right)^2\phi = \f{\sigma_a\phi-q}{\sigma_t}.
+\nala
+Then we operate on this equation by $\left(I-\f{4\ep^2}{15}\left(\f{1}{\sigma_t}\unab\right)^2\right)$ and discard terms of $O(\ep^4)$ to get
+\bala
+\f{1}{3}\left(\f{1}{\sigma_t}\unab\right)^2\phi = \left(I-\f{4\ep^2}{15}\left(\f{1}{\sigma_t}\unab\right)^2\right)\f{\sigma_a\phi-q}{\sigma_t},
+\nala
+which simplifies to
+\bala
+-\unab\cdot\f{1}{3\sigma_t}\unab\left(\phi + \f{4\ep^2}{5}\f{\sigma_a\phi-q}{\sigma_t}\right) + \sigma_a\phi = q.
+\nala
+Multiplying this by $\ep$ and going back to the original unscaled parameters, we get the simplified P$_2$ equation:
+\bala
+-\unab\cdot\f{1}{3\Sigma_t(\ux)}\unab\left(\phi(\ux) + \f{4}{5}\f{\Sigma_a(\ux)\phi(\ux)-Q(\ux)}{\Sigma_t(\ux)}\right) + \Sigma_a(\ux)\phi(\ux) = Q(\ux).
+\nala
+
+\subsection*{SP$_3$ Equations}
+We delete terms of $O(\ep^6)$ and higher in Eq.~\eqref{4} and rearrange the terms:
+\bal\label{5}
+-\sigma_t\f{1}{3}\left(\f{1}{\sigma_t}\unab\right)^2\left(\phi +\f{4\ep^2}{15}\left(\f{1}{\sigma_t}\unab\right)^2\phi + \f{44\ep^4}{315}\left(\f{1}{\sigma_t}\unab\right)^4\phi\right) + \sigma_a\phi = q.
+\nal
+Now we define
+\bal\label{6}
+\phi_2 = \f{2\ep^2}{15}\left(\f{1}{\sigma_t}\unab\right)^2\phi + \f{22\ep^4}{315}\left(\f{1}{\sigma_t}\unab\right)^4\phi = \left(I + \f{11\ep^2}{21}\left(\f{1}{\sigma_t}\unab\right)^2\right)\f{2\ep^2}{15}\left(\f{1}{\sigma_t}\unab\right)^2\phi
+\nal
+and rewrite Eq.~\eqref{5} as
+\bal\label{7}
+-\unab\cdot\f{1}{3\sigma_t}\unab\left(\phi + 2\phi_2\right) + \sigma_a\phi = q.
+\nal
+Operating on Eq.~\eqref{6} by
+\[
+\left(I - \f{11\ep^2}{21}\left(\f{1}{\sigma_t}\unab\right)^2\right)
+\]
+and discarding terms of $O(\ep^6)$, we obtain
+\bala
+\left(I - \f{11\ep^2}{21}\left(\f{1}{\sigma_t}\unab\right)^2\right)\phi_2 = 
+\f{2\ep^2}{15}\left(\f{1}{\sigma_t}\unab\right)^2\phi,
+\nala
+which simplifies to
+\bal\label{8}
+-\f{1}{\sigma_t}\unab\cdot\f{1}{3\sigma_t}\unab\left(\f{11\ep^2}{7}\phi_2 + \f{2\ep^2}{5}\phi\right) + \phi_2 = 0.
+\nal
+Multiplying Eq.~\eqref{7} by $\ep$ and going back to the original unscaled parameters, we get
+\bala
+-\unab\cdot\f{1}{3\Sigma_t(\ux)}\unab\left(\phi(\ux) + 2\phi_2(\ux)\right) + \Sigma_a(\ux)\phi(\ux) = Q(\ux);
+\nala
+similarly, multiplying Eq.~\eqref{8} by $\sigma_t/\ep$ and going back to the original unscaled parameters, we get
+\bala
+-\unab\cdot\f{1}{3\Sigma_t(\ux)}\unab\left(\f{11}{7}\phi_2(\ux) + \f{2}{5}\phi(\ux)\right) + \Sigma_t(\ux)\phi_2(\ux) = 0.
+\nala
+These are the simplified P$_3$ equations for Eq.~\eqref{1}.
+
+NOTE: In the previous class we had obtained the following SP$_3$ equations for a problem with an isotropic source:
+\begin{align*}
+&-\nabla \cdot \frac{1}{3[\Sigma_t-\Sigma_{s1}]}\nabla\phi_0
+-\nabla \cdot \frac{2}{3[\Sigma_t-\Sigma_{s1}]}\nabla\phi_2
++\Sigma_a\phi_0 = s_0\,,\\
+&-\nabla \cdot \frac{2}{15[\Sigma_t-\Sigma_{s1}]}\nabla\phi_0
+-\nabla \cdot \left(\frac{4}{15[\Sigma_t-\Sigma_{s1}]}+\frac{9}{35[\Sigma_t-\Sigma_{s3}]}\right)\nabla\phi_2
++[\Sigma_t-\Sigma_{s2}]\phi_2 = 0\,.
+ \end{align*}
+If scattering is isotropic, $\Sigma_{s1} = \Sigma_{s2} = \Sigma_{s3} = 0$, and these equations simplify to
+\begin{align*}
+&-\nabla \cdot \frac{1}{3\Sigma_t}\nabla\phi_0
+-\nabla \cdot \frac{2}{3\Sigma_t}\nabla\phi_2
++\Sigma_a\phi_0 = s_0\,,\\
+&-\nabla \cdot \frac{2}{15\Sigma_t}\nabla\phi_0
+-\nabla \cdot \left(\frac{4}{15\Sigma_t}+\frac{9}{35\Sigma_t}\right)\nabla\phi_2
++\Sigma_t\phi_2 = 0\,,
+ \end{align*}
+ reducing to the SP$_3$ equations derived above.
+ 
+ 
+ 
+--------------------------
+
+\vfill
+
+These notes are derived from Ryan McClarren's review paper on the SP$_N$ equations: ``Theoretical Aspects of the Simplified P$_n$ Equations'', Transport Theory and Statistical Physics 39: 73--109, 2011; and from the conference paper by Larsen, Morel, and McGhee: ``Asymptotic Derivation of the Simplified P$_N$ Equations'', Proceedings of the ANS - M\&C Topical Meeting in Karlsruhe, Germany (1993).
+
+
+\end{document}
+Contact GitHub 
