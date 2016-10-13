@@ -228,16 +228,18 @@ For us, $x_{i+1/2} - x_{i-1/2} = h \equiv \Di$. Thus, applying $\iiint(\cdot)\,d
   \frac{\xi}{\Dk}(\psi_{k+1/2}-\psi_{k-1/2}) + \Sigma_{t,ijk}\psi_{ijk} = s_{ijk}\:.
   \label{eq:cell-balance}
 \end{equation}
-Note that we now need a way to relate the center ($\psi_{ijk}$) and edge ($\psi_{n\pm 1/2}$)fluxes to one another!
-The diamond-difference method (using Lewis \& Miller) is derived by closing
+Note that we now need a way to relate the center ($\psi_{ijk}$) and edge ($\psi_{n\pm 1/2}$) fluxes to one another!
+The diamond-difference method (using Lewis \& Miller and Exnihilo manual) is derived by closing
 Eq.~(\ref{eq:cell-balance}) with a weighted average of the face-edge fluxes, which is
 equivalent to a Crank-Nicolson method in space. 
+(note that Lewis \& Miller uses a slightly different scheme that is mathematically equivalent)
 \begin{align*}
 \psi_{i} &= \frac{1}{2}\bigl((1+\alpha_i)\psi_{i+1/2}+(1-\alpha_i)\psi_{i-1/2}\bigr)\\
+& -1 \leq \alpha \leq 1\\
 \psi_{i+1/2} &= \frac{2}{(1+\alpha_i)}\psi_{ijk}-
-    \frac{(1-\alpha_i)}{(1+\alpha_i)}\psi_{i-1/2}\quad \mu>0 \quad \text{when }\psi_{i-1/2}\text{ is incoming}\\
+    \frac{(1-\alpha_i)}{(1+\alpha_i)}\psi_{i-1/2}\:,\quad \mu>0\:(\psi_{i-1/2}\text{ is incoming})\\
 \psi_{i-1/2} &= \frac{2}{(1-\alpha_i)}\psi_{ijk}-
-    \frac{(1+\alpha_i)}{(1-\alpha_i)}\psi_{i+1/2}\quad \mu<0 \quad \text{when }\psi_{i+1/2}\text{ is incoming}
+    \frac{(1+\alpha_i)}{(1-\alpha_i)}\psi_{i+1/2}\:,\quad \mu<0 \:(\psi_{i+1/2}\text{ is incoming})
 \end{align*}
 The plus/minus depends on direction--going in $\mu>0$ the $\psi_{i-1/2}$ is the flux incoming and $\psi_{i+1/2}$ is outgoing. This flips for $\mu<0$. We will use $\bar{\psi}$ to indicate the incoming fluxes on each face to help us keep track of which direction we're going.
 
@@ -246,7 +248,7 @@ terms are weighting factors such that $\alpha=0$ gives the classic
 diamond-difference equations (the central flux is the average of the incoming and outgoing). $\alpha = \pm 1$ gives the step-difference
 equations in which the center flux is determined entirely from the incoming flux.  Setting $\alpha = \pm 1$ yields a first-order spatial differencing
 scheme.  The default behavior of Denovo for WDD uses $\alpha=0$, which gives
-the diamond-difference method.
+the second-order diamond-difference method.
 
 Substituting and rearranging the cell-balance
 equation with this closure yields the following system of equations,
@@ -272,15 +274,16 @@ equation with this closure yields the following system of equations,
   \end{aligned}
   \label{eq:wdd}
 \end{equation}
-Now, given incoming boundary conditions, we can march through our spatial mesh along each direction and solve for (1) the cell-center flux and then (2) the outgoing flux in each cell. We use the outgoing flux as the incoming flux for the next cell. [talk through sweep pattern with angle].
+Now, given incoming boundary conditions, we can march through our spatial mesh along each direction and solve for (1) the cell-center flux and then (2) the outgoing flux in each cell. We use the outgoing flux as the incoming flux for the next cell. Going through all of the angles in some sensible order is called a sweep--where we've inverted the streaming + interaction term.
 
 Many codes, like Denovo, provide a version of WDD that \textbf{can correct negative fluxes}.  When the outgoing flux is less than zero, we set the face-edge flux to zero and
 recalculate $\psi_{ijk}$ and the new edge fluxes.  This process is repeated
 until all the outgoing fluxes are greater than or equal to zero.  This method
 is nonlinear in that the corrected solution of Eq.~(\ref{eq:wdd}) depends on
 $\psi$.
-
+\vspace*{-1 em}
 \subsubsection*{Theta Weighted Diamond}
+\vspace*{-1 em}
 Another nonlinear cell-balance scheme is TWD.  This scheme
 uses the incoming fluxes to calculate weighting factors that permit the
 calculation of cell-centered and outgoing fluxes that vary smoothly between
@@ -302,7 +305,7 @@ calculated from the following system of equations,
     %%
     1-c &= \frac{s_{ijk}V\theta_s + (|\mu|A\bar{\psi}_{i\mp1/2} +
       |\eta|B\bar{\psi}_{j\mp1/2})\theta + |\xi|C\bar{\psi}_{k\mp1/2}}
-    {(\sigma_{ijk}V + 2|\mu|A + 2|\eta|B)\bar{\psi}_{k\mp1/2}}\:,
+    {(\Sigma_{ijk}V + 2|\mu|A + 2|\eta|B)\bar{\psi}_{k\mp1/2}}\:,
   \end{aligned}
 \end{equation}
 where
@@ -349,7 +352,7 @@ Eq.~(\ref{eq:spatial_transport}). We begin the derivation by
 integrating Eq.~(\ref{eq:spatial_transport}) over a single element, $e$, and
 multiplying by a weighting function for the element, $w_{e\,n}$,
 \begin{equation}
-  \int_{V_e} w_{e\,n}(\vOmega\cdot\nabla\psi+\sigma\psi)\,dV =
+  \int_{V_e} w_{e\,n}(\vOmega\cdot\nabla\psi+\Sigma\psi)\,dV =
   \int_{V_e} w_{e\,n}s\,dV\:,
 \end{equation}
 where the element defined in Fig.~\ref{fig:mesh-cell-sn} has $dV=dxdydz$.  The
@@ -405,7 +408,7 @@ unknowns.
 
 \subsubsection*{Linear Discontinuous}
 The LD method defines a basis over the set $\{1, x, y, z\}$ with
-the shape functions \cite{adams_2001},
+the shape functions %\cite{adams_2001},
 \begin{equation}
   b_1 = 1\:,\quad b_2 = \frac{2(x-x_{ijk})}{\Di}\:,\quad b_3 =
   \frac{2(y-y_{ijk})}{\Dj}\:,\quad b_4 = \frac{2(z-z_{ijk})}{\Dk}\:.
@@ -467,7 +470,9 @@ and the upwinded slopes are
 For each direction, these expressions are inserted into Eq.~(\ref{eq:ld}), and
 the resulting $4\times4$ system is solved for $\Psi$.  For efficiency, the
 solution to the matrix is precomputed, and $\Psi$ is calculated by evaluating
-four statements.
+four statements. 
+
+What we have done is a finite element method \textit{within} one spatial cell. This strategy results in \textbf{four} unknowns per cell. This is not quite the same as how we typically think of finite element methods. 
 
 \subsubsection*{TriLinear Discontinuous}
 The TLD method is the only spatial discretization that maintains the
@@ -476,7 +481,7 @@ TLD equations are derived by expanding $\Psi$ in the basis
 \begin{equation*}
   \{1,x,y,z,xy,yz,xz,xyz\}\:.
 \end{equation*}
-thus, there are eight unknowns per cell.  We define the unknowns at each node
+thus, there are \textbf{eight} unknowns per cell.  We define the unknowns at each node
 of the cell as indicated by the cardinal numbers in Fig.~\ref{fig:mesh-cell-sn}.
 The basis functions are
 \begin{equation}
@@ -508,11 +513,11 @@ The basis functions are
   \label{eq:tld_basis}
 \end{equation}
 Substituting these into Eq.~(\ref{eq:matrix-weak-form}) and evaluating the
-integrals analytically, we derive the TLD equations for the cells. We are skipping this because it's a mess and waaay more than we need. 
+integrals analytically, we derive the TLD equations for the cells. We are skipping this because it's a mess and waaay more than we need to go through in this class. 
 
 
 %%---------------------------------------------------------------------------%%
-\section{Step Characteristics}
+\subsection*{Step Characteristics}
 \label{sec:step-characteristics}
 %%---------------------------------------------------------------------------%%
 
@@ -526,8 +531,8 @@ required, LD and TLD are better choices because they are second-order methods,
 whereas SC is first-order.
 
 The SC spatial discretization can be derived using the cell-balance or finite
-element formalism.  We will use the slice-balance method originally proposed
-by Lathrop \cite{lathrop_1969}.  First, define a minimum step size through the
+element formalism.  We will use the slice-balance method.% originally proposed by Lathrop \cite{lathrop_1969}.  
+First, define a minimum step size through the
 cell defined in Fig.~\ref{fig:mesh-cell-sn},
 \begin{equation}
   d = \min\left(\frac{\Di}{|\mu|}, \frac{\Dj}{|\eta|},
