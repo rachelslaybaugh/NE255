@@ -470,9 +470,8 @@ and the upwinded slopes are
 For each direction, these expressions are inserted into Eq.~(\ref{eq:ld}), and
 the resulting $4\times4$ system is solved for $\Psi$.  For efficiency, the
 solution to the matrix is precomputed, and $\Psi$ is calculated by evaluating
-four statements. 
-
-What we have done is a finite element method \textit{within} one spatial cell. This strategy results in \textbf{four} unknowns per cell. This is not quite the same as how we typically think of finite element methods. 
+four statements (\textbf{four} unknowns per cell).
+ 
 
 \subsubsection*{TriLinear Discontinuous}
 The TLD method is the only spatial discretization that maintains the
@@ -514,6 +513,14 @@ The basis functions are
 \end{equation}
 Substituting these into Eq.~(\ref{eq:matrix-weak-form}) and evaluating the
 integrals analytically, we derive the TLD equations for the cells. We are skipping this because it's a mess and waaay more than we need to go through in this class. 
+
+
+The order of error for LD compared to TLD is the same on bricks--with other mesh shapes it could be different (I *think*). However, TLD preserves the asymptotic diffusion limit whereas LD does not. That is the principal advantage. TLD should also have a lower coefficient, i.e.
+
+LD $\propto a(\Delta x)^2$\\
+TLD $\propto b(\Delta x)^2$
+
+and $a>b$. TLD should also preserve the asymptotic diffusion limit at boundaries whereas LD will not. Finally, TLD should do better at sharp boundary discontinuities compared to LD.
 
 
 %%---------------------------------------------------------------------------%%
