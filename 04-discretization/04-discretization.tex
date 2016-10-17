@@ -309,11 +309,15 @@ where we have used the idea that we can separate a spherical harmonic into even 
     \frac{(l-m)!}{(l+m)!}}\:.
 \end{align}
 
-We will make this substitution (for the sake of avoiding having constants floating around)
+The \(\sqrt{(2-\delta_{m0})\) term appears as an orthogonality requirement. When we expand a function in an entirely \textit{real} basis (as opposed to the complex basis of the general spherical harmonics), the basis functions for the real basis must be orthogonal. The spherical harmonics basis functions are orthogonal, but they also contain complex components that we don't need for real physical quantities such as the scattering source. Hence, the basis functions for the real basis need to be orthogonal, which means that the integral of \(\hat{Y}^e_{lm}\hat{Y}^e_{l'm'}\) over the unit sphere must give unity (with some Kronecker Deltas hanging around as well). We likewise require this orthogonality condition for the odd components. These two orthogonality statements do not give values of 1 unless the definitions contain an extra factor of \(\sqrt{(2-\delta_{m0})\) (the \(\delta_{m0}\) term appears from the orthogonality of cosines in the definition of \(\hat{Y}_{lm}^e\)). 
+
+We will make this substitution in order to satisfy the orthogonality requirement:
 \begin{equation}
-  \hat{Y}^e_{lm} = \frac{1}{\sqrt{2}}Y^e_{lm}\:,\quad
-  \hat{Y}^o_{lm} = \frac{1}{\sqrt{2}}Y^o_{lm}\:.
+  \hat{Y}^e_{lm} = \frac{1}{\sqrt{2-\delta_{m0}}}Y^e_{lm}\:,\quad
+  \hat{Y}^o_{lm} = \frac{1}{\sqrt{2-\delta_{m0}}}Y^o_{lm}\:.
 \end{equation}
+
+Because \(\hat{Y}_{l0}^o=0\) based on the inclusion of \(\sin{(m\phi)}\) in its definition, the above sometimes neglects the \(\delta_{m0}\) term in the odd function since it is implied that \(m=0\) leads to an identically zero function anyways.
 
 Next, we expand the Spherical Harmonics into real and imaginary components. The sum over $m>0$ then becomes 
 \begin{equation}
