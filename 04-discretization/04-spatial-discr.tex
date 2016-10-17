@@ -221,11 +221,11 @@ To integrate the differential term, we will note
 \]
 For the other terms we will use the \textit{midpoint integration rule}. We won't derive that rule here, but know that the midpoint rule comes from open Newton Cotes with Lagrange polynomials (a way to make integration rules) using $n=0$ (which uses one point only):
 \[\int_a^b f(x)dx = \int_{x_{i-1/2}}^{x_{i+1/2}} f(x)dx = hf(x_i) + \frac{h^3}{3}f''(\xi_i)\:.\]
-For us, $x_{i+1/2} - x_{i-1/2} = h \equiv \Di$. Thus, applying $\iiint(\cdot)\,dxdydz$, dividing by differential volume, and separating flux into $x$, $y$, and $z$ differential components gives,
+For us, $x_{i+1/2} - x_{i-1/2} = h \equiv \Di$. Thus, applying $\iiint(\cdot)\,dxdydz$, dividing by differential volume, and separating flux into $x$, $y$, and $z$ differential components gives (letting $\Sigma_{ijk} \equiv \Sigma_{t,ijk}$),
 \begin{equation}
   \frac{\mu}{\Delta_i}(\psi_{i+1/2}-\psi_{i-1/2}) +
   \frac{\eta}{\Dj}(\psi_{j+1/2}-\psi_{j-1/2}) +
-  \frac{\xi}{\Dk}(\psi_{k+1/2}-\psi_{k-1/2}) + \Sigma_{t,ijk}\psi_{ijk} = s_{ijk}\:.
+  \frac{\xi}{\Dk}(\psi_{k+1/2}-\psi_{k-1/2}) + \Sigma_{ijk}\psi_{ijk} = s_{ijk}\:.
   \label{eq:cell-balance}
 \end{equation}
 Note that we now need a way to relate the center ($\psi_{ijk}$) and edge ($\psi_{n\pm 1/2}$) fluxes to one another!
@@ -327,7 +327,7 @@ Using these factors, the cell-centered and outgoing fluxes are
   \begin{aligned}
     \psi_{ijk} &= \frac{s_{ijk}V + \frac{|\mu|A}{a}\bar{\psi}_{i\mp1/2} +
       \frac{|\eta|B}{b}\bar{\psi}_{j\mp1/2} +
-      \frac{|\xi|C}{c}\bar{\psi}_{k\mp1/2}}{s_{ijk}V + \frac{|\mu|A}{a} +
+      \frac{|\xi|C}{c}\bar{\psi}_{k\mp1/2}}{\Sigma_{ijk}V + \frac{|\mu|A}{a} +
       \frac{|\eta|B}{b} + \frac{|\xi|C}{c}}\:,\\
     %%
     \psi_{i\pm1/2} &= \frac{1}{a}\psi_{ijk}-
@@ -352,7 +352,7 @@ Eq.~(\ref{eq:spatial_transport}). We begin the derivation by
 integrating Eq.~(\ref{eq:spatial_transport}) over a single element, $e$, and
 multiplying by a weighting function for the element, $w_{e\,n}$,
 \begin{equation}
-  \int_{V_e} w_{e\,n}(\vOmega\cdot\nabla\psi+\Sigma\psi)\,dV =
+  \int_{V_e} w_{e\,n}(\vOmega\cdot\nabla\psi+\Sigma_t\psi)\,dV =
   \int_{V_e} w_{e\,n}s\,dV\:,
 \end{equation}
 where the element defined in Fig.~\ref{fig:mesh-cell-sn} has $dV=dxdydz$.  The
@@ -363,7 +363,7 @@ $w_{e\,n}\equiv w_n$.  Applying Green's theorem to the gradient term gives the
 weak form of the transport equation,
 \begin{equation}
   \oint_{\partial V_e}w_n\hat{\ve{n}}\cdot\vOmega\psi\,dA -
-  \int_{V_e}\vOmega\cdot\nabla w_n\psi\,dV + \int_{V_e} w_n\Sigma_t\psi\,dV_e =
+  \int_{V_e}\vOmega\cdot\nabla w_n\psi\,dV + \int_{V_e} w_n\Sigma_t\psi\,dV =
   \int_{V_e}w_ns\,dV\:, \quad n=1,\ldots,N\:.
   \label{eq:weak-form}
 \end{equation}
@@ -374,7 +374,12 @@ Now, we expand the angular flux in the following basis,
   \label{eq:psi_fe_expansion}
 \end{equation}
 
-Applying the Galerkin finite element approximation in which $w_n=b_n$,
+------------------------\\
+Aside: In a continuous Galerkin finite element method, the variable $u =u(x)$ is approximated globally in a (piecewise linear) continuous manner. In contrast, in a discontinuous Galerkin finite element method, the variable $u =u(x)$ is approximated globally in a discontinuous manner and locally in each element in a (piecewise linear) continuous way. What we're doing is discontinuous Galerkin.\\
+------------------------
+%https://pdfs.semanticscholar.org/c979/a9becfa3ea36ab691c041262a0d0095dc91b.pdf------------------
+
+Applying the Galerkin finite element approximation in which $w_n=b_n$, 
 Eq.~(\ref{eq:weak-form}) becomes
 \begin{equation}
   \oint_{\partial V_e}b_n\hat{\ve{n}}\cdot\vOmega\psi\,dA -
