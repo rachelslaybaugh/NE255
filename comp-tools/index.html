@@ -1,0 +1,1023 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Best Practices in Scientific Computing</title>
+
+                <meta name="description" content="
+                A discussion of best practices in scientific computing.
+                This was presented at a g-node advanced summer school in Split, 
+                Croatia, September 2014.
+                ">
+		<meta name="author" content="Kathryn Huff">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/simple.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+                                <section>
+                                        <h1>Best Practices and Resources</h1>
+                                        <h2>for Computational Nuclear Engineering</h2>
+                                        <br/>
+                                        <h3>Rachel Slaybaugh, October 18, 2016</h3>
+                                        <h3>NE255 : Numerical Simulation in Radiation Transport</h3>
+                                </section>
+
+                                        <section>
+                                                <a
+href="http://rationalwiki.org/w/images/thumb/0/0e/Fission.svg/800px-Fission.svg.png" 
+                                                  class="image"><img 
+                                                  src="http://rationalwiki.org/w/images/thumb/0/0e/Fission.svg/800px-Fission.svg.png"
+                                                  alt="Fission."></a>
+                                                <p
+class="fragment">\[\sigma(E,\vec{r},\hat{\Omega},T,t,x,i)\]<p>
+                                        </section>
+                                        <section>
+                                                <a
+href="http://rationalwiki.org/w/images/thumb/1/1f/Chainreaction.svg/715px-Chainreaction.svg.png"
+                                                  class="image"><img 
+                                                  src="http://rationalwiki.org/w/images/thumb/1/1f/Chainreaction.svg/715px-Chainreaction.svg.png"
+                                                  alt="Chain reaction"></a>
+                                        </section>
+                                        <!--<section>
+                                                <a
+href="http://upload.wikimedia.org/wikipedia/commons/thumb/6/68/ThermalFissionYield.svg/800px-ThermalFissionYield.svg.png"
+                                                  class="image"><img 
+                                                  src="
+                                                  http://upload.wikimedia.org/wikipedia/commons/thumb/6/68/ThermalFissionYield.svg/800px-ThermalFissionYield.svg.png
+                                                  "
+                                                  alt="Fission
+yield"height=400></a>
+                                        </section>
+                                        -->
+                                        <section>
+                                                <a
+href="http://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Isotopes_and_half-life.svg/853px-Isotopes_and_half-life.svg.png"
+                                                  class="image"><img 
+                                                  height="600"
+                                                  src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Isotopes_and_half-life.svg/853px-Isotopes_and_half-life.svg.png"
+                                                  alt="Nucleus Stability"></a>
+                                        </section>
+                                        <section>
+                                                <a
+href="http://wwwndc.jaea.go.jp/j40fig/jpeg/u235_f1.jpg"
+                                                  class="image"><img 
+                                                  src="http://wwwndc.jaea.go.jp/j40fig/jpeg/u235_f1.jpg"
+                                                  alt="Resonances"></a>
+                                        </section>
+                                        <section>
+                                                <h2>Evaluated Nuclear Data
+Sets</h2>
+                                                <a
+href="https://raw.githubusercontent.com/rachelslaybaugh/NE255/comp-intro/gh-pages/images/res.png" 
+                                                  class="image"><img 
+                                                  src="https://raw.githubusercontent.com/rachelslaybaugh/NE255/comp-intro/gh-pages/images/res.png" 
+                                                  alt="Nuclear Resonance Theory
+and Evaluation"></a>
+                                        </section>
+
+                                        <section>
+                                                <h2>Application Specific Data Processing</h2>
+                                                <ul>
+                                                  <li>Energy discretization </li>
+                                                  <ul>
+                                                    <li>multigroup</li>
+                                                    <li>pointwise</li>
+                                                    <li>piecewise linear continuous</li>
+                                                  </ul>
+                                                  <li>Angular quadratures</li>
+                                                  <li>Resonance integration</li>
+                                                  <li>...</li>
+                                                </ul>
+                                        </section>
+                                        <section>
+                                                <h2>Simulation Methods</h2>
+                                                <ul>
+                                                  <li>Monte Carlo Methods</li>
+                                                  <li>Deterministic Methods</li>
+                                                  <li>Hybrid Methods</li>
+                                                  <li>Other keywords...</li>
+                                                  <ul>
+                                                    <li>lattice codes</li>
+                                                    <li>ray tracing algorithms</li>
+                                                    <li>acceleration schemes</li>
+                                                    <li>adjoint methods</li>
+                                                    <li>...</li>
+                                                  </ul>
+                                                </ul>
+
+                                        </section>
+                                </section>
+				<section>
+					<section>
+                                        <h2>Science</h2>
+                                        <ul>
+                                          <li class="fragment">builds and organizes knowledge</li>
+                                          <li class="fragment">tests explanations about the universe</li>
+                                          <li class="fragment">systematically,</li>
+                                          <li class="fragment">objectively,</li>
+                                          <li class="fragment">transparently,</li>
+                                          <li class="fragment">and reproducibly.</li>
+                                        </ul>
+
+                                        <p class="fragment"><b>Otherwise it's not science.</b></p>
+					</section>
+					<section>
+                                        <h2>Computers</h2>
+                                        <h3>should...</h3>
+                                        <ul>
+                                          <li class="fragment">improve efficiency,</li>
+                                          <li class="fragment">reduce human error,</li>
+                                          <li class="fragment">automate the mundane,</li>
+                                          <li class="fragment">simplify the complex,</li>
+                                          <li class="fragment">and accelerate research.</li>
+                                        </ul>
+                                        <p class="fragment"><b>But scientists don't use them effectively.</b></p>
+                                        </section>
+					<section>
+                                        <blockquote cite="
+                                          Stodden, Victoria.
+                                          The Scientific Method in Practice: 
+                                          Reproducibility in the Computational 
+                                          Sciences
+                                          MIT Sloan School of Management,
+                                          MIT Sloan School Working Paper 
+                                          4773-10. February 2010.">
+                                                &ldquo;
+                                        Computational science is a special case
+                                        of scientific research: the work is 
+                                        easily
+                                        shared via the Internet since the 
+                                        paper, code, and data are digital and 
+                                        those three aspects
+                                        are all that is required to reproduce 
+                                        the results, given sufficient 
+                                        computation tools.
+                                                &rdquo; - Stodden, 2010.
+                                      </blockquote>
+                                        
+					</section>
+                                </section>
+				<section>
+					<section>
+                                        <h2>Getting Started</h2>
+                                        <blockquote cite="Merton, R.K. 'The 
+                                          Normative Structure of Science'. In: 
+                                          Merton, R. K., The Sociology of
+                                          Science: Theoretical and Empirical 
+                                          Investigations, Chicago, IL: 
+                                          University Of Chicago
+                                          Press, 1942.">
+                                                &ldquo;
+                                                Organized Skepticism. 
+                                                Scientists are critical: All 
+                                                ideas must be tested and are
+                                                subject to rigorous structured 
+                                                community scrutiny.&rdquo; - R.K. 
+                                                Merton, 1942
+                                        </blockquote>
+                                        
+					</section>
+					<section>
+                                        <h2>Data Storage</h2>
+                                        <ul>
+                                          <li class="fragment">
+                                            <b>Good:</b> pencil and paper</li>
+                                          
+                                          <li class="fragment">
+                                            <b>Better:</b> 
+                                            spreadsheet</li>
+                                          
+                                          <li class="fragment">
+                                            <b style="color:green">Best:</b> 
+                                             standardized file format, database management system</li>
+                                        </ul>
+                                        <br/>
+                                        <br/>
+                                        <p class="fragment"><b 
+                                          style="color:blue">Formats:</b> 
+                                          Evaluated Nuclear Data File (ENDF), 
+                                          Evaluated Nuclear Structure Data File 
+                                          (ENSDF), Hierarchical Data Format 
+                                          (HDF), etc.</p>
+                                          <p class="fragment" >
+                                          <b style="color:blue">Management:</b> 
+                                          C/Python/Fortran APIs, SQL, MySQL, MongoDB, 
+                                          etc.</p>
+                                        </section>
+
+					<section>
+                                        <h2>Backing Up Files</h2>
+                                        <ul>
+                                          <li class="fragment">
+                                            <b>Good:</b> hope</li>
+                                          <li class="fragment">
+                                            <b>Better:</b> 
+                                            nightly emails</li>
+                                          <li class="fragment">
+                                            <b style="color:green">Best:</b> 
+                                            remote version control</li>
+                                        </ul>
+
+                                        <br/>
+                                        <br/>
+                                        <p class="fragment">
+                                        <b style="color:blue">Version Control Systems:</b> 
+                                        cvs, svn, hg, <b>git</b></p>
+                                        </section>
+					<section>
+                                        <h2>Managing Changes</h2>
+                                        <ul>
+                                          <li class="fragment">
+                                            <b>Good:</b> 
+                                            naming convention</li>
+                                          
+                                          <li class="fragment">
+                                            <b>Better:</b> 
+                                            clever naming convention</li>
+                                                <li class="fragment">
+                                                  <b style="color:green">Best:</b> 
+                                              local version control</li>
+                                          
+                                        </ul>
+                                        <p class="fragment">
+                                               <a href=""
+                                                  class="image"><img src="./images/git_vc.jpeg"
+                                                  alt="Version Control."></a>
+                                                </p>
+                                        </section>
+
+                                </section>
+				<section>
+                                        
+					<section>
+                                        <h2>Getting It Done</h2>
+                                        <blockquote cite="private communication 
+                                          with strom borman indicates that 
+                                          leonid polterovic said this once in 
+                                          2014.">
+                                                &ldquo;
+                                                It takes just as much time to 
+                                                write a good paper as it takes 
+                                                to write a bad one.
+                                                &rdquo; - Polterovich, 2014
+                                        </blockquote>
+                                        </section>
+
+					<section>
+                                        <h2>Analysis</h2>
+                                        <ul>
+                                          <li class="fragment">
+                                            <b>Good:</b> 
+                                            pencil and calculator</li>
+                                          
+                                          <li class="fragment">
+                                            <b>Better:</b> 
+                                            spreadsheets, matlab, mathematica</li>
+                                                <li class="fragment">
+                                                  <b style="color:green">Best:</b> 
+                                              scripting, open source libraries, modern 
+                                                programming language</li>
+                                          
+                                        </ul>
+
+                                        <br/>
+                                        <br/>
+                                        <p class="fragment"><b style="color:blue">Hint:</b> 
+                                        Check out PyNE, a python toolkit for 
+                                        nuclear engineering analysis.</p>
+                                        </section>
+
+					<section>
+                                        <h2>Multiple File Cleanup</h2>
+                                        <ul>
+                                          <li class="fragment">
+                                            <b>Good:</b> 
+                                            manually edit every file</li>
+                                          
+                                          <li class="fragment">
+                                            <b>Better:</b> 
+                                            search and replace in each file</li>
+                                                <li class="fragment">
+                                                  <b style="color:green">Best:</b> 
+                                              scripted batch editing</li> 
+                                        </ul>
+
+                                        <br/>
+                                        <br/>
+                                        <p class="fragment">
+                                        <b style="color:blue">Hint:</b> 
+                                        try a tutorial on BASH, CSH, Python, 
+                                        or Perl.</p>
+                                        </section>
+					<section>
+                                        <h2>Excecuting Workflows</h2>
+                                        <ul>
+                                          <li class="fragment">
+                                            <b>Good:</b> 
+                                            retype a series of commands</li>
+                                          
+                                          <li class="fragment">
+                                            <b>Better:</b> 
+                                            bash script</li>
+                                                <li class="fragment">
+                                                  <b style="color:green">Best:</b> 
+                                                  build system</li>
+                                            </ul>
+                                        <br/>
+                                        <br/>
+                                        <p class="fragment">
+                                        <b style="color:blue">Build System Tools:</b> 
+                                        make, autoconf, automake, cmake, etc.</p>
+                                        </section>
+
+					<section>
+                                        <h2>Data Structures</h2>
+                                        <ul>
+                                          <li class="fragment">
+                                            <b>Good:</b> 
+                                            100 string variables holding 
+                                              doubles</li>
+                                          
+                                          <li class="fragment">
+                                            <b>Better:</b> 
+                                            lists of lists of doubles</li>
+                                          <li class="fragment">
+                                            <b style="color:green">Best:</b> 
+                                            appropriate powerful data 
+                                            structures</li>
+                                        </ul>
+                                        <br/>
+                                        <br/>
+                                        <p class="fragment"><b style="color:blue">Hint:</b> 
+                                        In FORTAN, learn about arrays. In C++, 
+                                        learn about maps, vectors, deques, 
+                                        queues, etc. In python, the power lies 
+                                        in dictionaries and numpy arrays.</p>
+
+                                        </section>
+
+
+					<section>
+                                        <h2>API Design</h2>
+                                        <ul>
+                                          <li class="fragment">
+                                            <b>Good:</b> 
+                                            single block of procedural code</li>
+                                          
+                                          <li class="fragment">
+                                            <b>Better:</b> 
+                                            separate functions</li>
+                                          <li class="fragment">
+                                            <b style="color:green">Best:</b> 
+                                            small, testable functions, 
+                                              grouped into classes, DRY</li>
+                                        </ul>
+
+                                        <br/>
+                                        <br/>
+                                        <p class="fragment">
+                                        <b style="color:blue">DRY:</b> 
+                                        Dont Repeat Yourself. Code replication 
+                                        is bug proliferation.</p>
+                                        </section>
+
+					<section>
+                                        <h2>Variable Naming</h2>
+                                        <ul>
+                                          <li class="fragment">
+                                            <b>Good:</b> 
+                                            d1, d2, d3</li>
+                                          
+                                          <li class="fragment">
+                                            <b>Better:</b> 
+                                            x, y, z</li>
+                                          <li class="fragment">
+                                            <b style="color:green">Best:</b> 
+                                            p.x, p.y, p.z, p=Point(x,y,z)</li> 
+                                        </ul>
+                                        </section>
+
+					<section>
+                                        <h2>File I/O</h2>
+                                        <ul>
+                                          <li class="fragment">
+                                            <b>Good:</b> 
+                                            none, hardcoded variables</li>
+                                          
+                                          <li class="fragment">
+                                            <b>Better:</b> 
+                                            plain text input file, 
+                                              line-by-line homemade string parsing</li>
+                                          <li class="fragment">
+                                            <b style="color:green">Best:</b> 
+                                            file parsing library</li>
+                                        </ul>
+                                        <br/>
+                                        <br/>
+                                        <p class="fragment">
+                                        <b style="color:blue">Tools:</b> 
+                                        python argparse, xml rng, etc.</li>
+                                        </p>
+                                        </section>
+                                </section>
+				<section>
+
+					<section>
+                                        <h2>Getting It Right</h2>
+                                        <blockquote cite="Donoho, Reproducible 
+                                          Research in
+                                          Computational Harmonic Analysis, 
+                                          2009.">
+                                        &ldquo;
+                                        The scientific method’s central
+                                        motivation is the ubiquity of error—the 
+                                        awareness
+                                        that mistakes and self-delusion can 
+                                        creep in
+                                        absolutely anywhere and that the 
+                                        scientist’s effort
+                                        is primarily expended in recognizing 
+                                        and rooting
+                                        out error.
+                                        &rdquo; - Donoho, 2009.
+                                      </blockquote>
+					</section>
+					<section>
+                                        <h2>Error Detection</h2>
+                                        <ul>
+                                          <li class="fragment">
+                                            <b>Good:</b> 
+                                            show results to experts</li>
+                                          <li class="fragment">
+                                            <b>Better:</b> 
+                                            integration testing</li>
+                                          <li class="fragment">
+                                            <b style="color:green">Best:</b> 
+                                        unit test suite, continuous integration</li>
+                                        </ul>
+
+                                          <p class="fragment">
+                                          <a 
+                                            href="https://raw.githubusercontent.com/katyhuff/ne255fall2014/gh-pages/images/ci.png" 
+                                            class="image"><img 
+                                            src="https://raw.githubusercontent.com/katyhuff/ne255fall2014/gh-pages/images/ci.png"></a>
+                                          </p>
+
+                                        </section>
+
+					<section>
+                                        <h2>Error Diagnostics</h2>
+                                        <ul>
+                                          <li class="fragment">
+                                            <b>Good:</b> 
+                                            re-re-read the code</li>
+                                          <li class="fragment">
+                                            <b>Better:</b> 
+                                            print statements</li>
+                                          <li class="fragment">
+                                            <b style="color:green">Best:</b> 
+                                        use a linter, a debugger, and a profiler</li>
+                                        </ul>
+                                        <br/>
+                                        <br/>
+                                        <p class="fragment">
+                                        <b style="color:blue">Tools:</b> 
+                                        cpplint, pyflakes, 
+                                        gdb, lldb, pdb, idb, valgrind, 
+                                        kernprof, kcachegrind</li>
+                                        </p>
+                                        </section>
+					<section>
+                                        <h2>Error Correction</h2>
+                                        <ul>
+                                          <li class="fragment">
+                                            <b>Good:</b> 
+                                            fix code</li>
+                                          
+                                          <li class="fragment">
+                                            <b>Better:</b> 
+                                            fix, add an exception</li>
+                                          <li class="fragment">
+                                            <b style="color:green">Best:</b> 
+                                            fix, add an exception, add a test</li>
+                                        </ul>
+                                        </section>
+
+
+                                </section>
+				<section>
+					<section>
+                                        <h2>Getting It Together</h2>
+                                        &ldquo;
+                                        Two of the biggest challenges 
+                                        scientists and other programmers
+                                        face when working with code and data 
+                                        are keeping track of
+                                        changes (and being able to revert them 
+                                        if things go wrong), and
+                                        <b>collaborating on a program or 
+                                          dataset.</b> 
+                                        &rdquo;
+                                        - Wilson, et al. 2014.
+                                      </blockquote>
+					</section>
+
+					<section>
+                                        <h2>Merging Collaborative Work</h2>
+                                        <ul>
+                                          <li class="fragment">
+                                            <b>Good:</b> 
+                                            single master copy, waiting</li>
+                                          
+                                          <li class="fragment">
+                                            <b>Better:</b> 
+                                            emails and patches</li>
+                                                <li class="fragment">
+                                                  <b style="color:green">Best:</b> 
+                                              remote version control</li>
+                                        </ul>
+                                          <p class="fragment">
+                                          <a 
+                                            href="https://raw.githubusercontent.com/katyhuff/ne255fall2014/gh-pages/images/pr.png" 
+                                            class="image"><img 
+                                            src="https://raw.githubusercontent.com/katyhuff/ne255fall2014/gh-pages/images/pr.png"></a>
+                                          </p>
+
+                                        </section>
+					<section>
+                                        <h2>Peer Review For Code</h2>
+                                        <ul>
+                                          <li class="fragment">
+                                            <b>Good:</b> 
+                                            separation of concerns</li>
+                                          
+                                          <li class="fragment">
+                                            <b>Better:</b> 
+                                            shared repository</li>
+                                          <li class="fragment">
+                                            <b style="color:green">Best:</b> 
+                                            peer-reviewed pull requests</li>
+                                        </ul>
+                                        <blockquote class="fragment" cite="Petre, Wilson. Code Review For and 
+                                          By Scientists, July 2014.">
+                                        &ldquo;
+                                        just-in-time review of small
+                                        code changes is more likely to succeed than large-scale
+                                        end-of-work reviews. &rdquo;
+                                        - Petre, Wilson 2014
+                                        </blockquote>
+
+
+                                        </section>
+
+					<section>
+                                        <h2>Teamwork</h2>
+                                        <ul>
+                                          <li class="fragment">
+                                            <b>Good:</b> 
+                                            weekly research meetings, year-long tasks</li>
+                                          
+                                          <li class="fragment">
+                                            <b>Better:</b> 
+                                            daily conversations, month-long goals</li>
+                                          <li class="fragment">
+                                            <b style="color:green">Best:</b> 
+                                            pair programming, issue tracking</li>
+                                        </ul>
+                                          <p class="fragment">
+                                          <a 
+                                            href="https://help.github.com/articles/about-issues" 
+                                            class="image"><img 
+                                            src="https://raw.githubusercontent.com/katyhuff/ne255fall2014/gh-pages/images/issues.png"></a>
+                                          </p>
+
+                                        </section>
+
+					<section>
+                                        <h2>Software Handovers</h2>
+                                        <ul>
+                                          <li class="fragment">
+                                            <b>Good:</b> 
+                                            zip file, theory paper</li>
+                                          
+                                          <li class="fragment">
+                                            <b>Better:</b> 
+                                            comments in code, example input 
+                                            file</li>
+                                          <li class="fragment">
+                                            <b style="color:green">Best:</b> 
+                                            automated documentation, test 
+                                            suite</li>
+                                        </ul>
+                                        <br/>
+                                        <br/>
+                                        <p class="fragment">
+                                        <b style="color:blue">Books:</b> 
+                                        Clean Code, Working Effectively with Legacy Code
+                                        </p>
+                                        <p class="fragment">
+                                        <b style="color:blue">Tools:</b> 
+                                          sphinx, doxygen, gooletest, 
+                                          unitttest, nosetests 
+                                        </p>
+
+
+                                        </section>
+
+                                </section>
+				<section>
+					<section>
+                                        <h2>Getting It Out There</h2>
+                                        <blockquote cite="katy huff">
+                                                &ldquo;
+                                                If a piece of scientific 
+                                                software is released in the 
+                                                forest, does it change the field?
+                                                &rdquo;
+                                        </blockquote>
+                                        </section>
+
+
+					<section>
+                                        <h2>Plotting</h2>
+                                        <ul>
+                                          <li class="fragment">
+                                            <b>Good:</b> 
+                                            custom formatting, clickable 
+                                              GUI</li>
+                                          
+                                          <li class="fragment">
+                                            <b>Better:</b> 
+                                            plot format templates (excel, 
+                                              mathematica)</li>
+                                          <li class="fragment">
+                                            <b style="color:green">Best:</b> 
+                                            scripted plotting, matplotlib, 
+                                            gnuplot, etc. </li>
+                                          
+                                        </ul>
+                                        </section>
+
+
+					<section>
+                                        <h2>Writing</h2>
+                                        <ul>
+                                          <li class="fragment">
+                                            <b>Good:</b> 
+                                            stone tablet, microsoft word</li>
+                                          
+                                          <li class="fragment">
+                                            <b>Better:</b> 
+                                            word with track changes, open 
+                                              office</li>
+                                          <li class="fragment">
+                                            <b style="color:green">Best:</b> 
+                                            plain text markup with version 
+                                            control and a makefile</li>
+                                        </ul>
+                                        <br/>
+                                        <br/>
+                                        <p class="fragment">
+                                        <b style="color:blue">Tools:</b> 
+                                            LaTeX, markdown, restructured 
+                                            text</li>
+                                        </p>
+                                          
+                                        </section>
+
+					<section>
+                                        <h2>Distribution Control</h2>
+                                        <ul>
+                                          <li class="fragment">
+                                            <b>Good:</b> 
+                                            "email to request access"</li>
+                                          
+                                          <li class="fragment">
+                                            <b>Better:</b> 
+                                            license file</li>
+                                          <li class="fragment">
+                                            <b style="color:green">Best:</b> 
+                                            license file, citation file, DOI, forkable repository</li>
+                                          
+                                        </ul>
+                                        <br/>
+                                        <br/>
+                                        <p class="fragment">
+                                        <b style="color:blue">Example:</b> 
+                                        github.com/cyclus
+                                        </p>
+                                        <p class="fragment">
+                                        </section>
+
+                                        <section>
+                                                <h2>Unique Issue in Nuclear Engineering</h2>
+                                                <br/>
+                                                <p class="fragment">
+                                                Export control is serious.
+                                                <br/>
+
+
+                                                <p class="fragment">
+                                                <a
+                                                  href="http://www.exportsolutionsinc.com/system/html/doe-export-control-requirements-46a39548.png"
+                                                  class="image"><img
+                                                  src="http://www.exportsolutionsinc.com/system/html/doe-export-control-requirements-46a39548.png"
+                                                  alt="Export Control is a big deal in nuclear"></a>
+                                                </p>
+                                        </section>
+
+
+					<section>
+                                        <h2>Community Adoption</h2>
+                                        <ul>
+                                          <li class="fragment">
+                                            <b>Good:</b> 
+                                            none, internal use only</li>
+                                          
+                                          <li class="fragment">
+                                            <b>Better:</b> 
+                                            online repository, developer 
+                                              email online</li>
+                                          <li class="fragment">
+                                            <b style="color:green">Best:</b> 
+                                            issue tracker, user/developer 
+                                              listhost(s), online 
+                                            documentation</li> 
+                                        </ul>
+                                        </section>
+
+
+                                </section>
+
+				<section>
+                                        <section>
+                                        <h1>Resources</h1>
+                                        Ok, I'm convinced. So how can one learn this stuff?
+                                        </section>
+                                        <section>
+                                        <h2>Online Resources</h2>
+                                        <ul>
+                                          <li><a href="http://software-carpentry.org/">
+                                          Software Carpentry</a></li>
+                                          <li>Version Control: Github, Pro Git book</li>
+                                          <li>Testing: nose, goolgetest</li>
+                                          <li>Documentation: Sphinx, Doxygen</li>
+                                          <li><a href="http://python.berkeley.edu">
+                                          Python Worker's Party Listhost</a></li>
+                                          <li><a href="https://thehackerwithin.github.io/berkeley">
+                                          The Hacker Within Listhost</a></li>
+                                        <ul>
+                                        </section>
+                                        <section>
+                                          <h2>On Campus Resources</h2>
+                                              <li><a href="http://thehackerwithin.github.io/berkeley">
+                                              The Hacker Within</a></li>
+                                              <li><a href="http://software-carpentry.org">
+                                              Software Carpentry</a></li>
+                                              <li><a href="http://bids.berkeley.edu">
+                                              BIDS</a></li>
+                                              <li><a href="http://dlab.berkeley.edu">
+                                              D-Lab</a></li>
+                                              <li><a href="http://dlab.berkeley.edu/working-groups/python-workers-party">
+                                              Python Worker's Party</a></li>
+                                          <ul>
+                                        </section>
+                                        <section>
+                                        <h2>Hardware Resources</h2>
+                                        <ul>
+                                          <li>Berkelium</li>
+                                          <li><a href="http://research-it.berkeley.edu/brc">
+                                          Berkeley Resource Computing</a></li>
+                                          <li><a href="https://nim.nersc.gov/nersc_account_request.php">
+                                          NERSC</a></li>
+                                        </ul>
+                                        </section>
+                                          
+                                        <section>
+                                        <h3>Papers!</h3>
+                                        <small>
+                                        <ul>
+                                          <li>
+                                          <a href="http://dx.doi.org/10.5334/jors.ba">
+                                            Blanton, Brian, and Chris Lenhardt. 2014. “A 
+                                          Scientist’s Perspective on Sustainable 
+                                          Scientific Software.” Journal of Open 
+                                          Research Software, Issues in Research 
+                                          Software, 2 (1): e17. 
+                                          </a></li>
+        
+                                          <li>
+                                          <a href="http://dx.doi.org/10.1109/MCSE.2009.15">
+                                          Donoho, David L., Arian Maleki, Inam Ur 
+                                          Rahman, Morteza Shahram, and Victoria 
+                                          Stodden. 2009. “Reproducible Research in 
+                                          Computational Harmonic Analysis.” Computing 
+                                          in Science & Engineering 11 (1): 8–18. 
+                                          doi:10.1109/MCSE.2009.15.
+                                          </a></li>
+        
+                                          <li>
+                                          <a href="http://dx.doi.org/10.1109/MIC.2014.88">
+                                          Goble, Carole. 2014. “Better Software, Better 
+                                          Research.” IEEE Internet Computing 18 (5): 
+                                          4–8. doi:10.1109/MIC.2014.88.
+                                          </a></li>
+        
+                                          <li>
+                                          <a href="http://dl.acm.org/citation.cfm?id=1556928">
+                                          Hannay, J. E, C. MacLeod, J. Singer, H. P 
+                                          Langtangen, D. Pfahl, and G. Wilson. 2009. 
+                                          “How Do Scientists Develop and Use Scientific 
+                                          Software?” In Proceedings of the 2009 ICSE 
+                                          Workshop on Software Engineering for 
+                                          Computational Science and Engineering, 1–8.
+                                          </a></li>
+        
+                                          <li>
+                                          <a href="http://dx.doi.org/10.1126/science.1231535">
+                                          Joppa, L. N., G. McInerny, R. Harper, L. 
+                                          Salido, K. Takeda, K. O’Hara, D. Gavaghan, 
+                                          and S. Emmott. 2013. “Troubling Trends in 
+                                          Scientific Software Use.” Science 340 (6134): 
+                                          814–15.  doi:10.1126/science.1231535.
+                                          </a></li>
+        
+                                          <li>
+                                          <a href="http://dx.doi/org/10.1038/467775a">
+                                          Merali, Zeeya. 2010. “Computational Science: 
+                                          ...Error.” Nature 467 (7317): 775–77. 
+                                          doi:10.1038/467775a.
+                                          </a></li>
+        
+                                          <li>
+                                          <a href="http://arxiv.org/abs/1407.5648">
+                                          Petre, Marian, and Greg Wilson. 2014. “Code 
+                                          Review For and By Scientists.” 
+                                          arXiv:1407.5648 [cs], July. 
+                                          </a></li>
+        
+                                          <li>
+                                          <a href="http://arxiv.org/abs/1407.6220">
+                                          Schossau, Jory, and Greg Wilson. 2014. “Which 
+                                          Sustainable Software Practices Do Scientists 
+                                          Find Most Useful?” arXiv:1407.6220 [cs], 
+                                          July.
+                                          </a></li>
+        
+                                          <li>
+                                          <a href="http://dx.doi.org/10.2139/ssrn.1550193">
+                                          Stodden, Victoria. 2010. “The Scientific 
+                                          Method in Practice: Reproducibility in the 
+                                          Computational Sciences.” SSRN Electronic 
+                                          Journal. doi:10.2139/ssrn.1550193.
+                                          </a></li>
+        
+                                          <li>
+                                          <a href="http://dx.doi.org/10.1371/journal.pone.0026828">
+                                          Wicherts, Jelte M., Marjan Bakker, and Dylan 
+                                          Molenaar. 2011. “Willingness to Share 
+                                          Research Data Is Related to the Strength of 
+                                          the Evidence and the Quality of Reporting of 
+                                          Statistical Results.” PLoS ONE 6 (11): 
+                                          e26828. doi:10.1371/journal.pone.0026828.
+                                          </a></li>
+        
+                                          <li>
+                                          <a href="http://www.plosbiology.org/article/info%3Adoi%2F10.1371%2Fjournal.pbio.1001745">
+                                          Wilson, Greg, D. A. Aruliah, C. Titus Brown, 
+                                          Neil P. Chue Hong, Matt Davis, Richard T. 
+                                          Guy, Steven H. D. Haddock, Kathryn D. Huff, 
+                                          et al. 2014. “Best Practices for Scientific 
+                                          Computing.” PLoS Biol 12 (1): e1001745.  
+                                          doi:10.1371/journal.pbio.1001745.
+                                          </a></li>
+                                        </ul>
+                                      </small>
+                                        </section>
+        				<section>
+                                        <h1>Links</h1>
+                                        <ul>
+                                          <li>software-carpentry.org</li>
+                                          <li>github.com</li>
+                                          <li>katyhuff.github.io</li>
+                                        </ul>
+                                       </section>
+        
+        				<section>
+                                        <h1>Good Books</h1>
+                                        <ul>
+                                          <li>Clean Code - Robert C. Martin</li>
+                                          <li>Working Effectively with Legacy Code - Martin Fowler</li>
+                                          <li class="fragment">Effective Computation in Physics - Huff, Scopatz</li>
+                                        </ul>
+        				</section>
+                                </section>
+				<section>
+                                <h2>Project Ideas</h2>
+                                  <ul>
+                                    <li>PyNE contributions</li>
+                                    <li>WARP contributions</li>
+                                    <li>MocDown Contributions</li>
+                                    <li>BEAU Refactoring</li>
+                                  </ul>
+                                </section>
+				<section>
+                                <h2>Acknowledgements</h2>
+                                <ul>
+                                  <li>Nuclear Science and Security Constoritum</li>
+                                  <li>Berkeley Institute for Data Science</li>
+                                  <li>Software Carpentry</li>
+                                </ul>
+						<p class="fragment">
+                                                <a 
+                                                  href="http://nssc.berkeley.edu/images/NSSC_newLogo_medium.png" 
+                                                  class="image"><img height="133" width="210" 
+                                                  src="http://nssc.berkeley.edu/images/NSSC_newLogo_medium.png"></a>
+                                                </p>
+
+				</section>
+				<section>
+					<h1>THE END</h1>
+                                        <h3>Katy Huff </h3>
+                                        <a href="https://katyhuff.github.io/ne255fall2014">katyhuff.github.io/ne255fall2014</a> 
+
+<br/>
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img 
+  alt="Creative Commons License" style="border-width:0" 
+  src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br /><span 
+  xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Best Practices 
+  and Resources for Computational Nuclear Engineering</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://katyhuff.github.io" property="cc:attributionName" rel="cc:attributionURL">Kathryn Huff</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="http://katyhuff.github.io/ne255fall2014" rel="dct:source">http://katyhuff.github.io/ne255fall2014</a>.  
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+                                        { src: 'plugin/math/math.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
