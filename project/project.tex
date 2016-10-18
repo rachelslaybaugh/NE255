@@ -1,0 +1,111 @@
+\documentclass[12pt]{article}
+%\textwidth=7in
+%\textheight=9.5in
+%\topmargin=-1in
+%\headheight=0in
+%\headsep=.5in
+%\hoffset=-.85in
+
+%\usepackage[cm]{fullpage}
+\usepackage[top=0.75in, bottom=0.75in, left=1in, right=1in]{geometry}
+\pagestyle{empty}
+\usepackage{tabu}
+\usepackage{hyperref}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\begin{document}
+
+\begin{center}
+{\bf NE 255 - Numerical Simulations in Radiation Transport \\ Final Project \\ Due December 14, 2016 
+}
+\end{center}
+
+\setlength{\unitlength}{1in}
+\begin{picture}(6,.1) 
+\put(0,0) {\line(1,0){6.25}}         
+\end{picture}
+
+\renewcommand{\arraystretch}{2}
+
+\noindent Below is a list of possible projects (there are Monte Carlo and deterministic options). If you intend to share a project among a team of students (maximum three students per team), check to ensure that the project has sufficient scope. The project is 30\% of your grade and is due on Dec.\ 14 at the time of the final presentation. The following schedule will be imposed:
+
+\vspace*{2 em}
+\textbf{Oct.\ 25:} Decide which project to work on; turn in list of team members (if applicable) and a one- or two-page \textit{abstract}, including:
+\begin{enumerate}
+\item What you plan to do
+\item Major steps to execute the project
+\item Deadlines associated with each step
+\item What you need to do to accomplish each step (laying out a path to success)
+\item If in a team, the division of work
+\end{enumerate}
+
+\vspace*{2 em}
+\textbf{Nov.\ 15:} Submit a written \textit{interim} report (4, 6, or 8 pages maximum for 1, 2, or 3 people, respectively) explaining your project. See the project guidelines below for details of what to include.
+
+\vspace*{2 em}
+\textbf{Dec.\ 14:} Presentations (time TBD, depending on projects and team sizes). See the project guidelines below for details of what to include.
+
+\vspace*{2 em}
+\textbf{Dec.\ 14:} Final written reports (about 6-7 pages/team member as a rule of thumb) are due. See the rubric for details of what to include.
+
+%-----------------------------------------------------------
+%-----------------------------------------------------------
+\clearpage 
+\begin{center}
+\textbf{Potential project topics}
+\end{center}
+
+\begin{enumerate}
+\item Write a 2D transport solver that has vacuum boundaries on the bottom and left faces and reflecting boundaries on the top and right faces. I have more detailed specifications and some helpful tasks to facilitate completion if you choose this project.
+
+%\item Write a simple Monte Carlo solver that will include tallies, a subset of sampling routines, and implicit capture. I have more detailed specifications and some helpful tasks to facilitate completion if you choose this project. (It is unlikely this will be an easy choice if you do not already have familiarity with MC since we're covering that last).
+
+\item Propose your own code project; this can include writing a code or studying and characterizing the way a code performs. Please use this as an opportunity to expand on or compliment work you are already doing.
+
+\item  Propose your own analysis project. Use a piece of transport software to study a problem. This project needs to focus more on what methods you use, why, and how well they work for the problem rather than on the analysis itself. Please use this as an opportunity to expand on or compliment work you are already doing.
+\end{enumerate}
+
+\vspace*{1 em}
+PLEASE use version control for your project. 
+
+\vspace*{1 em}
+\noindent If you are comfortable writing your project in Python, consider using PyNE (\href{http://pyne.io}{http://pyne.io}) to facilitate your project. Depending on what you do, we might be able to contribute your project back to the PyNE code base.
+
+%-----------------------------------------------------------
+%-----------------------------------------------------------
+\clearpage 
+\begin{center}
+\textbf{Project Guidelines}
+\end{center}
+
+The final paper should be $\sim$6-7 pages with 1.5 spacing per team member. This may vary based on the specific project; please use your best judgment (think of this as a technical report where you're laying out what you did so it can be reproduced and why what you did matters). Please include these items as clearly labeled sections in the \underline{FINAL report}:
+%
+\begin{enumerate}
+\item \textbf{Introduction:} What does the code you wrote do (or what is the problem you solved)? Provide an opening with high-level motivation and purpose. Also preview what you are going to talk about.
+
+\item \textbf{Mathematics:} Write the continuous and discretized equations that you are solving, defining all terms. Include overviews of derivations needed to reach discretized equations as applicable. If this is very lengthy or a lot of information is needed, please use an appendix.
+
+\item \textbf{Algorithms:} Include the algorithms that you implemented in your code. That is, how does your code do what it does? Include reasoning behind any important choices made (e.g.\ it handles multigroups this way because of X).
+
+\item \textbf{Code Use:} Describe how to use your code, including inputs needed and output expected. 
+
+\item \textbf{Test Problems and Results:} Describe any testing you did to demonstrate your code is correct and present any results from test problems. This is verification and validation.
+
+\item \textbf{Summary/Conclusion:} Wrap up: tell us what you told us and why that matters.
+
+\item \textbf{References:} You must have references that you cite in your paper (including the interim report).
+\end{enumerate}
+
+\vspace*{1em}
+You must submit your code and at least one example input and corresponding output (I strongly encourage you to version control your code and submit access to the repository). Part of the project grade will be based on whether the code executes properly.
+
+\vspace*{2em}
+In your \underline{INTERIM report}, \textit{replace the ``Test Problems and Results" section (and possibly also ``Code Use" depending on how far you've gotten)} with \textbf{Plans for Completion} and keep in mind that these plans should include plans for what tests/inputs you will give to your code. The first four sections don't have to be completely polished, but they should at least be very solid drafts. I will provide feedback, so the better they are when I read them the more useful the feedback will be. This should be a maximum of 4, 6, or 8 pages with 1.5 spacing for 1, 2, or 3 people, respectively (varying depending on compactness of mathematics, algorithms, etc.).
+
+%\vspace*{2em}
+%Please include these same items in your \underline{final presentation}. The presentations should be approximately 6, 9, or 12 minutes for 1, 2, or 3 people, respectively.  This may vary based on the specific project; please use your best judgment. Part of the final presentation should be a code execution demonstration.
+
+\vspace*{2em}
+\input{notes}
+
+\end{document}
