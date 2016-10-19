@@ -1,0 +1,244 @@
+\documentclass[12pt]{article}
+\usepackage[top=1in, bottom=1in, left=1in, right=1in]{geometry}
+
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage{amssymb}
+%% The amsthm package provides extended theorem environments
+\usepackage{amsthm}
+\usepackage{epsfig}
+\usepackage{times}
+\renewcommand{\ttdefault}{cmtt}
+\usepackage{amsmath}
+\usepackage{graphicx} % for graphics files
+\usepackage{tabu}
+
+% Draw figures yourself
+\usepackage{tikz} 
+
+% writing elements
+%\usepackage{mhchem}
+
+\usepackage{paralist}
+
+% The float package HAS to load before hyperref
+\usepackage{float} % for psuedocode formatting
+\usepackage{xspace}
+
+% from Denovo Methods Manual
+\usepackage{mathrsfs}
+\usepackage[mathcal]{euscript}
+\usepackage{color}
+\usepackage{array}
+
+\usepackage[pdftex]{hyperref}
+\usepackage[parfill]{parskip}
+
+% math syntax
+\newcommand{\nth}{n\ensuremath{^{\text{th}}} }
+\newcommand{\ve}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\Macro}{\ensuremath{\Sigma}}
+\newcommand{\rvec}{\ensuremath{\vec{r}}}
+\newcommand{\vecr}{\ensuremath{\vec{r}}}
+\newcommand{\omvec}{\ensuremath{\hat{\Omega}}}
+\newcommand{\vOmega}{\ensuremath{\hat{\Omega}}}
+\newcommand{\even}{\ensuremath{\phi^g}}
+\newcommand{\odd}{\ensuremath{\vartheta^g}}
+\newcommand{\evenp}{\ensuremath{\phi^{g'}}}
+\newcommand{\oddp}{\ensuremath{\vartheta^{g'}}}
+\newcommand{\Sn}{\ensuremath{S_N} }
+\newcommand{\Ye}[2]{\ensuremath{Y^e_{#1}(\vOmega_#2)}}
+\newcommand{\Yo}[2]{\ensuremath{Y^o_{#1}(\vOmega_#2)}}
+\newcommand{\sigg}[1]{\ensuremath{\Macro^{gg'}_{s\,#1}}}
+\newcommand{\psig}{\ensuremath{\psi^g}}
+\newcommand{\Di}{\ensuremath{\Delta_i}}
+\newcommand{\Dj}{\ensuremath{\Delta_j}}
+\newcommand{\Dk}{\ensuremath{\Delta_k}}
+%---------------------------------------------------------------------------
+%---------------------------------------------------------------------------
+\begin{document}
+\begin{center}
+{\bf NE 255, Fa16 \\
+Operator Form and Iteration Methods\\
+October 20, 2016}
+\end{center}
+
+\setlength{\unitlength}{1in}
+\begin{picture}(6,.1) 
+\put(0,0) {\line(1,0){6.25}}         
+\end{picture}
+
+We have now fully discretized the transport equation. 
+\begin{align}
+\vOmega_a \cdot \nabla \psi^g_a(\vecr) &+ \Sigma^g_t(\vecr)\psi^g_a(\vecr) = \\
+&\sum_{g'=0}^G
+  \sum_{l=0}^N
+  \sigg{l}(\vec{r})
+  \Bigl[
+  Y^e_{l0}(\vOmega)\evenp_{l0}(\vec{r}) +
+  \sum_{m=1}^l
+  \bigl(
+  Y^e_{lm}(\vOmega)\evenp_{lm}(\vec{r}) +
+  Y^o_{lm}(\vOmega)\oddp_{lm}(\vec{r})
+  \bigr)\Bigr] + q_{a,e}^g(\vec{r}) \nonumber
+\end{align}
+\begin{alignat}{3}
+  \even_{lm} &= \int_{4\pi}Y^e_{lm}(\vOmega)\psi^g(\vOmega)\:d\vOmega\:,
+  \quad& m\ge 0\:,\label{eq:even-flux}\\
+  %%
+  \odd_{lm} &= \int_{4\pi}Y^o_{lm}(\vOmega)\psi^g(\vOmega)\:d\vOmega\:,
+  \quad& m>0\:.\label{eq:odd-flux}
+\end{alignat}
+%
+Now that we have these equations (+ spatial discretization) we're going to look at how we actually solve this with a computer. The  next set of material comes from my dissertation (R. N. Slaybaugh. \textit{Acceleration Methods for Massively Parallel Deterministic Transport}, a PhD Dissertation. University of Wisconsin, Madison, WI (2011).)
+
+\section*{Operator Form}
+We start by expressing the TE in operator notation. Using the operator form of the transport equation will facilitate the presentation of the solution techniques discussed in the remainder of this document. In general, uppercase bolded letters will indicate matrices and lowercase italicized letters will indicate vectors and scalars. The following operators are used to express the transport equation:\\
+%
+\indent $\mathbf{L} = \vOmega \cdot \nabla + \Macro$ is the transport operator, \\
+\indent $\mathbf{M}$ is the operator that converts harmonic moments into discrete angles, \\
+\indent $\mathbf{S}$ is the scattering matrix, \\
+\indent $f$ contains the fission source, $\nu \Macro_{f}$; $\mathbf{F} =\mathbf{\chi} f^{T}$, \\ 
+\indent $\mathbf{D} = \ve{M^{T}}\ve{W} = \sum_{a=1}^{n}Y^{e/o}_{lm}w_{a}$ is the discrete-to-moment operator. 
+
+With this notation Equation \eqref{eq:mg-sn-transport} can be written as \eqref{eq:operator-form}; it can be formulated as a fixed source problem by replacing the fission term with $\ve{M}q_{e}$. This has two unknowns, the angular flux and the moments, which are related by the discrete-to-moment operator as seen in Equation \eqref{eq:moments}.
+%
+\begin{align}
+  \mathbf{L} \psi &= \mathbf{MS}\phi + \frac{1}{k}\mathbf{MF}\phi \label{eq:operator-form}\\
+  \phi &= \mathbf{D}\psi 
+  \label{eq:moments}
+\end{align}
+The typical strategy for solving Equation \eqref{eq:operator-form} is to combine it with \eqref{eq:moments} and form one equation involving only the moments, where $Q$ is comprised of the fixed or fission source: 
+\begin{equation}
+   (\ve{I} - \ve{DL}^{-1}\ve{MS})\phi = Q \:.
+\end{equation}  
+This is solved for $\phi$ from which $\psi$ can be determined at the end of the calculation.
+
+The size of the operators can be defined in terms of the granularity of discretization: \\
+%
+\indent $G$ = number of energy groups, \\
+\indent $t$ = number of moments, \\
+\indent $n$ = number of angular unknowns, \\
+\indent $c$ = number of cells, \\
+\indent $u$ = number of unknowns per cell, which is determined by spatial discretization. \\
+%
+These can be combined to define $a = G \times n \times c \times u$ and $f = G \times t \times c \times u$. Using $a$ and $f$, Equation \eqref{eq:operator-form} can be presented in terms of operator size: $(a \times a)(a \times 1) = (a \times f) (f \times f) (f \times 1) + (a \times f) (f \times f) (f \times 1)$. The index variables, their meaning, and their ranges are shown in Table \ref{table:index}. 
+%
+\begin{table}[!h]
+\caption{Meaning and Range of Indices Used in Transport Discretization}
+\begin{center}
+\begin{tabular}{l c c c c}
+\hline
+Variable & Symbol & First & Last \\[0.5ex]
+\hline
+Energy & g & 1 & G \\
+Solid Angle & a & 1 & n \\
+Space & suppressed & n/a & n/a \\
+Legendre moment ($P_{N}$) & $l$ & 0 & N \\
+Spherical harmonic moment ($Y$) & m & 0 & $l$ \\
+\hline
+\end{tabular}
+\end{center}
+\label{table:index}
+\end{table}
+%
+
+The structures of the vectors and matrices are shown in the next few equations as this will make some of the proposed methods easier to understand and visualize \cite{Evans2009}. The angular flux vector is explicitly written first, where for each discrete angle, $a$, and energy group, $g$, the set of angular fluxes, $ \psi^g_a$, includes all spatial unknowns.
+%
+ \begin{align}
+    \psi &=     \begin{pmatrix}
+    [\psi]_{1} & [\psi]_2 & \cdots & [\psi]_g & \cdots [\psi]_{G} 
+  \end{pmatrix}^T  \:, \qquad \text{and} \nonumber \\
+  %
+    [\psi]_g &= \begin{pmatrix}
+    \psi^g_1 & \psi^g_2& \cdots & \psi^g_a & \cdots \psi^g_n 
+  \end{pmatrix}^T \:.  \nonumber 
+\end{align}
+%
+\begin{alignat}{2}
+  \mathbf{M} &=    \begin{pmatrix}
+      [\ve{M}]_{11} & 0 & 0 & \cdots & 0 \\
+      0 & [\ve{M}]_{22} & 0 & \cdots & 0 \\
+      0 & 0 & [\ve{M}]_{33} & \cdots & 0 \\
+      \vdots & \vdots & \vdots & \ddots   & \vdots \\
+      0 & 0 & 0 & \cdots & [\ve{M}]_{GG} \\
+    \end{pmatrix} \nonumber  \:,& \qquad
+    %
+  \mathbf{S}  =     \begin{pmatrix}
+      [\ve{S}]_{11} & [\ve{S}]_{12} & [\ve{S}]_{13} & \cdots &
+      [\ve{S}]_{1G} \\
+      [\ve{S}]_{21} & [\ve{S}]_{22} & [\ve{S}]_{23} & \cdots &
+      [\ve{S}]_{2G} \\
+      [\ve{S}]_{31} & [\ve{S}]_{32} & [\ve{S}]_{33} & \cdots &
+      [\ve{S}]_{3G} \\
+      \vdots & \vdots & \vdots & \ddots & \vdots \\
+      [\ve{S}]_{G1} & [\ve{S}]_{G2} & [\ve{S}]_{G3} & \cdots &
+      [\ve{S}]_{GG}
+    \end{pmatrix} \nonumber  \:,
+ \end{alignat}
+ %
+ \begin{alignat}{2}
+      \mathbf{F}  &=     \begin{pmatrix}
+     \chi^{1}[\nu\Macro_{f}]^{1} &\chi^{1}[\nu\Macro_{f}]^{2} & \cdots &
+      \chi^{1}[\nu\Macro_{f}]^{G} \\
+      \chi^{2}[\nu\Macro_{f}]^{1} &\chi^{2}[\nu\Macro_{f}]^{2} & \cdots &
+      \chi^{2}[\nu\Macro_{f}]^{G}\\
+      \vdots & \vdots & \ddots & \vdots \\
+      \chi^{G}[\nu\Macro_{f}]^{1} &\chi^{G}[\nu\Macro_{f}]^{2} & \cdots &
+      \chi^{G}[\nu\Macro_{f}]^{G}\\
+    \end{pmatrix} \:, \nonumber & \qquad
+    %
+  [\ve{S}]_{gg'} = \begin{pmatrix}
+    \sigg{0} & 0 & \cdots & 0  \\
+    0 & \sigg{1} & \cdots & 0 \\
+    \vdots & 0 & \ddots  & \vdots \\
+     0 & 0 & \cdots & \sigg{N}
+  \end{pmatrix}\:, \nonumber
+ \end{alignat}
+    %
+\begin{equation}    
+   [\ve{M}]_{gg} = \begin{pmatrix}
+    \Ye{00}{1} & \Ye{10}{1} & \Yo{11}{1} & \Ye{11}{1} & 
+    \Ye{20}{1} & \cdots & \Yo{NN}{1} & \Ye{NN}{1} \\
+    \Ye{00}{2} & \Ye{10}{2} & \Yo{11}{2} & \Ye{11}{2} & 
+    \Ye{20}{2} & \cdots & \Yo{NN}{2} & \Ye{NN}{2} \\
+    \Ye{00}{3} & \Ye{10}{3} & \Yo{11}{3} & \Ye{11}{3} & 
+    \Ye{20}{3} & \cdots & \Yo{NN}{3} & \Ye{NN}{3} \\
+    \vdots     & \vdots     & \vdots     & \vdots     & 
+    \vdots     &  \ddots    & \vdots     & \vdots     \\
+    \Ye{00}{n} & \Ye{10}{n} & \Yo{11}{n} & \Ye{11}{n} & 
+    \Ye{20}{n} & \cdots & \Yo{NN}{n} & \Ye{NN}{n}
+  \end{pmatrix}\:. \nonumber \\
+\end{equation}
+
+\noindent Note that $[\ve{M}]_{11} = [\ve{M}]_{22} =  \hdots = [\ve{M}]_{GG} = [\ve{M}]$. These are written with subscripts to simplify the visualization of which blocks correspond to which equations and multiply which other blocks. 
+
+%--------------------------------------------------------------------------------
+\subsection{Solution Procedure}
+Once the matrices are multiplied together, a series of single-group equations that are each only a function of space and angle result:
+%
+\begin{equation}
+  \begin{aligned}
+    \ve{L}[\psi]_1 &= [\ve{M}]\bigl([\ve{S}]_{11}[\phi]_1 + 
+    [\ve{S}]_{12}[\phi]_2 + \ldots + [\ve{S}]_{1G}[\phi]_G\bigr) + 
+    \frac{1}{k}[\ve{M}]\sum_{i=1}^{G}[\ve{F}]_{1i}[\phi]_{i} \:, \\
+    %%
+    \ve{L}[\psi]_2 &= [\ve{M}]\bigl([\ve{S}]_{21}[\phi]_1 + 
+    [\ve{S}]_{22}[\phi]_2 + \ldots + [\ve{S}]_{2G}[\phi]_G\bigr) + 
+     \frac{1}{k}[\ve{M}]\sum_{i=1}^{G}[\ve{F}]_{2i}[\phi]_{i} \:, \\
+    %%
+    &\vdots\\
+    %%
+    \ve{L}[\psi]_G &= [\ve{M}]\bigl([\ve{S}]_{G1}[\phi]_1 + 
+    [\ve{S}]_{G2}[\phi]_2 + \ldots + [\ve{S}]_{GG}[\phi]_G\bigr) + 
+     \frac{1}{k}[\ve{M}]\sum_{i=1}^{G}[\ve{F}]_{Gi}[\phi]_{i} \:.
+  \end{aligned}
+  \label{eq:group-equations}
+\end{equation}
+%
+Each ``within-group'' equation is solved for that group's flux. If the groups are coupled together, as they often are, then multiple ``multigroup'' solves over the coupled portion of the energy range may be required. If the eigenvalue is desired an additional ``eigenvalue'' solve is needed as well \cite{Evans2009}. The details of these steps will be discussed later as they relate to the new methods.  
+
+
+
+\end{document}
