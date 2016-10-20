@@ -276,7 +276,71 @@ Once the matrices are multiplied together, a series of single-group equations th
   \label{eq:group-equations}
 \end{equation}
 %
-Each ``within-group'' equation is solved for that group's flux. If the groups are coupled together through upscattering, as they often are, then multiple ``multigroup'' solves over the coupled portion of the energy range may be required. If there is fission and the eigenvalue is desired, an additional ``eigenvalue'' solve is needed as well. 
+Each \textbf{within-group} equation is solved for that group's flux. 
+
+If the groups are coupled together through upscattering, as they often are, then multiple \textbf{multigroup} solves over the coupled portion of the energy range may be required. 
+
+If there is fission and the eigenvalue is desired, an additional \textbf{eigenvalue} solve is needed as well. 
+
+Each of these levels of iteration typically uses a completely different solver. 
+
+Note that the typical strategy for solving Equation \eqref{eq:operator-form} is to combine it with \eqref{eq:moments} and form one equation involving only the moments, where $Q = \ve{DL}^{-1}\ve{M}q_e$ is comprised of the fixed (or fission) source: 
+\begin{equation}
+   (\ve{I} - \ve{DL}^{-1}\ve{MS})\phi = Q \:.
+\end{equation}  
+This is solved for $\phi$ from which $\psi$ can be determined at the end of the calculation. This format looks like what we're used to seeing in numerical linear algebra: $\ve{A}x = b$.
+
+\subsection*{Solver Basics}
+There are two categories of methods for solving $\ve{A}x = b$, \textbf{direct} and \textbf{iterative}. 
+
+\underline{Direct methods} solve the problem by inverting $\ve{A}$ and setting $x = \ve{A}^{-1}b$. If $\ve{A}$ is invertible this can be done explicitly. $\ve{A}$ is often not invertible, so most direct methods are based on factoring the coefficient matrix $\ve{A}$ into matrices that are easy to invert. The problem is then solved in pieces where each factored matrix is inverted to get the final solution. An example where this is done is LU factorization. These methods are often robust and require a predictable amount of time and storage resources. However, direct methods scale poorly with problem size, becoming increasingly expensive as problems grow large.% \cite{Benzi2002}.
+
+\underline{Iterative methods} compute a sequence of increasingly accurate approximations to the solution. They generally require less storage and take fewer operations than direct methods, though they may not be as reliable. Iterative methods are highly advantageous for large problems because direct methods become intractable for systems of the size of those of interest here. For this reason the nuclear energy industry tends to use iterative methods for transport calculations.% \cite{Birkhoff1984}, \cite{Benzi2002}. 
+
+Within the category of iterative methods, two further subdivisions can be made that will be useful in this work. Some methods only place data from previous iterations on the right hand side of the equation. The order in which those equations are solved is then irrelevant because only the previous iterate is needed. The other class of methods place data from both the previous and current iteration on the right hand side. These methods are fundamentally sequential and must be solved in order. These two categories will be referred to as \textit{order independent} and \textit{order dependent}, respectively. 
+
+%---------------------------------------------------
+%---------------------------------------------------
+\subsection*{Within Group Iterative Methods}
+The methods that functionally perform a mesh sweep
+\[
+[\psi]_g = \ve{L}^{-1}\bigl([\ve{M}]\bigl([\ve{S}]_{11}[\phi]_1 + 
+    [\ve{S}]_{12}[\phi]_2 + \ldots + [\ve{S}]_{1G}[\phi]_G\bigr) + 
+    [\ve{M}][q_{e}]_1\bigr)\:.
+\]
+%---------------------------------------------------
+\subsubsection*{Richardson iteration}
+The simplest iteration scheme used by the nuclear community is source iteration (SI), also known as \textbf{Richardson iteration}. SI is applied to the within-group space-angle iterations. Richardson iteration can be thought of as a two-part process for the neutron transport equation, where $\bar{Q}$ includes all sources and $k$ is the inner iteration index:
+%
+\begin{align}
+  \ve{L}[\psi]_g^{k+1} &= \ve{MS} [\phi]_g^k + [\bar{Q}]_{g} \:,   \label{eq:SIpsi} \\
+  [\phi]_g^{k+1} &= \ve{D}[\psi]_g^{k+1} \:.
+  \label{eq:SIphi}
+\end{align}
+%
+The spectral radius, $c = \Macro_s / \Macro$, determines the speed of convergence. For problems dominated by scattering, SI will converge very slowly (good explanation of how to think of this physically on p.\ 2, 3 of  \href{https://github.com/rachelslaybaugh/NE250/blob/master/23-iterations/Nov-30Class.tex}{https://github.com/rachelslaybaugh/NE250/blob/master/23-iterations/Nov-30Class.tex}, which you can build using pdflatex). 
+
+%---------------------------------------------------
+\subsubsection*{Krylov methods}
+\textbf{Krylov methods} are a powerful class of subspace methods that can be ideal for solving various types of linear and eigenvalue problems. A Krylov method solves $\ve{A}x = b$ by building a solution from a Krylov subspace generated by an iteration vector $v_{1}$. At iteration $k$, the subspace is:
+%
+\begin{equation}
+  \mathcal{K}_{k}(\ve{A},v_{1}) \equiv span\{v_{1}, \ve{A}v_{1}, \ve{A}^{2}v_{1}, ..., \ve{A}^{k-1}v_{1}\} \:.
+  \label{eq:Krylov-subspace}
+\end{equation}
+%
+The choice of $v_{1}$ varies, but $v_{1} = b$ is common. %When the problem is presented as $\ve{A}z = r_{0}$ where $r_{0} \equiv b - \ve{A}x_{0}$ and the solution is $x_{k} = x_{0} + z$, then $v_{1} $ is often chosen to be $r_{0}$. Note that $x_{0}$ is the initial guess and $x_{k}$ is the solution approximation at step $k$.%  \cite{Ipsen1998}.
+
+The dimension of a Krylov space is bounded by $n$ because Krylov methods will give the exact solution after $n$ iterations in the absence of roundoff error. Interestingly, this technically makes Krylov methods a hybrid of direct and iterative methods because an exact answer can be obtained in a predetermined number of steps. Krylov subspace methods are nevertheless generally classified as iterative methods.% \cite{Birkhoff1984}.
+
+Krylov methods are particularly useful in a few pertinent cases. One is when $\ve{A}$ is very large because fewer operations are required than traditional inversion methods like Gaussian elimination. Another is when $\ve{A}$ is not explicitly formed because Krylov methods only need the action of $\ve{A}$. Finally, Krylov methods are ideal when $\ve{A}$ is sparse because the number of operations are low for each matrix-vector multiplication. For deterministic transport codes, $\ve{A}$ is typically quite large, fairly sparse, and only its action is needed. The action of $\ve{A}$ is implemented through the transport sweeps%. \cite{Lewis1993}, \cite{Ipsen1998}.  
+
+In the last few decades Krylov methods have been used widely to solve problems with appropriate properties for several reasons. Krylov methods are robust; the existence and uniqueness of the solution can be established; typically far fewer than $n$ iterations are needed when they are used as iterative solvers; they can be preconditioned to significantly reduce time to solution; only matrix-vector products are required; explicit construction of intermediate residuals is not needed; and they have been found to be highly efficient in practice.% \cite{Ipsen1998}, \cite{Knoll2004}. 
+
+There are, however, a few drawbacks. In some cases Krylov methods can be very slow to converge, causing large subspaces to be generated and thus becoming prohibitively expensive in terms of storage size and cost of computation. Some methods can be restarted after $m$ steps %\footnote{For information about restarted Krylov methods see Appendix \ref{sec:AppendixB}.} 
+to alleviate this problem, keeping the maximum subspace size below $\mathcal{K}_{m+1}$.  The relatively inexpensive restart techniques can reduce the storage requirements and computational costs associated with a slow-converging problem such that they are tractable. Preconditioners can also help by reducing the number of iterations needed. %Development of appropriate preconditioners is an active area of research \cite{Warsa2004a}, \cite{Ipsen1998}, \cite{Knoll2004}. 
+
+%In the 1970s interest in Krylov methods in the wider computational community began to increase after it was demonstrated that these methods can converge quickly. At first Krylov methods were restricted to problems where $\ve{A}$ is symmetric positive definite (SPD). These are methods such as conjugate gradient (CG), MINRES, SYMMLQ, and others. Then, Krylov methods for non-symmetric matrices became a focus, including the Generalized Minimum Residual (GMRES) and BiConjugate Gradient Stabilized (BiCGSTAB) methods \cite{Barrett1994}, \cite{Benzi2002}. The transport problem has characteristics that make it well suited for solution with Krylov methods, and these methods are used in several novel ways throughout this work.
 
 
 \end{document}
