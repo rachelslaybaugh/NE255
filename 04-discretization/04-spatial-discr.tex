@@ -124,7 +124,7 @@ We'll talk about cell balance and finite element methods; in nuclear we have spe
 \item Discrete ordinates: trilinear discontinuous (TLD) is a Galerkin method formed from the basis set $\{1,x,y,z,xy,yz,xz,xyz\}$ and maintains the asymptotic diffusion limit on the grid used in Denovo; FEM
 \item Discrete ordinates: step characteristics (SC) in 2- or 3-D does not produce negative fluxes and does not have oscillatory behavior; can be written as a cell balance or finite element scheme
 \end{compactitem}
-The WDD, WDD-FF, TWD, LD, BLD, and TLD schemes are all second-order, and the SC scheme is first-order.
+The WDD, WDD-FF, TWD, LD, BLD, and TLD schemes are all second-order, and the SC scheme is first-order.  
 
 ----------------------\\
 Aside\\ 
@@ -375,7 +375,9 @@ Now, we expand the angular flux in the following basis,
 \end{equation}
 
 ------------------------\\
-Aside: In a continuous Galerkin finite element method, the variable $u =u(x)$ is approximated globally in a (piecewise linear) continuous manner. In contrast, in a discontinuous Galerkin finite element method, the variable $u =u(x)$ is approximated globally in a discontinuous manner and locally in each element in a (piecewise linear) continuous way. What we're doing is discontinuous Galerkin.\\
+Aside: In a continuous Galerkin finite element method, the variable $u =u(x)$ is approximated globally in a (piecewise linear) continuous manner. In contrast, in a discontinuous Galerkin finite element method, the variable $u =u(x)$ is approximated globally in a discontinuous manner and locally in each element in a (piecewise linear) continuous way. What we're doing is discontinuous Galerkin.
+
+With discontinuous Galerkin methods, continuity at the nodes is \textit{not} enforced. This leads to a much greater number of unknowns when compared to the continuous Galerkin method. For instance, consider four Cartesian mesh cells that meet at a node. At this node, with the discontinuous Galerkin method, we have four unknkowns. With the continuous Galerkin method, however, because continuity at this node is required, there is only one unknown. The difference in the number of unknowns is even greater for higher-order basis functions. So why use the discontinuous Galerkin method? One big advantage is (* I think *) that it allows us to formulate our problem in terms of a transport sweep that is now familiar to us from the finite difference methods we showed previously. With the continuous Galerkin method, you cannot sweep through the mesh because the solution over each individual mesh cell depends on the solutions over the adjacent cells, and a sweep would effectively mean that you're trying to solve each cell alone. This is equivalent to trying to solve a singular system, and is not a valid solution approach. With the continuous Galerkin method, a large matrix system \(\textbf{A}x=b\) is solved, where this matrix system applies to the entire mesh, and not to a single cell. On the other hand, with the discontinuous Galerkin method, the solution over each cell can be phrased in terms of a transport sweep because continuity is not imposed at nodes. Phrasing a finite element method in terms of a transport sweep allows the ability to re-use code already developed for the finite differencing sweeps.\\
 ------------------------
 %https://pdfs.semanticscholar.org/c979/a9becfa3ea36ab691c041262a0d0095dc91b.pdf------------------
 
