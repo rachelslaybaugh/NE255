@@ -1,0 +1,197 @@
+\documentclass[12pt]{article}
+\usepackage[top=1in, bottom=1in, left=1in, right=1in]{geometry}
+
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage{amssymb}
+%% The amsthm package provides extended theorem environments
+\usepackage{amsthm}
+\usepackage{epsfig}
+\usepackage{times}
+\renewcommand{\ttdefault}{cmtt}
+\usepackage{amsmath}
+\usepackage{graphicx} % for graphics files
+\usepackage{tabu}
+
+% Draw figures yourself
+\usepackage{tikz} 
+
+% writing elements
+%\usepackage{mhchem}
+
+\usepackage{paralist}
+
+% The float package HAS to load before hyperref
+\usepackage{float} % for psuedocode formatting
+\usepackage{xspace}
+
+% from Denovo Methods Manual
+\usepackage{mathrsfs}
+\usepackage[mathcal]{euscript}
+\usepackage{color}
+\usepackage{array}
+
+\usepackage[pdftex]{hyperref}
+\usepackage[parfill]{parskip}
+
+% math syntax
+\newcommand{\nth}{n\ensuremath{^{\text{th}}} }
+\newcommand{\ve}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\Macro}{\ensuremath{\Sigma}}
+\newcommand{\rvec}{\ensuremath{\vec{r}}}
+\newcommand{\vecr}{\ensuremath{\vec{r}}}
+\newcommand{\omvec}{\ensuremath{\hat{\Omega}}}
+\newcommand{\vOmega}{\ensuremath{\hat{\Omega}}}
+\newcommand{\even}{\ensuremath{\phi^g}}
+\newcommand{\odd}{\ensuremath{\vartheta^g}}
+\newcommand{\evenp}{\ensuremath{\phi^{g'}}}
+\newcommand{\oddp}{\ensuremath{\vartheta^{g'}}}
+\newcommand{\Sn}{\ensuremath{S_N} }
+\newcommand{\Ye}[2]{\ensuremath{Y^e_{#1}(\vOmega_#2)}}
+\newcommand{\Yo}[2]{\ensuremath{Y^o_{#1}(\vOmega_#2)}}
+\newcommand{\sigg}[1]{\ensuremath{\Macro^{gg'}_{s\,#1}}}
+\newcommand{\psig}{\ensuremath{\psi^g}}
+\newcommand{\Di}{\ensuremath{\Delta_i}}
+\newcommand{\Dj}{\ensuremath{\Delta_j}}
+\newcommand{\Dk}{\ensuremath{\Delta_k}}
+%---------------------------------------------------------------------------
+%---------------------------------------------------------------------------
+\begin{document}
+\begin{center}
+{\bf NE 255, Fa16 \\
+Krylov Methods, A Quick Introduction\\
+October 25, 2016}
+\end{center}
+
+\setlength{\unitlength}{1in}
+\begin{picture}(6,.1) 
+\put(0,0) {\line(1,0){6.25}}         
+\end{picture}
+
+We often use Krylov methods in nuclear engineering, so I'm taking a full aside about them. 
+
+\section*{Krylov Methods}
+An aside, because they're useful and I think they're super cool. 
+\subsection*{Arnoldi Method}
+A general issue with Krylov subspaces is that the columns of $\mathcal{K}_{k}(\ve{A},v_{1})$ become increasingly linearly dependent with increasing $k$. To deal with this, there are two factorization methods upon which many Krylov methods are based. Some use the Arnoldi method, which generates an orthonormal basis for the Krylov subspace for non-normal matrices, and others use the Lanczos method, which creates non-orthogonal bases for normal matrices. % \cite{Knoll2004}, \cite{Stewart2001}. Denovo has the option of using either restarted GMRES or BiCGSTAB, both of which use the Arnoldi method \cite{Evans2009}.  The remainder of this section will be devoted to developing an understanding of the Arnoldi method.
+We'll focus on the Arnoldi method.
+
+\subsubsection*{Galerkin Method and Weighted Residuals}
+Fundamentally, Krylov methods are Galerkin or Galerkin-Petrov methods on a Krylov subspace. \textit{Galerkin's method} uses a few fundamental concepts: 
+\begin{compactitem}
+\item an inner product of two functions is zero when the functions are orthogonal: 
+\[
+<f(x), g(x)> = 0\text{ if }f(x)\text{ and }g(x)\text{ are orthogonal.}
+\]
+
+\item any function $f(x)$ in a subspace $\mathcal{V}$ can be written as a linear combination of the vectors that make a basis for that function space. Let $\ve{V} = \{\phi_{i}(x) \}_{i=0}^{\infty}$ be the basis for $\mathcal{V}$; if $f(x) \in \mathcal{V}$ then 
+ \[f(x) = \sum_{j=0}^{\infty} c_{j} \phi_{j}(x)\] 
+ for some scalar coefficients $c_{j}$.% \cite{Matthews2005}. 
+  
+\item A \textit{weighted residual method} is a solution technique for solving some linear problem $\ve{A}u = b$ where 
+\[u = u_0 + \sum_{i=1}^{n} c_i \phi_i(x)\]
+is the approximate solution and $u_{0}$ is an initial guess. The solution is found by taking the inner product of some arbitrary weight function, $w(x)$, and the residual, $r(x) = b - \ve{A}u$, $r(x) \in \mathcal{V}$, such that $<w(x), r(x)> = 0$. The solution is the $u$ satisfying this requirement. 
+\end{compactitem}
+
+Galerkin's method is a weighted residual method where the weight function is chosen from the basis functions: $w(x)$ is selected from $\ve{V}$ (the basis for the subspace containing $f(x)$). % \cite{Matthews2005}. 
+In the Galerkin-Petrov method, the weight functions come from a subspace other than $\mathcal{V}$, that is $w(x) \in \mathcal{W}$.% \cite{Skeel2006}. 
+
+The weighted residual method can also be thought of as a process to minimize the residual. There are a few ways to express this idea. 
+\begin{compactitem}
+\item If $\hat{u}$ is the exact minimizer of $r(x) = b - \ve{A}\hat{u}$, then let $u' = \hat{u} + w(x)$ be a close approximation to $\hat{u}$ with $w(x) \in \mathcal{V}$. The residual is minimized if and only if $<w(x), r(x)> = 0$ for all $w(x) \in \mathcal{V}$, meeting the Galerkin condition just described. 
+
+\item This can also be written as: 
+
+\begin{align}
+  \text{find } \qquad u \in u_{0} + \mathcal{V} \qquad \text{such that} \qquad r(x) \perp \mathcal{V} \:.
+  \label{eq:galerkinMin}
+\end{align}
+%
+Further, if $y$ is the solution to
+\begin{equation}
+  \ve{V}^{T}\ve{AV}y = \ve{V}^{T} r_{0} \:, \qquad \text{then} \qquad \hat{u} = u_{0} + \ve{V}y \:.
+  \label{eq:minResidual}
+\end{equation}
+This $\hat{u}$ minimizes the residual in the some measure of interest, where the measure is determined by the selection of $y$. %In the Petrov-Galerkin formulation, $\ve{W}$ is a basis for subspace $\mathcal{W}$ and the idea is to find $ u \in u_{0} + \mathcal{V}$ such that $r(x) \perp \mathcal{W}$. Now $\ve{V}^T\ve{AW}y = \ve{V}^T r_0$ \cite{Skeel2006}.
+\end{compactitem}
+
+%Sorensen~\cite{Sorensen1996} and Stewart~\cite{Stewart 2001} 
+We can use the Galerkin Method in combination with \textit{Ritz pairs} to understand the Arnoldi method. %, and this viewpoint will be developed here. To maintain consistency with the main portion of this work, 
+For us, the subspace from which solutions are derived %in the next paragraphs 
+will be the Krylov subspace $\mathcal{K}_{k}(\ve{A},v_{1})$, and the equation will be switched to $\ve{A}x = b$.
+
+\subsubsection*{Ritz Pairs}
+A vector $z \in \mathcal{K}_{k}(\ve{A},v_{1})$ is defined as a \textit{Ritz vector} with corresponding \textit{Ritz value}, $\theta$, if it satisfies the Galerkin condition 
+\[
+<w, \ve{A}z - \theta z> = 0  \:\forall\: w \in \mathcal{K}_{k}(\ve{A}, v_{1})\:.
+\]
+To see why Ritz pairs can be important, define $\hat{p}(\ve{A})$ to be the minimum characteristic polynomial of $\ve{A}$ such that $||\hat{p}(\ve{A})v_{1}|| \le ||q(\ve{A})v_{1}||$ for all monic polynomials $q \ne \hat{p}$ of degree $k$. If $(\theta, z)$ is a Ritz pair for $\ve{A}$, then $\ve{A}z - z\theta = \gamma \hat{p}(\ve{A})v_{1} = g$ for some scalar $\gamma$. When $g = 0$, then the Ritz pair is an eigenpair. When $g$ is small, the Ritz pair is likely a close approximation to an eigenpair of $\ve{A}$.% \cite{Sorensen1996}. 
+
+\subsubsection*{Method}
+These ideas can be assembled to understand why the Arnoldi method works. Let $\ve{V}$ be a basis for a Krylov subspace $\mathcal{K}_{k}(\ve{A},v_{1})$, and $\mathcal{X} \in \mathcal{K}_{k}(\ve{A},v_{1})$ be an eigenspace of $\ve{A}$. When solving $\ve{A}x = b$, the subspace $\mathcal{K}_{k}(\ve{A},v_{1})$ and the vector $x$ must satisfy
+\begin{enumerate}
+  \item $x \in \mathcal{K}_{k}(\ve{A},v_{1})$ and
+  \item $r = \ve{A}x - b \perp \mathcal{K}_{k}(\ve{A},v_{1})$. 
+\end{enumerate} 
+%
+Let $\ve{H} = \ve{V}^{T}\ve{AV}$. There is an eigenpair $(\theta, x)$ of $\ve{H}$ such that $(\theta, \ve{V}x)$ is an eigenpair of $\ve{A}$. To reduce notational clutter let $z = \ve{V}x$, giving $\ve{A}z = \theta z$.% \cite{Stewart2001}. 
+
+If $\ve{V}$ is an orthonormal basis for  $\mathcal{K}_{k}(A,v_{1})$, then $(\theta, z)$ is a Ritz pair if and only if $x = \ve{V}y$ with $\ve{H}y = \theta y$ for some $y$. Noting the definition of $\ve{H}$, comparing to Equation \eqref{eq:minResidual}, and doing some basic matrix manipulation, it can be seen that this $y$ minimizes the residual. As the residual tends toward zero, the Ritz pair converges to an approximate eigenpair of $\ve{A}$. % \cite{Stewart2001}.
+Another way to state this is to revisit the polynomial identity expressing the minimum residual. It can be shown that $\ve{AV}y - \ve{VH}y = \gamma \hat{p}(\ve{A})v_{1} = g$. As $g \to 0$, the Ritz pair approaches the eigenpair of $\ve{A}$.% \cite{Sorensen1996}. 
+
+In summary, the eigenpairs of $\ve{A}$ are approximated by the eigenpairs of $\ve{H}$. These eigenvalues and/or eigenvectors are subsequently used in different ways by different Krylov methods to formulate the solution to $\ve{A}x = b$ to achieve specific goals, like minimizing the residual in a certain norm. The Galerkin condition is used to ensure the eigenpairs of $\ve{H}$ become increasingly good approximations to those of $\ve{A}$ as the size of the Krylov subspace increases. 
+
+The Arnoldi method is a process of establishing the $\ve{V}$ and $\ve{H}$ discussed above. % \cite{Stewart2001}.
+ $\ve{H}$ is an orthogonal projection of $\ve{A}$ onto the basis $\ve{V}$ and is upper Hessenberg in form. The Gram-Schmidt method (or the modified Gram-Schmidt method) computes $\ve{V}$. The Arnoldi method generates a Ritz estimate for the Ritz pair at each iteration. 
+The Arnoldi Algorithm is:            
+%Using these terms and ideas, the Arnoldi algorithm shown in Algorithm~\ref{algo:Arnoldi} can be understood \cite{Saad1986}, \cite{Sorensen1996}.
+%
+\begin{list}{}{}
+  \item $r_0 = b - \ve{A}x_0$ 
+  \item $v_1 = \frac{r_0}{||r_0||}$ 
+  \item For $j = 1$ to $k$: 
+  \begin{list}{}{\hspace{2em}}
+    \item $h_{i,j} = v_i \ve{A} v_j$, $i = 1, \dots, j$ 
+    \item $\text{ } \hat{v}_{j+1} = \ve{A}v_j - \sum_{i=1}^{j} v_j h_{i,j}$ 
+    \item $\text{ } h_{j+1,j} = ||\hat{v}_{j+1}||$ 
+    \item $\text{ } v_{j+1} = \frac{\hat{v}_{j+1}} {h_{j+1,j}}$ 
+  \end{list}
+  \item Form the solution $x_k = x_0 + \ve{V}_k y_k$, where $y_k = \ve{H}_k^{-1} ||r_0|| e_1$
+\end{list}
+
+The $k$th step of an Arnoldi factorization can be written as: 
+%
+\begin{equation}
+  \ve{AV}_{k} = \ve{V}_{k}\ve{H}_{k} + g_{k}e_{k}^{T} \:,
+\end{equation} 
+%
+where $e_{k}$ is the $k^{th}$ column of the identity matrix and $g$ is the residual. An alternative way to derive the Arnoldi method is as a truncation of the reduction of $\ve{A}$ to Hessenberg form using shifted QR-iteration.% \cite{Sorensen1996}.
+
+%\subsection*{Restarting Arnoldi}
+%As mentioned above, Krylov methods can become untenable if the subspace is allowed to become large. Restart methods have been developed to handle this. After $m$ iterations the Arnoldi process is halted and a new starting vector, $\hat{v}_1$, is constructed from information gained during the previous $m$ iterations. This new vector is used as the starting vector for another round of the Arnoldi process, which is now using the subspace $\mathcal{K}_k(\ve{A},\hat{v}_1)$ rather than $\mathcal{K}_m(\ve{A},v_1)$. This process is repeated, finding a new starting vector every time the subspace reaches dimension $m$, until convergence. It is assumed that of the $m$ eigenvalues available, only $r$ of them are wanted. Two such restart methods, explicit and implicit, will be discussed here from the viewpoint of how they work and how they preserve the information of interest. 
+%
+%Explicit restarting applies a polynomial to the starting vector that is designed to damp unwanted components of the eigenvector expansion. There are a few different forms of explicit restarting, but the basic idea begins with splitting the Ritz values into a wanted set, $\Omega_w$, and an unwanted set, $\Omega_u$. In one form of explicit restarting, a combination of wanted eigenvalues are used and in another form a combination of unwanted eigenvectors are used. In both formulations a filter polynomial is used to create a $\hat{v}_1$ that minimizes the residual by removing the unwanted information. The components of the new starting vector therefore become more aligned toward the directions of interest. Unfortunately, filter polynomials are expensive to apply directly and this motivates the need for a more sophisticated restart method \cite{Sorensen1996}, \cite{Stewart2001}.
+%
+%Implicit restarting is designed to be less expensive than explicit restarting. It uses an implicitly shifted QR mechanism to compress the factorization while retaining information of interest. The idea is to go from a factorization of length $m = p + r$ to one of length $r$ by applying $p$ shifts implicitly. For $j = 1,2,\dots,p$, a QR factorization is done with shifts $\mu_j$ where the shifts are derived from the spectrum of $\ve{H}$, $\sigma(\ve{H}) \equiv \{\lambda \in \mathbb{R}: rank(\ve{H} - \lambda \ve{I}) < n\}$. This gives an $r$-step Arnoldi factorization of the form $\ve{AV}_r \ve{Q} = (\ve{V}_r \ve{Q})(\ve{Q}^T \ve{H}_r \ve{Q}) + g_k e^T_k$. $\ve{Q} = \ve{Q}_1 \ve{Q}_2 \dots \ve{Q}_p$, where $\ve{Q}_j$ is an orthogonal matrix corresponding to shift $\mu_j$, and $g_r = (\ve{V}_r \ve{Q}) e_{r+1} \beta_r + g_m \sigma(\ve{H})$ \cite{Sorensen1996}.
+%
+%The shift selection strategy can be designed to create a minimal $\hat{v}_1$. The shifted QR factorization reduces the subspace size while eliminating the undesired components. In essence this is implicitly applying a filter polynomial while avoiding the matrix-vector multiplications that would be required in an explicit method. Further, $\mathcal{K}_p(\ve{A},v_1) \subset \mathcal{K}_m(\ve{A}, \hat{v}_1)$, which means the wanted Ritz vectors are still represented in the updated subspace. The implicit method is more efficient and more numerically stable than the explicit restart method \cite{Sorensen1996}, \cite{Stewart2001}.
+
+\subsection*{GMRES}
+One of the more popular Krylov methods, which uses the Arnoldi process, is the GMRES algorithm developed by Saad and Schultz. %~\cite{Saad1986}, \cite{Knoll2004}. 
+Recall that $\ve{V}_{k}$ is an orthonormal basis for the Krylov subspace $\mathcal{K}_{k}(\ve{A}, v_1)$ and that $\ve{H}_{k}$ is the representation of the part of $\ve{A}$ that is in this Krylov subspace formed from the basis $\ve{V}_{k}$. The notation $\bar{\ve{H}}^{k}$ is the $(k+1) \times k$ upper Hessenberg matrix that includes the newest $h_{k+1,k}$ element generated in the Arnoldi process. This satisfies $\ve{AV}_{k} = \ve{V}_{k+1}\bar{\ve{H}}_{k}$.% \cite{Saad1986}. 
+
+The distinguishing factor for different Krylov methods is the way in which they select the $y_k$ that makes the solution $x_k = x_0 + \ve{V}_k y_k$. GMRES uses the least squares procedure to find the $y_k$ that minimizes the norm of the residual over $z$ in $\mathcal{K}_{k}(\ve{A}, v_1)$. To accomplish this, the least squares problem
+%
+\begin{equation}
+  \min_{z \in \mathcal{K}_{k}} ||r_{0} - \ve{A}z||
+  \label{eq:least-squares}
+\end{equation} 
+%
+is solved. Here $z = \ve{V}_k y_k$. The $y_{k}$ that is selected minimizes $||\beta e_{1} - \bar{\ve{H}}^{k} y||$, where $\beta = ||r_{0}||$.%  \cite{Saad1986}. 
+
+GMRES picks the best solution within the Krylov subspace with respect to minimizing the residual. % \cite{Ipsen1998}. %The minimization is done by progressively applying plane rotations in such a way that the residual norm can always be easily and efficiently obtained to analyze convergence. 
+%This method cannot break down unless it has already converged, in which case the answer has been found. GMRES has all of the storage issues associated with Krylov methods mentioned before, but restarted GMRES can be used to mitigate this concern. \cite{Saad1986}.
+
+
+\end{document}
