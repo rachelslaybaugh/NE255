@@ -143,7 +143,7 @@ As an aside, it is interesting to point out the connection between Krylov method
 
 %-----------------------------------------------------------------------------------------
 \subsection*{Power Iteration in the TE}
-Recall the operator form of the transport equation:
+Recall the operator form of the steady state, eigenvalue transport equation:
 \[
 \mathbf{L} \psi = \mathbf{MS}\phi +\frac{1}{k}\mathbf{MF}\phi \:.
 \]
@@ -199,23 +199,47 @@ As $\mu \to \lambda_1$, $\tau_1 \to \infty$ and all the other eigenvalues go to 
 The algorithm for shifted inverse iteration is much like that for power iteration, requiring only one change. Step 1 becomes ``solve $(\ve{A}-\mu \ve{I})w = v$;'' all other steps are the same. After convergence, the actual eigenvalue of interest is backed out using the eigenvector. %\cite{Sorensen1996}.  
 Shifted inverse iteration is effectively the same as performing power iteration on $(\ve{A}-\mu \ve{I})^{-1}$. 
 
+--------------------------------------------\\
+\textbf{Aside:}\\
+Conditioning is one way to express the perturbation behavior of the mathematical problem. A \emph{well-conditioned} problem is one in which all small perturbations of $x$ lead to only small changes in $f(x)$. An \emph{ill-conditioned} problem is one in which some small perturbation of $x$ leads to a large change in $f(x)$. The condition number is a quantity used to express how well-conditioned a matrix or problem is. A small condition number corresponds to a well-conditioned problem, and vice versa. 
+
+The relative condition number is used to measure the effect of relative perturbations. This is particularly useful in numerical analysis because computers introduce relative errors. Let $\delta x$ be a small perturbation of $x$ and $\delta f = f(x + \delta x) - f(x)$. With these terms, the relative condition number for some norm $p$ is defined as
+%
+\begin{equation}
+  \kappa(x)_{p} = \lim_{\delta \rightarrow 0} \sup_{||\delta x||_{p} \le \delta} \biggl(\frac{||\delta f||_{p}}{||f(x)||_{p}} / \frac{||\delta x||_{p}}{||x||_{p}} \biggr)  \:,
+  \label{eq:cond}
+\end{equation}
+%
+where $\sup$ is the supremum, the smallest real number that is greater than or equal to every number in the set in question. %\cite{Wikipedia2011}. 
+This definition holds for any norm. The norm subscript will excluded unless specifying a certain norm is pertinent.
+
+The condition number of a matrix $\mathbf{A}$ is defined as
+%
+\begin{equation}
+  \kappa(\mathbf{A}) = ||\mathbf{A}|| \text{ }||\mathbf{A}^{-1}|| \:.
+  \label{eq:condA}
+\end{equation}
+%
+For an $n \times m$ matrix $\ve{A}$, the singular values (a generalization of eigenvalues for non-square matrices) are ordered such that $\sigma_{1} \ge \sigma_{2} \ge \dots \ge \sigma_{n} > 0$. If the two-norm is used, then $||\mathbf{A}||_{2} = \sigma_{1}$, $||\mathbf{A}^{-1}||_{2} = \frac{1}{\sigma_{m}}$, and $\kappa_{2}(\mathbf{A}) = \frac{\sigma_{1}}{\sigma_{m}}$; $\sigma_{m}$ is the $m$th singular value of $\ve{A}$. If $\mathbf{A}$ is singular, its condition number is infinity. 
+%The ratio $\frac{\sigma_{1}}{\sigma_{m}}$ can be interpreted as the eccentricity of the hyper-ellipse that is the image of an $m$-dimensional unit sphere under $\mathbf{A}$. When $\ve{A}$ has a large condition number the largest principle semiaxis is much longer than the smallest principle semiaxis. 
+
+--------------------------------------------
+
 On initial consideration it would seem shifted inverse methods might not work well when the shift is very good because the matrix becomes very ill-conditioned. If the shift is exact, i.e.\ when $\mu = \lambda_{1}$, the matrix is singular. It turns out this concern is unfounded. Peters and Wilkinson proved that ill-conditioning is not a problem for inverse iteration methods. %\cite{Peters1979}.
 Trefethen and Bau also assert that this is the case as long as the $(\ve{A}-\mu \ve{I})w = v$ portion is solved with a backwards stable algorithm.% \cite{Trefethen1997}.
 
 Wielandt's method is a flavor of shifted inverse iteration that has been used widely in the neutron transport community, though it was originally developed in 1944 in an unrelated context. %\cite{Zinzani2008}, \cite{Itagaki1996}, \cite{Itagaki2002}, \cite{Ipsen}. 
-In the transport equation formulation, Wielandt's method changes the generalized form of the eigenvalue problem to $(\ve{I} - \ve{DL}^{-1}\ve{M}(\ve{S} +\gamma_e \ve{F}))\phi = \delta \gamma \ve{DL}^{-1}\ve{MF} \phi$ where $\gamma_e$ is an estimate for the eigenvalue $\gamma_1 = \frac{1}{k}$, $\phi$ is the corresponding eigenvector, and $\delta \gamma = \gamma_1 - \gamma_e$. The power method is applied to this, giving.% \cite{Nakamura1977}
+In the transport equation formulation, Wielandt's method changes the generalized form of the eigenvalue problem to $(\ve{I} - \ve{DL}^{-1}\ve{M}(\ve{S} +\gamma_e \ve{F}))\phi = (\delta \gamma) \ve{DL}^{-1}\ve{MF} \phi$ where $\gamma_e$ is an estimate for the eigenvalue $\gamma_1 = \frac{1}{k}$, $\phi$ is the corresponding eigenvector, and $(\delta \gamma) = \gamma_1 - \gamma_e$. The power method is applied to this, giving.% \cite{Nakamura1977}
 %
 \begin{equation}
-\phi^{i+1} = \delta \gamma^{i}(\ve{I} - \ve{DL}^{-1}\ve{M}(\ve{S} + \gamma_e \ve{F}))^{-1}\ve{DL}^{-1}\ve{MF}\phi^{i} \:. \label{eq:Wielandt}
+\phi^{i+1} = (\delta \gamma)^{i}(\ve{I} - \ve{DL}^{-1}\ve{M}(\ve{S} + \gamma_e \ve{F}))^{-1}\ve{DL}^{-1}\ve{MF}\phi^{i} \:. \label{eq:Wielandt}
 \end{equation}
 
-The estimate, $\gamma_e$, can be improved on each iteration by starting with an initial guess of $0$ and setting $\gamma_e^i = \delta \gamma^{i-1} + \gamma_e^{i-1} + \alpha$. Here $\alpha$ is an optional small positive constant that is designed to keep roundoff error from dominating when $\gamma_e$ becomes very close to $\gamma_1$.% \cite{Nakamura1977}. 
+The estimate, $\gamma_e$, can be improved on each iteration by starting with an initial guess of $0$ and setting $\gamma_e^i = (\delta \gamma)^{i-1} + \gamma_e^{i-1} + \alpha$. Here $\alpha$ is an optional small positive constant that is designed to keep roundoff error from dominating when $\gamma_e$ becomes very close to $\gamma_1$.% \cite{Nakamura1977}. 
 
 Studies of reactor systems have found shifted inverse iteration to be faster than power iteration. %\cite{Allen2002}. 
 In the general computational community, shifted inverse iteration has largely taken the place of power iteration when looking for eigenvectors associated with eigenvalues that are relatively well known at the outset of the calculation since this information allows for the selection of a good shift.% \cite{Ipsen}.  
 
-%-----------------------------------------------------------------------------------------
-\subsection*{Shifted Inverse Iteration in the TE}
 
 %-----------------------------------------------------------------------------------------
 \subsection*{Rayleigh Quotient Iteration}
@@ -231,7 +255,7 @@ The Rayleigh quotient for the ordinary eigenvalue problem, originally proposed b
 If $x$ is an eigenvector of $\ve{A}$, then the RQ is the corresponding eigenvalue. If $x$ is close to an eigenvector, then the RQ will approximate the eigenvalue. %\cite{Stewart2001}. 
 The derivation of the RQ comes from asking the question ``what $\alpha$ will minimize $||\ve{A}x - \alpha x||_2$?'' Solving this using least squares will give $\alpha = \rho(x)$.% \cite{Trefethen1997}. 
 
-The RQ has a similar form for the generalized eigenvalue problem, mentioned here because it applies to some of the past work discussed below and is the form that was implemented in the added solver. For the problem $\ve{A}x = \lambda \ve{B}x$, there is a right eigenpair $(\lambda, x)$ for $x \ne 0$ and a left eigenpair $(\lambda, y): y^{T}\ve{A} = \lambda y^{T}\ve{B}$ for $y \ne 0$. Let $\langle \alpha, \beta \rangle$ be a simple eigenvalue of pencil $(\ve{A}, \ve{B})$. If $x$ and $y$ are right and left eigenvectors corresponding to $\langle \alpha, \beta \rangle$, respectively, then $\langle \alpha, \beta \rangle = \langle y^{T} \ve{A} x, y^{T} \ve{B} x \rangle$. This means the ordinary form of the eigenvalue is:
+The RQ has a similar form for the generalized eigenvalue problem, mentioned here because it is the form that was implemented in Denovo. For the problem $\ve{A}x = \lambda \ve{B}x$, there is a right eigenpair $(\lambda, x)$ for $x \ne 0$ and a left eigenpair $(\lambda, y): y^{T}\ve{A} = \lambda y^{T}\ve{B}$ for $y \ne 0$. Let $\langle \alpha, \beta \rangle$ be a simple eigenvalue of pencil $(\ve{A}, \ve{B})$. If $x$ and $y$ are right and left eigenvectors corresponding to $\langle \alpha, \beta \rangle$, respectively, then $\langle \alpha, \beta \rangle = \langle y^{T} \ve{A} x, y^{T} \ve{B} x \rangle$. This means the ordinary form of the eigenvalue is:
 \begin{equation}
  \lambda = \frac{y^{T} \ve{A} x}{y^{T} \ve{B} x} \:,
 \end{equation}
