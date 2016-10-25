@@ -140,15 +140,53 @@ However, because of the slow convergence for many problems of interest, many cur
 
 As an aside, it is interesting to point out the connection between Krylov methods and power iteration. The power method is a Krylov method that uses a subspace of dimension one.  A Krylov subspace is built by storing the vectors created during each iteration of the power method. Krylov methods with subspaces larger than one take advantage of the information generated during each iteration that the power method discards. 
 
+
 %-----------------------------------------------------------------------------------------
 \subsection*{Power Iteration in the TE}
+Recall the operator form of the transport equation:
+\[
+\mathbf{L} \psi = \mathbf{MS}\phi +\frac{1}{k}\mathbf{MF}\phi \:.
+\]
+This equation can be combined with $\phi = \mathbf{D} \psi$ and manipulated in the following ways:
+%
+\begin{equation}
+  \phi = \ve{DL}^{-1}\ve{MS}\phi + \ve{DL}^{-1}\ve{M}\frac{1}{k}\ve{\chi} \ve{f}^{T} \phi \:.
+\end{equation}
+%
+Let $\ve{T} = \ve{DL}^{-1}$, rearrange, and multiply both sides by $f^{T}$:
+  %
+\begin{align}
+  f^{T}\bigl(\ve{I} - \ve{TMS}\bigr)\phi &= \frac{f^{T}}{k} \ve{TM}\chi f^{T} \phi \:, \label{eq:OperatorEvalForm} \\
+  %
+  \text{define } \Gamma &= f^{T}\phi  \text{ and rearrange} \:, \nonumber \\
+  %
+  k \Gamma &= \underbrace{f^{T}(\ve{I} - \ve{TMS})^{-1} \ve{TM} \chi}_{\ve{A}} \Gamma \:. \label{eq:OrdinaryEigenvalue}
+\end{align}
+%
+All of that can be used to make the traditional form of power iteration where the eigenvalue iteration index is $k$:
+%
+\begin{equation}
+  \Gamma^{k+1} =  \frac{1}{k^{k}}\ve{A} \Gamma^{k} \:.
+\label{eq:PowerItForm} 
+\end{equation}
+Note that Equation~\eqref{eq:OrdinaryEigenvalue} is the ordinary form of the eigenvalue transport equation. In this case the eigenvalue-vector pair are $(\Gamma, k)$. 
+
+The application of $\ve{A}$ to $\Gamma^{k}$ involves a multigroup solve that looks like a fixed source problem:
+%
+\begin{equation}
+  \bigl(\ve{I} - \ve{TMS}\bigr)y^{k} = \ve{TM}\chi \Gamma^{k} \:.
+\end{equation}
+%
+Thus, inside of one eigenvalue iteration we will have done inner, space-angle solves for each group and an outer iteration over all groups. 
+%This means outer iterations update the eigenvalue and there are two sets of inner iterations: energy, and space-angle, just like other fixed source solves. Originally, a Krylov solver was used for the space-angle inner iterations and Gauss Seidel was used for the energy iterations. %\cite{Evans2009a}, \cite{Evans2011}. Denovo uses Trilinos \cite{Heroux2003} to provide the Krylov solver, with a choice of either GMRES or BiCGSTAB \cite{Evans2009}.
 
 
 %-----------------------------------------------------------------------------------------
 \subsection*{Shifted Inverse Iteration}
 One way to improve power iteration is to shift the matrix $\ve{A}$ and then, in a power iteration-type scheme, apply the inverse of the shifted matrix rather than the regular unshifted matrix. The method is called inverse iteration or shifted inverse iteration and the goal is to provide better convergence properties. Understanding why shifted inverse iteration is an improvement requires understanding spectral transformation. 
 
-The fundamental notion is that $\ve{A}$ can be shifted by a scalar without changing the eigenvectors. That is, for some shift $\mu$, $(\ve{A} - \mu \ve{I})$ will have the same eigenvectors as $\ve{A}$ \cite{Sorensen1996}. If $\mu \notin \sigma(\ve{A})$, then $(\ve{A} - \mu \ve{I})$ is invertible and $\sigma([\ve{A} - \mu \ve{I}]^{-1}) = \{1/(\lambda - \mu):\lambda \in \sigma(\ve{A})\}$. Eigenvalues of $\ve{A}$ that are near the shift will be transformed to extremal eigenvalues that are well separated from the others. Such a spectral transformation can be added to the power method. Given an estimate, $\mu \approx \lambda_1$, the shifted inverse power method will usually converge more quickly than PI.
+The fundamental notion is that $\ve{A}$ can be shifted by a scalar without changing the eigenvectors. That is, for some shift $\mu$, $(\ve{A} - \mu \ve{I})$ will have the same eigenvectors as $\ve{A}$. %\cite{Sorensen1996}. 
+If $\mu \notin \sigma(\ve{A})$, then $(\ve{A} - \mu \ve{I})$ is invertible and $\sigma([\ve{A} - \mu \ve{I}]^{-1}) = \{1/(\lambda - \mu):\lambda \in \sigma(\ve{A})\}$. Eigenvalues of $\ve{A}$ that are near the shift will be transformed to extremal eigenvalues that are well separated from the others. Such a spectral transformation can be added to the power method. Given an estimate, $\mu \approx \lambda_1$, the shifted inverse power method will usually converge more quickly than PI.
 
 To see why this works consider: 
 %
