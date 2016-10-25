@@ -71,6 +71,8 @@ October 27, 2016}
 
 We're going to start talking about how to find the criticality state of a reactor, or the dominant eigenvalue-eigenvector pair. First, we're going to talk generally about eigenvalue solution methods, and then apply them to the transport equation. 
 
+Most material derived from my thesis, with support form Wolfram Mathworld and other sources (noted in tex comments).
+
 \subsection*{Background}
 A right eigenvector is defined as a column vector $x_R$ satisfying
 \[\ve{A}x_R=\lambda_R x_R\:.\] 
@@ -93,5 +95,153 @@ It will be assumed that the eigenvalues are ordered as $|\lambda_{1}| > |\lambda
 
 Eigenvalue problems in the nuclear transport community are typically solved with iterative rather than direct methods. A variety of iterative solvers have been used to solve eigenvalue problems. These are ones that have been most widely used. 
 
+%-----------------------------------------------------------------------------------------
+\subsection*{Power Iteration}
+Power iteration (PI) is an old and straightforward algorithm for finding an eigenvalue/vector pair. The basic idea is that any nonzero vector can be written as a linear combination of the eigenvectors of $\ve{A}$ because the eigenvectors are linearly independent, namely $v_0 = \gamma_1 x_1 + \gamma_2 x_2 + \cdots + \gamma_n x_n$ where $x_{j}$ is the $j$th eigenvector and $\gamma_{j}$ is some constant. This specific expression assumes a non-defective $\ve{A}$, though this assumption is not necessary for the method to work. 
+
+Another fact that is used to understand power iteration is that $\ve{A}^k x_i = \lambda_i^k x_i$. Thus
+%
+\begin{equation}
+  \ve{A}^k v_{0} = \gamma_1 \lambda_1^k x_1 + \gamma_2 \lambda_2^k x_2 + \cdots + \gamma_n \lambda_n^k x_n \:.
+  \label{eq:Ak}
+\end{equation}
+%
+Since $|\lambda_1| > |\lambda_i|, i \ne 1$, the first term in the expansion will dominate as $k \to \infty$ and $\ve{A}^k v_{0}$ therefore becomes an increasingly accurate approximation to $x_1$. In practice, it is desirable to avoid exponentiating a matrix and it is helpful to normalize $v$ in order to avoid possible over or underflow. This leads to the power iteration algorithm:%\ref{algo:PI} \cite{Stewart2001}, \cite{Trefethen1997}. 
+%
+\begin{list}{}{}
+  \item Given $\ve{A}$ and $v_0$, $v = \frac{v_{0}}{||v_{0}||}$.
+  \item Until convergence do:
+  \begin{list}{}{\hspace{2em}}
+    \item $w = \ve{A}v$
+    \item $v = \frac{w}{||w||}$
+    \item $\lambda = v^{T}\ve{A}v$
+  \end{list}
+  %\caption{Power Iteration}
+  %\label{algo:PI}
+\end{list}
+
+Using Equation \eqref{eq:Ak} and the PI algorithm, PI's convergence behavior can be understood. After $k$ steps, the iteration vector will be: 
+%
+\begin{equation}
+  v_{k} = \bigl( \frac{\lambda_{1}^{k}}{e_{1}^{T}\ve{A}^{k}v_{0}} \bigr) \bigl(\frac{1}{\lambda_{1}^{k}}\ve{A}^{k}v_{0} \bigr) \:.
+\end{equation}
+% 
+If $\ve{A}$ has eigenpairs $\{(x_{j}, \lambda_{j}), 1 \le j \le n \}$ and $v_{0}$ has the expansion $v_{0} = \sum_{j=1}^{n} x_{j}\gamma_{j}$ then
+%
+\begin{equation}
+  \frac{1}{\lambda_{1}^{k}}\ve{A}^{k}v_{0} =  \frac{1}{\lambda_{1}^{k}} \sum_{j=1}^{n} \ve{A}^{k}x_{j}\gamma_{j} = \sum_{j=1}^{n} x_{j} \bigl(\frac{\lambda_{j}}{\lambda_{1}} \bigr) \gamma_{j} \:.
+  \label{eq:PIexpand}
+\end{equation}
+%
+From equation \eqref{eq:PIexpand} it can be determined that the error is reduced in each iteration by a factor of $|\frac{\lambda_{2}}{\lambda_{1}}|$, which is called the dominance ratio. If $\lambda_2$ is close to $\lambda_1$, then this ratio will be close to unity and the method will converge very slowly. If $\lambda_2$ is far from $\lambda_1$, then convergence will happen much more quickly. Put simply, PI is better suited for problems where $\ve{A}$ has eigenvalues that are well separated.% \cite{Sorensen1996}.  
+
+Power iteration is very attractive because it only requires matrix-vector products and two vectors of storage space. Because of its simplicity and low storage cost, PI has been widely used in the transport community for criticality problems for quite some time. %\cite{Lewis1993}, \cite{Warsa2004a}. 
+However, because of the slow convergence for many problems of interest, many current codes use an acceleration method with PI or have moved away from it altogether. 
+
+As an aside, it is interesting to point out the connection between Krylov methods and power iteration. The power method is a Krylov method that uses a subspace of dimension one.  A Krylov subspace is built by storing the vectors created during each iteration of the power method. Krylov methods with subspaces larger than one take advantage of the information generated during each iteration that the power method discards. 
+
+%-----------------------------------------------------------------------------------------
+\subsection*{Power Iteration in the TE}
+
+
+%-----------------------------------------------------------------------------------------
+\subsection*{Shifted Inverse Iteration}
+One way to improve power iteration is to shift the matrix $\ve{A}$ and then, in a power iteration-type scheme, apply the inverse of the shifted matrix rather than the regular unshifted matrix. The method is called inverse iteration or shifted inverse iteration and the goal is to provide better convergence properties. Understanding why shifted inverse iteration is an improvement requires understanding spectral transformation. 
+
+The fundamental notion is that $\ve{A}$ can be shifted by a scalar without changing the eigenvectors. That is, for some shift $\mu$, $(\ve{A} - \mu \ve{I})$ will have the same eigenvectors as $\ve{A}$ \cite{Sorensen1996}. If $\mu \notin \sigma(\ve{A})$, then $(\ve{A} - \mu \ve{I})$ is invertible and $\sigma([\ve{A} - \mu \ve{I}]^{-1}) = \{1/(\lambda - \mu):\lambda \in \sigma(\ve{A})\}$. Eigenvalues of $\ve{A}$ that are near the shift will be transformed to extremal eigenvalues that are well separated from the others. Such a spectral transformation can be added to the power method. Given an estimate, $\mu \approx \lambda_1$, the shifted inverse power method will usually converge more quickly than PI.
+
+To see why this works consider: 
+%
+\begin{equation}
+    \tau_1 = \frac{1}{\lambda_1 - \mu}\text{ , }\tau_2 = \frac{1}{\lambda_2 - \mu}\text{ , }\dots\text{ , }\tau_n = \frac{1}{\lambda_n - \mu} \:.
+\end{equation}
+%
+As $\mu \to \lambda_1$, $\tau_1 \to \infty$ and all the other eigenvalues go to finite quantities. If the $\tau$s are inserted into the convergence analysis done for PI, it can be shown that the shifted inverse power method will reduce error in every iteration by a factor of $\frac{|\lambda_{1} - \mu|}{|\lambda_{2} - \mu|}$. This is typically much faster than $|\frac{\lambda_{2}}{\lambda_{1}}|$, though the ultimate success of the method is dependent upon the quality of the shift.% \cite{Sorensen1996}, \cite{Trefethen1997}. 
+
+The algorithm for shifted inverse iteration is much like that for power iteration, requiring only one change. Step 1 becomes ``solve $(\ve{A}-\mu \ve{I})w = v$;'' all other steps are the same. After convergence, the actual eigenvalue of interest is backed out using the eigenvector. %\cite{Sorensen1996}.  
+Shifted inverse iteration is effectively the same as performing power iteration on $(\ve{A}-\mu \ve{I})^{-1}$. 
+
+On initial consideration it would seem shifted inverse methods might not work well when the shift is very good because the matrix becomes very ill-conditioned. If the shift is exact, i.e.\ when $\mu = \lambda_{1}$, the matrix is singular. It turns out this concern is unfounded. Peters and Wilkinson proved that ill-conditioning is not a problem for inverse iteration methods. %\cite{Peters1979}.
+Trefethen and Bau also assert that this is the case as long as the $(\ve{A}-\mu \ve{I})w = v$ portion is solved with a backwards stable algorithm.% \cite{Trefethen1997}.
+
+Wielandt's method is a flavor of shifted inverse iteration that has been used widely in the neutron transport community, though it was originally developed in 1944 in an unrelated context. %\cite{Zinzani2008}, \cite{Itagaki1996}, \cite{Itagaki2002}, \cite{Ipsen}. 
+In the transport equation formulation, Wielandt's method changes the generalized form of the eigenvalue problem to $(\ve{I} - \ve{DL}^{-1}\ve{M}(\ve{S} +\gamma_e \ve{F}))\phi = \delta \gamma \ve{DL}^{-1}\ve{MF} \phi$ where $\gamma_e$ is an estimate for the eigenvalue $\gamma_1 = \frac{1}{k}$, $\phi$ is the corresponding eigenvector, and $\delta \gamma = \gamma_1 - \gamma_e$. The power method is applied to this, giving.% \cite{Nakamura1977}
+%
+\begin{equation}
+\phi^{i+1} = \delta \gamma^{i}(\ve{I} - \ve{DL}^{-1}\ve{M}(\ve{S} + \gamma_e \ve{F}))^{-1}\ve{DL}^{-1}\ve{MF}\phi^{i} \:. \label{eq:Wielandt}
+\end{equation}
+
+The estimate, $\gamma_e$, can be improved on each iteration by starting with an initial guess of $0$ and setting $\gamma_e^i = \delta \gamma^{i-1} + \gamma_e^{i-1} + \alpha$. Here $\alpha$ is an optional small positive constant that is designed to keep roundoff error from dominating when $\gamma_e$ becomes very close to $\gamma_1$.% \cite{Nakamura1977}. 
+
+Studies of reactor systems have found shifted inverse iteration to be faster than power iteration. %\cite{Allen2002}. 
+In the general computational community, shifted inverse iteration has largely taken the place of power iteration when looking for eigenvectors associated with eigenvalues that are relatively well known at the outset of the calculation since this information allows for the selection of a good shift.% \cite{Ipsen}.  
+
+%-----------------------------------------------------------------------------------------
+\subsection*{Shifted Inverse Iteration in the TE}
+
+%-----------------------------------------------------------------------------------------
+\subsection*{Rayleigh Quotient Iteration}
+Rayleigh quotient iteration is a variation of shifted inverse iteration that has a changing shift like Wielandt's method sometimes does. The key difference is that this method uses a specific formula, the Rayleigh quotient (RQ), that is designed to find the optimal the shift at every iteration. 
+
+The Rayleigh quotient for the ordinary eigenvalue problem, originally proposed by the third Baron Rayleigh in the 1870s, is defined as:% \cite{Parlett1974}:
+%
+\begin{equation}
+  \rho(x, \ve{A}) = \rho(x) = \frac{x^{T}\ve{A}x}{x^{T}x} \:.
+  \label{RQ}
+\end{equation}
+%
+If $x$ is an eigenvector of $\ve{A}$, then the RQ is the corresponding eigenvalue. If $x$ is close to an eigenvector, then the RQ will approximate the eigenvalue. %\cite{Stewart2001}. 
+The derivation of the RQ comes from asking the question ``what $\alpha$ will minimize $||\ve{A}x - \alpha x||_2$?'' Solving this using least squares will give $\alpha = \rho(x)$.% \cite{Trefethen1997}. 
+
+The RQ has a similar form for the generalized eigenvalue problem, mentioned here because it applies to some of the past work discussed below and is the form that was implemented in the added solver. For the problem $\ve{A}x = \lambda \ve{B}x$, there is a right eigenpair $(\lambda, x)$ for $x \ne 0$ and a left eigenpair $(\lambda, y): y^{T}\ve{A} = \lambda y^{T}\ve{B}$ for $y \ne 0$. Let $\langle \alpha, \beta \rangle$ be a simple eigenvalue of pencil $(\ve{A}, \ve{B})$. If $x$ and $y$ are right and left eigenvectors corresponding to $\langle \alpha, \beta \rangle$, respectively, then $\langle \alpha, \beta \rangle = \langle y^{T} \ve{A} x, y^{T} \ve{B} x \rangle$. This means the ordinary form of the eigenvalue is:
+\begin{equation}
+ \lambda = \frac{y^{T} \ve{A} x}{y^{T} \ve{B} x} \:,
+\end{equation}
+which is the generalization of the RQ.% \cite{Stewart2001}. 
+
+Recall from the previous section that choosing a shift close to the eigenvalue of interest controls the dominance ratio of shifted inverse iteration, and hence convergence behavior. The RQI algorithm uses a strategically selected shift, the Rayleigh quotient, as seen here.% \cite{Trefethen1997}, \cite{Parlett1974}.
+\begin{list}{}{}
+  \item Given $\ve{A}$ and $v_{0}$, $v = \frac{v_{0}}{||v_{0}||}$, and $\rho_{0} = \rho(v) = v^{T}\ve{A}v$ \\
+  \item Until convergence do:
+  \begin{list}{}{\hspace{2.5em}}
+    \item Solve $(\ve{A} - \rho\ve{I})w = v$
+    \item normalize $v = \frac{w}{||w||}$
+    \item form $\rho = v^{T}\ve{A}v$
+  \end{list}
+  %\caption{Rayleigh Quotient Iteration}
+  %\label{algo:RQI}
+\end{list}
+%
+This process generates a sequence, $\{\rho_{k}, v_{k}\}$, called the Rayleigh sequence generated by $v_{0}$ on $\ve{A}$. To more deeply understand why this method is optimal and useful for the purposes of this work, more properties of the Rayleigh quotient are highlighted:% \cite{Parlett1974}: 
+%
+\begin{itemize}
+  \item For $\alpha \ne 0$, $\rho(\alpha x, \ve{A}) = \rho(x, \ve{A})$, so using any multiple of $x$ will produce the same sequence as $x$. 
+  \item The RQ has translational invariance, $\rho(x, \ve{A} - \alpha \ve{I}) = \rho(x,\ve{A}) - \alpha$, meaning the matrix $(\ve{A} - \alpha \ve{I})$ produces the same sequence as $\ve{A}$. %\cite{Parlett1974}. 
+ This relationship can be used to relate eigenvalues and applied shifts. In fact, this is one of the ways to find the eigenvalue of interest for the standard shifted inverse iteration method.% \cite{Sorensen1996}. 
+\item When $x$ is an eigenvector of $\ve{A}$, $\rho(x)$ is stationary at $x$.  
+\item When $x \ne 0$ the RQ gives the minimal residual, with equivalence holding only when $\beta = \rho(x)$:
+%
+\begin{equation}
+  ||(\ve{A} - \beta\ve{I})x||^{2} \ge ||\ve{A}x||^{2} - ||\rho(x)x||^{2} \:.
+\end{equation}
+%
+\item $x$ is orthogonal to $(\ve{A} - \rho(x))x$. 
+\end{itemize}
+
+RQI has very good convergence properties for normal matrices. The minimal residual property of the RQ causes the global convergence behavior. The sequence of residuals $\{ ||(\ve{A} - \rho_{k})v_{k}|| = ||r_{k}||, k = 0, 1, ... \}$ is monotonically decreasing for all starting $v_{0}$. When RQI is applied to normal matrices, the following has been proven as $k \to \infty$:
+%
+\begin{enumerate}
+ \item $\rho_{k} = \rho(v_{k})$ converges, and either
+ \item $(\rho_{k}, v_{k})$ converges cubically to an eigenpair $(\lambda, k)$, or
+ \item $\rho_{k}$ converges linearly to a point equidistant from $s \ge 2$ eigenvalues of $\ve{A}$, and the sequence $\{v_{k}\}$ cannot converge. 
+\end{enumerate}
+%
+This means that when RQI converges to the correct eigenpair it does so rapidly. However, there is a risk that if a bad starting vector is selected it will not converge at all.% \cite{Parlett1974}. 
+
+The monotone sequence $\{||r_{k}||\}$ is bounded from below by 0. If the limit of the sequence is 0 as $k \to \infty$ then case 2 will be observed and convergence will be cubic. If the limit is greater than 0, case 3 is found. Unfortunately, it does not seem that this can be know \emph{a priori}. In practice, however, users found that it was difficult to make the method fail for normal matrices.% \cite{Parlett1974}. 
+
+For non-normal matrices the stationary property does not hold, which means the convergence is quadratic at best. The residual sequence is also not guaranteed to be monotonically decreasing and thus no global convergence properties can be proven. It has been found in practice that RQI will still converge for non-normal systems, just at a slower rate than for normal matrices. However, convergence cannot be guaranteed nor predicted in advance.% \cite{Parlett1974}. 
+
+%To deal with this, two adapted RQI methods for non-normal matrices were developed that attempt rectify this. One developed Ostrowski regains the stationary property at eigenvectors. In the non-defective case this gives cubic convergence, but gives no guarantees of global convergence. The other was developed by Parlett and it generates monotonically decreasing residuals, thus guaranteeing global convergence but at a rate that is merely linear for non-defective matrices \cite{Parlett1974}. 
 
 \end{document}
