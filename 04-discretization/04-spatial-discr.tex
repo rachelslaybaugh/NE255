@@ -130,10 +130,10 @@ The WDD, WDD-FF, TWD, LD, BLD, and TLD schemes are all second-order, and the SC 
 Aside\\ 
 \emph{Galerkin Methods}: Converts a continuous problem to a discrete problem - equivalent to converting the equation to a weak formulation. Typically one gives some constraints on the function space to characterize the space with a finite set of basis functions.\\
 
-\emph{weak form}: The main idea of the weak form is to turn the differential equation into an integral equation so as to lessen the burden on the numerical algorithm in evaluating derivatives.
+\emph{weak form}: The main idea of the weak form is to multiply the entire governing equation by an arbitrary function, often referred to as a ``weight function,'' and then integrate over the entire domain. Then, integration by parts is applied when possible to transfer some amount of the differentiation requirements on the solution to the weight function. The reason that this is performed is that we can use lower-order basis functions for expanding the solution than would have been possible with the un-modified equation, or the ``strong form.'' For instance, in the equation \(d^2u(x)/dx^2=0\), it is required that \(u(x)\) be twice-differentiable. While physically we may have reason to believe that \(u(x)\) should always be second-order (based on a particular physical application), the basis functions used in the finite element method are often only piecewise continuous, such that their second derivatives are not continuous. Integrating over the second derivatives would be similar to integrating a heaviside function, and could be undefined based on the region of the domain over which we're integrating. However, we still want to use these simple basis functions because they allow us to expend relatively little cost in evaluation of those functions, and their piecewise continuous nature means that we can force them to exist only over each finite element (this is a big deal - this allows us to have very sparse matrices in our problem). So, the weak form allows us to transfer half of the differentiations to the weight function, which then means that we only require \(u(x)\) to be once-differentiable. So, the essential purpose of the weak form is to turn the differential equation into an integral equation and introduce an arbitrary function, the weight function, so as to lessen the burden on the numerical algorithm in evaluating derivatives of the solution.
 %https://www.comsol.com/blogs/brief-introduction-weak-form/
 
-A strong form of the governing equations along with boundary conditions states the conditions at every point over a domain that a solution must satisfy. On the other hand a weak form states the conditions that the solution must satisfy in an integral sense. Examples of weak forms are variational formulations or weighted residual formulations. 
+A strong form of the governing equations along with boundary conditions states the conditions at every point over a domain that a solution must satisfy. On the other hand a weak form states the conditions that the solution must satisfy in an integral sense. (As an aside, weak formulations strictly require that the solution obey the Dirichlet boundary conditions, but not necessarily the Neumann boundary conditions). Examples of weak forms are variational formulations or weighted residual formulations. 
 
 Weak  formulations  naturally  promote  computing  approximate  solutions  to  challenging problems, and are 'equivalent' to strong forms.
 %http://homepages.cae.wisc.edu/~suresh/ME964Website/M964Notes/Notes/Strong,Weak,%20FE%20Form%20of%201-DScalar.pdf
@@ -143,7 +143,7 @@ Weak  formulations  naturally  promote  computing  approximate  solutions  to  c
 LANL's PARTISN has similar choices, but their new Capsaicin code has unstructured mesh and uses Discontinuous Finite Element Method (DFEM): Linear, Bars, Triangles, Quadrilaterals, Polygons. They also have an ability to deal with non-convex meshes using Continuous FEM. Finally, they have structured meshes in 3-D with DD and LD.
 
 INL's Rattle$S_N$ake uses finite element methods for unstructured higher-order
-meshes as well.
+meshes as well, and has capabilities for both discontinuous and continuous Galerkin.
 
 We'll use the diagram in \autoref{fig:mesh-cell-sn} to think through our discretization schemes.
 \begin{figure}[h!]
@@ -526,6 +526,14 @@ LD $\propto a(\Delta x)^2$\\
 TLD $\propto b(\Delta x)^2$
 
 and $a>b$. TLD should also preserve the asymptotic diffusion limit at boundaries whereas LD will not. Finally, TLD should do better at sharp boundary discontinuities compared to LD.
+
+The rate of convergence for the \textit{continuous} Galerkin method is:
+
+\begin{equation}
+\|u-u^h\|_{H^1{\Omega}}\leq c h^{\text{min}(r-1, p)}
+\end{equation}
+
+where \(H^1\) indicates the Hilbert-space norm, \(c\) is an unknown constant, \(h\) is the mesh spacing, \(r\) is the regularity, and \(p\) is the polynomial order of the approximating function. This theorem comes from functional analysis, and applies for \textit{any} mesh and \textit{any} element type (i.e. shape of element). The regularity of smooth functions is \(\infty\), and the lowest theoretical value of \(r\) is 3/2, but for the types of problems we're going to be solving the minimum in the exponent of \(h\) is going to be dictated by \(p\). Hence, in the \(H^1\) norm, linear elements give first-order convergence, quadratic elemetns second-order, and so on. When measured in the \(L^2\) norm, on the other hand, the error is proportional to \(h^{p+1}\), and linear elements are second-order, quadratic are third-order, and so on. If this same theorem applies to the discontinuous finite element method (* I think it would, though I haven't looked at the derivation of the theorem above to see if at any point it assumes continuity at the nodes *), then this explains why all the LD, BLD, and TLD methods are second-order convergent, since their basis functions are all linear in \(x\), \(y\), and \(z\) (note that a basis function \(xyz\) is still considered to be linear because \(x\), \(y\), and \(z\) do not appear to powers greater than 1). Higher-order methods would achieve better convergence, and hence the finite element method is not always second-order convergent.
 
 
 %%---------------------------------------------------------------------------%%
