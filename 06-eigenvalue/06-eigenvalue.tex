@@ -69,7 +69,45 @@ October 27, 2016}
 \put(0,0) {\line(1,0){6.25}}         
 \end{picture}
 
-We're going to start talking about how to find the criticality state of a reactor, or the dominant eigenvalue-eigenvector pair. First, we're going to talk generally about eigenvalue solution methods, and then apply them to the transport equation. 
+We're going to start talking about how to find the criticality state of a reactor, or the dominant eigenvalue-eigenvector pair. To turn the steady state Boltzmann transport equation with fission into an eigenvalue problem, we can use a mathematical ``knob". There are two ways we do this:
+\begin{enumerate}
+\item Alter the effective cross section by adding an $\alpha$ term or
+\item Alter the effective fission yield, $\nu$, by scaling it with $k$.
+\end{enumerate}
+
+\textbf{The $\alpha$ version}, which is used more frequently at LLNL and LANL, looks like this:
+%
+\begin{align*}
+\bigl[\vOmega \cdot \nabla + \bigl(\Sigma_t + \underbrace{\frac{\alpha_0}{v}}_{\text{new}}\bigr)\bigr]\psi(\vec{r}, E, \vOmega) &= \int_{4 \pi} d\vOmega' \int_0^{\infty} dE' \: \Sigma_s(E', \vOmega' \rightarrow E, \vOmega) \psi(\vec{r}, E', \vOmega')\\
+ +& \frac{\chi(E)}{4 \pi}\int_0^{\infty} dE' \: \nu(E') \Sigma_f(E') \int_{4 \pi} d\vOmega' \:\psi(\vec{r}, E', \vOmega')
+\end{align*}
++ homogeneous boundary conditions.\\
+%
+Some important notes about this
+\begin{itemize}
+\item In the $\alpha$-evaluation problem, the total cross section is modified by a 1/v absorber.
+\item There is numerical difficulty if $\alpha_0 < 0$.\\
+If $\frac{-\alpha_0}{v} > \Sigma_t$ then total interaction becomes a ``source" rather than a loss!
+\item If $\alpha_0 > 0$, absorption of \textbf{slow} neutrons is enhanced by an $\alpha_0$/v absorber $\rightarrow$ harder spectrum.
+\item If $\alpha_0 < 0$, absorption of \textbf{fast} neutrons is enhanced by an $\alpha_0$/v absorber $\rightarrow$ softer spectrum.
+\item These spectral effects are important because reaction rate is $\int_0^{\infty} dE \:\Sigma_j(E) \phi(E)$
+\end{itemize}
+
+\textbf{The $k$-eigenvalue problem} is a little bit different:
+%
+\begin{align*}
+\bigl[\vOmega \cdot \nabla + \Sigma_t \bigr]\psi(\vec{r}, E, \vOmega) &= \int_{4 \pi} d\vOmega' \int_0^{\infty} dE' \: \Sigma_s(E', \vOmega' \rightarrow E, \vOmega) \psi(\vec{r}, E', \vOmega')\\
+ +& \underbrace{\frac{1}{k}}_{\text{new}}\frac{\chi(E)}{4 \pi}\int_0^{\infty} dE' \: \nu(E') \Sigma_f(E') \int_{4 \pi} d\vOmega' \:\psi(\vec{r}, E', \vOmega')
+\end{align*}
+%
++ homogeneous boundary conditions.\\
+Important notes about this version:
+\begin{itemize}
+\item we can see that $k=1$ means $\alpha_0 = 0$ and vice versa.
+\item $k$ as a multiplication factor: the ratio of neutron production in one generation to the neutron production in the previous generation.
+\item We often use the $k$ version because we don't have the mathematical difficulties associated with the $\alpha$ form, and the physical interpretation is helpful.
+\end{itemize}
+
 
 Most material derived from my thesis, with support form Wolfram Mathworld and other sources (noted in tex comments).
 
