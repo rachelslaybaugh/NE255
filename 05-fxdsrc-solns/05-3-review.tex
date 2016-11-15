@@ -1,0 +1,146 @@
+\documentclass[12pt]{article}
+\usepackage[top=1in, bottom=1in, left=1in, right=1in]{geometry}
+
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage{amssymb}
+%% The amsthm package provides extended theorem environments
+\usepackage{amsthm}
+\usepackage{epsfig}
+\usepackage{times}
+\renewcommand{\ttdefault}{cmtt}
+\usepackage{amsmath}
+\usepackage{graphicx} % for graphics files
+\usepackage{tabu}
+
+% Draw figures yourself
+\usepackage{tikz} 
+
+% writing elements
+%\usepackage{mhchem}
+
+\usepackage{paralist}
+
+% The float package HAS to load before hyperref
+\usepackage{float} % for psuedocode formatting
+\usepackage{xspace}
+
+% from Denovo Methods Manual
+\usepackage{mathrsfs}
+\usepackage[mathcal]{euscript}
+\usepackage{color}
+\usepackage{array}
+
+\usepackage[pdftex]{hyperref}
+\usepackage[parfill]{parskip}
+
+% math syntax
+\newcommand{\nth}{n\ensuremath{^{\text{th}}} }
+\newcommand{\ve}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\Macro}{\ensuremath{\Sigma}}
+\newcommand{\rvec}{\ensuremath{\vec{r}}}
+\newcommand{\vecr}{\ensuremath{\vec{r}}}
+\newcommand{\omvec}{\ensuremath{\hat{\Omega}}}
+\newcommand{\vOmega}{\ensuremath{\hat{\Omega}}}
+\newcommand{\even}{\ensuremath{\phi^g}}
+\newcommand{\odd}{\ensuremath{\vartheta^g}}
+\newcommand{\evenp}{\ensuremath{\phi^{g'}}}
+\newcommand{\oddp}{\ensuremath{\vartheta^{g'}}}
+\newcommand{\Sn}{\ensuremath{S_N} }
+\newcommand{\Ye}[2]{\ensuremath{Y^e_{#1}(\vOmega_#2)}}
+\newcommand{\Yo}[2]{\ensuremath{Y^o_{#1}(\vOmega_#2)}}
+\newcommand{\sigg}[1]{\ensuremath{\Macro^{gg'}_{s\,#1}}}
+\newcommand{\psig}{\ensuremath{\psi^g}}
+\newcommand{\Di}{\ensuremath{\Delta_i}}
+\newcommand{\Dj}{\ensuremath{\Delta_j}}
+\newcommand{\Dk}{\ensuremath{\Delta_k}}
+%---------------------------------------------------------------------------
+%---------------------------------------------------------------------------
+\begin{document}
+\begin{center}
+{\bf NE 255, Fa16 \\
+Source Iteration Redux\\
+Nov 15, 2016}
+\end{center}
+
+\setlength{\unitlength}{1in}
+\begin{picture}(6,.1) 
+\put(0,0) {\line(1,0){6.25}}         
+\end{picture}
+
+Let's revisit ``source iteration" and how that works to get a better handle on within group iteration. Let's assume
+\begin{compactitem}
+\item 1D
+\item azimuthally symmetric
+\item steady state
+%\item diamond difference spatial differencing ($i = 1, \dots, I$)
+\item $S_N$ angular discretization ($a = 1, \dots, N(N+2)$; $N(N+2)=M$)
+\item $P_N$ with $N=1$: linearly anisotropic scattering ($l = 0, 1$ so $\Sigma_s = \Sigma_{s0} + 3\mu_a \mu_{a'} \Sigma_{s1}$)
+\item multigroup in energy ($g = 1, \dots, G$)
+\end{compactitem}
+
+With that, we have
+\begin{align}
+%\mu_a \frac{d}{dx}\psi_{a,i}^g + \Sigma_{t,i} \psi_{a,i}^g &= 2\pi \sum_{g'=1}^G
+%  \sum_{l=0}^N \Sigma_{i,sl}^{gg'} \tilde{\psi^{g'}_i} + q_{a,i}^g\\
+\mu_a \frac{d}{dx}\psi_{a}^g(x) + \Sigma_{t}(x) \psi_{a}^g(x) &= 2\pi \sum_{g'=1}^G
+  \sum_{l=0}^N \Sigma_{sl}^{gg'}(x) \tilde{\psi^g_l}(x) + q_{a}^g(x)\\
+  %
+\tilde{\psi^g_0}(x) &= \sum_{a=1}^M w_a \psi_a^g(x)\:; \quad P_0 = 1\\
+\tilde{\psi^g_1}(x) &= \sum_{a=1}^M w_a \mu_a \psi_a^g(x)\:; \quad P_1 = \mu
+\end{align}
+%
+We've 
+\begin{compactitem}
+\item converted the angular integration in the source term to a quadrature integration ($\sum_{a=1}^M w_a f_a$)
+\item expanded the double differential scattering cross section in Legendre polynomials ($\sum_{l=0}^N P_l f_l$)
+\item applied groups ($x^g$)
+\end{compactitem} 
+
+Next, let's add the iteration index for source iteration.  
+\begin{align}
+\mu_a \frac{d}{dx}\psi_{a}^{g, (k+1)}(x) + \Sigma_{t}(x) \psi_{a}^{g, (k+1)}(x) &= 2\pi \sum_{g'=1}^G
+  \sum_{l=0}^N \Sigma_{sl}^{gg'}(x) \tilde{\psi^{g', (k)}_l}(x) + q_{a}^g(x)\\
+  %
+\tilde{\psi}^{g, (k)}_0(x) &= \sum_{a=1}^M w_a \psi_a^{g, (k)}(x)\:; \quad P_0 = 1\\
+\tilde{\psi}^{g, (k)}_1(x) &= \sum_{a=1}^M w_a \mu_a \psi_a^{g, (k)}(x)\:; \quad P_1 = \mu
+\end{align}
+
+You can see that because the \textit{source} depends on the flux from angles and energies other than the one we are in, we need to \textit{iterate}. Hence, \textbf{source iteration}. We would still need to iterate with only one group because of the angle component. If we didn't have scattering, then we wouldn't need to iterate. 
+
+To add spatial discretization, define the right hand side as $s_i$:
+\begin{align}
+\psi_{i,a}^{g,(k+1)} &= \frac{s_{i}^{g,(k)} + \frac{2}{(1\pm\alpha_i)}\frac{|\mu|}{\Di}\bar{\psi}^{g,(k+1)}_{i\mp1/2}}{
+      \Sigma_{i} + \frac{2}{(1\pm\alpha_i)}\frac{|\mu|}{\Di}} \label{eq:dd}\\
+%
+%\psi_{i}^{g,(k+1)} &= \frac{1}{2}\bigl((1+\alpha_i)\psi_{i+1/2}^{g,(k+1)}+(1-\alpha_i)\psi_{i-1/2}^{g,(k+1)}\bigr)\\
+%
+\psi_{i\pm1/2}^{g,(k+1)} &= \frac{2}{(1\pm\alpha_i)}\psi_{i}^{g,(k+1)}-
+    \frac{(1\mp\alpha_i)}{(1\pm\alpha_i)}\bar{\psi}_{i\mp1/2}^{g,(k+1)} \label{eq:out}
+\end{align}
+where the overbar indicates incoming flux (based on direction).
+
+With all of this, we can see the iteration levels. We have an initial guess $\psi^{(0)}$ for each group, angle, and cell. For a given group, do the following \underline{until convergence of the flux in that group}:
+\begin{enumerate}
+\item For each angle
+    \begin{enumerate}
+    \item Start at the appropriate cell where we have known incoming flux moments, $\bar{\psi}_{i\mp1/2}^{g}$
+    \item Calculate the source guess in that cell using the past flux value (because it is known at all angles and energies):
+    \[
+    s_{i}^{g,(k)} = 2\pi \sum_{g'=1}^G
+  \sum_{l=0}^N \Sigma_{sl}^{gg'}(x) \tilde{\psi^g_l}(x) + q_{a}^g(x)
+    \]
+    \item Calculate and store the updated flux in that cell, $\psi_{i,a}^{g,(k+1)}$, using \autoref{eq:dd} 
+    \item Calculate the updated outgoing flux in that cell, $\psi_{i\pm1/2}^{g,(k+1)}$, using \autoref{eq:out}
+    \item Set the incoming flux in the next cell to be the outgoing flux in the previous cell:
+    \[
+    \bar{\psi}_{i\mp3/2}^{g} = \psi_{i\pm1/2}^{g,(k+1)}
+    \]
+    \item move to the next cell
+  \end{enumerate}
+  \item move to the next angle
+\end{enumerate}
+
+
+\end{document}
