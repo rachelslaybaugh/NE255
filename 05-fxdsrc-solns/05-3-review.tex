@@ -82,7 +82,7 @@ Let's revisit ``source iteration" and how that works to get a better handle on w
 
 With that, we have
 \begin{align}
-%\mu_a \frac{d}{dx}\psi_{a,i}^g + \Sigma_{t,i} \psi_{a,i}^g &= 2\pi \sum_{g'=1}^G
+%\mu_a \frac{d}{dx}\psi_{a,i}^g + \Sigma_{t,i}^g \psi_{a,i}^g &= 2\pi \sum_{g'=1}^G
 %  \sum_{l=0}^N \Sigma_{i,sl}^{gg'} \tilde{\psi^{g'}_i} + q_{a,i}^g\\
 \mu_a \frac{d}{dx}\psi_{a}^g(x) + \Sigma_{t}(x) \psi_{a}^g(x) &= 2\pi \sum_{g'=1}^G
   \sum_{l=0}^N \Sigma_{sl}^{gg'}(x) \tilde{\psi^g_l}(x) + q_{a}^g(x)\\
@@ -100,8 +100,8 @@ We've
 
 Next, let's add the iteration index for source iteration.  
 \begin{align}
-\mu_a \frac{d}{dx}\psi_{a}^{g, (k+1)}(x) + \Sigma_{t}(x) \psi_{a}^{g, (k+1)}(x) &= 2\pi \sum_{g'=1}^G
-  \sum_{l=0}^N \Sigma_{sl}^{gg'}(x) \tilde{\psi^{g', (k)}_l}(x) + q_{a}^g(x)\\
+\mu_a \frac{d}{dx}\psi_{a}^{g, (k+1)}(x) + \Sigma_{t}^g(x) \psi_{a}^{g, (k+1)}(x) &= 2\pi \sum_{g'=1}^G
+  \sum_{l=0}^N \Sigma_{sl}^{gg'}(x) \tilde{\psi}^{g', (k)}_l(x) + q_{a}^g(x)\\
   %
 \tilde{\psi}^{g, (k)}_0(x) &= \sum_{a=1}^M w_a \psi_a^{g, (k)}(x)\:; \quad P_0 = 1\\
 \tilde{\psi}^{g, (k)}_1(x) &= \sum_{a=1}^M w_a \mu_a \psi_a^{g, (k)}(x)\:; \quad P_1 = \mu
@@ -111,13 +111,13 @@ You can see that because the \textit{source} depends on the flux from angles and
 
 To add spatial discretization, define the right hand side as $s_i$:
 \begin{align}
-\psi_{i,a}^{g,(k+1)} &= \frac{s_{i}^{g,(k)} + \frac{2}{(1\pm\alpha_i)}\frac{|\mu|}{\Di}\bar{\psi}^{g,(k+1)}_{i\mp1/2}}{
-      \Sigma_{i} + \frac{2}{(1\pm\alpha_i)}\frac{|\mu|}{\Di}} \label{eq:dd}\\
+\psi_{i,a}^{g,(k+1)} &= \frac{s_{i,a}^{g,(k)} + \frac{2}{(1\pm\alpha_i)}\frac{|\mu_a|}{\Di}\bar{\psi}^{g,(k+1)}_{a,i\mp1/2}}{
+      \Sigma_{i}^g + \frac{2}{(1\pm\alpha_i)}\frac{|\mu_a|}{\Di}} \label{eq:dd}\\
 %
 %\psi_{i}^{g,(k+1)} &= \frac{1}{2}\bigl((1+\alpha_i)\psi_{i+1/2}^{g,(k+1)}+(1-\alpha_i)\psi_{i-1/2}^{g,(k+1)}\bigr)\\
 %
-\psi_{i\pm1/2}^{g,(k+1)} &= \frac{2}{(1\pm\alpha_i)}\psi_{i}^{g,(k+1)}-
-    \frac{(1\mp\alpha_i)}{(1\pm\alpha_i)}\bar{\psi}_{i\mp1/2}^{g,(k+1)} \label{eq:out}
+\psi_{a,i\pm1/2}^{g,(k+1)} &= \frac{2}{(1\pm\alpha_i)}\psi_{i,a}^{g,(k+1)}-
+    \frac{(1\mp\alpha_i)}{(1\pm\alpha_i)}\bar{\psi}_{a,i\mp1/2}^{g,(k+1)} \label{eq:out}
 \end{align}
 where the overbar indicates incoming flux (based on direction).
 
@@ -128,15 +128,12 @@ With all of this, we can see the iteration levels. We have an initial guess $\ps
     \item Start at the appropriate cell where we have known incoming flux moments, $\bar{\psi}_{i\mp1/2}^{g}$
     \item Calculate the source guess in that cell using the past flux value (because it is known at all angles and energies):
     \[
-    s_{i}^{g,(k)} = 2\pi \sum_{g'=1}^G
+    s_{a,i}^{g,(k)} = 2\pi \sum_{g'=1}^G
   \sum_{l=0}^N \Sigma_{sl}^{gg'}(x) \tilde{\psi^g_l}(x) + q_{a}^g(x)
     \]
     \item Calculate and store the updated flux in that cell, $\psi_{i,a}^{g,(k+1)}$, using \autoref{eq:dd} 
     \item Calculate the updated outgoing flux in that cell, $\psi_{i\pm1/2}^{g,(k+1)}$, using \autoref{eq:out}
-    \item Set the incoming flux in the next cell to be the outgoing flux in the previous cell:
-    \[
-    \bar{\psi}_{i\mp3/2}^{g} = \psi_{i\pm1/2}^{g,(k+1)}
-    \]
+    \item Set the incoming flux in the next cell to be the outgoing flux in the previous cell
     \item move to the next cell
   \end{enumerate}
   \item move to the next angle
