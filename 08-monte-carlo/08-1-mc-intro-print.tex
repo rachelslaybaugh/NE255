@@ -2,7 +2,7 @@
 %%  NE 255
 %%
 
-\documentclass[xcolor=x11names,compress, handouts]{beamer}
+\documentclass[xcolor=x11names,compress]{beamer}
 
 \definecolor{CoolBlack}{rgb}{0.0, 0.18, 0.39}
 %% General document %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -199,7 +199,7 @@ Notes derived from Jasmina Vujic and Paul Wilson
     \end{equation}
   \end{column}
 \end{columns}
-\pause
+
 \begin{equation}
   G = \int_0^1 g(x)dx = (1-0)\overline{g(x)} \nonumber
 \end{equation}
@@ -229,7 +229,7 @@ Determine $\overline{g(x)}$ by random sampling:\\
     \end{equation}
   \end{column}
 \end{columns}
-\pause
+
 \vspace*{0.5em}
 G = area under curve, \\
 \hspace*{0.75 em} = fraction of unit square under curve\\
@@ -272,7 +272,7 @@ $m_N$ = $\#$ of times in $N$ trials that $\hat{x}_k^2 + \hat{y}_k^2 \leq 1$,
   	\end{figure}
   \end{column}
 \end{columns}
-\pause
+
 Nicholas Metropolis, S.\ Ulam. ''The Monte Carlo Method," J\textit{ournal of the American Statistical Association}, \textbf{44}, No.\ 247, 335-341 (Sep. 1949).
 \end{frame}
 
@@ -316,7 +316,7 @@ Nicholas Metropolis, S.\ Ulam. ''The Monte Carlo Method," J\textit{ournal of the
 \item Deterministic numerical integration may be slow and/or require error prone approximations
 \end{itemize} 
 \vspace*{0.5 em}
-\pause
+
 \item However, statistically accurate results can require \textbf{significant computer time}
 \item Fortunately, Monte Carlo and parallel computing go well together
 \item and we also have Variance Reduction methods
@@ -333,13 +333,13 @@ Simulate many independent particles in a system
 \begin{itemize}
 \item Treat each physical process as a
 \textit{probabilistic process}
-\pause
+
 \item \textit{Randomly sample} each process using an
 independent stream of random numbers
-\pause
+
 \item Follow each particle from birth until it no
 longer matters
-\pause
+
 \item Accumulate the contributions of each
 particle to find the statistically-expected
 mean behavior and variance
@@ -360,7 +360,7 @@ describing position, $\vec{r}$, and velocity, $\vec{v}$
 from one position to another at a
 constant velocity
 \[T(\vec{r}\:' \rightarrow \vec{r}, \vec{v})\]
-\pause
+
 \item A particle can undergo a collision at a
 single position that changes its velocity
 \[C(\vec{r}, \vec{v}\:' \rightarrow \vec{v})\]
@@ -466,7 +466,7 @@ Arriving at the \textit{integral form} of the transport equation
  \item Randomly sample from source: $\Psi_0 (\vec{p}_0)$
  \item Randomly sample for each of $k$ transitions: $R(\vec{p}_{k-1} \rightarrow \vec{p}_{k})$
 \end{itemize}
-\pause
+
 \item Average for result $A$ by averaging of $M$ histories
 \end{itemize}
 
@@ -495,22 +495,22 @@ Arriving at the \textit{integral form} of the transport equation
 \begin{itemize}
   \item \textbf{PDFs}: the physical/mathematical system must be described by a set of pdfs.
   % That's next class
-  \pause
+  
   \item \textbf{Random number generator}: a source of random \#s uniformly distributed on the unit interval.
   % We're going to skip this
-  \pause
+  
   \item \textbf{Sampling rule}: prescription for sampling the pdf (given having random \#s)
   % That's also next class
-  \pause
+  
   \item \textbf{Scoring}: the outcomes must be accumulated/\underline{tallied} for quantities of interest
   % we might cover it
-  \pause
+  
   \item \textbf{Error estimation}: an estimate of the statistical error (\underline{variance}) of the solution
   % This class!
-    \pause
+    
   \item \textbf{Variance Reduction}: methods for reducing the variance and computation time simultaneously
   % briefly this class, maybe more at the end
-    \pause
+    
   \item \textbf{Parallelization}: efficient use of computers
   % probably not
 \end{itemize}
@@ -585,14 +585,14 @@ represented by probability distributions
     \item Each possible energy has a different probability
 (intensity)
     \end{itemize} 
-    \pause
+    
     \vspace*{0.5 em}
   \item Scattering cross-sections
     \begin{itemize}
     \item Each possible scattering angle has a different
 probability as a function of the energy
     \end{itemize}
-    \pause
+    
     \vspace*{0.5 em}
   \item Transmission through a medium
     \begin{itemize}
@@ -784,7 +784,7 @@ function
       \item Continuous discrete sampling
       \item Rejection sampling
       \end{itemize}
-    \pause
+    
     \vspace*{.5em}
     \item \textit{Advanced }sampling techniques
       \begin{itemize}
@@ -883,7 +883,7 @@ Consider the CDF
       \item Binary search requires $O(\log_2 N)$ time
       \end{itemize}
     \vspace*{.5em}
-    \pause
+    
     \item Special case: Uniform discrete PDF
       \begin{itemize}
       \item $p_k = 1/N$
@@ -948,16 +948,16 @@ required
 %
 \[
   \begin{aligned}
-  \action<+->{g(t)dt &= e^{-\lambda t} dt \:, \quad t > 0 \\}
+g(t)dt &= e^{-\lambda t} dt \:, \quad t > 0 \\
   %
-  \action<+->{G(t) &= \int_{-\infty}^t g(t')dt' = \int_0^t g(t') dt' = \biggl[- \frac{e^{-\lambda t'}}{\lambda} \biggr]_0^t = \frac{1}{\lambda} \bigl(1 - e^{-\lambda t}\bigr)\\
-    G(\infty) &= \frac{1}{\lambda}\\}
+G(t) &= \int_{-\infty}^t g(t')dt' = \int_0^t g(t') dt' = \biggl[- \frac{e^{-\lambda t'}}{\lambda} \biggr]_0^t = \frac{1}{\lambda} \bigl(1 - e^{-\lambda t}\bigr)\\
+    G(\infty) &= \frac{1}{\lambda}\\
     %
-    \action<+->{\\p(t) &= \lambda g(t) = \lambda e^{-\lambda t} dt \:, \quad t > 0 \\
+\\p(t) &= \lambda g(t) = \lambda e^{-\lambda t} dt \:, \quad t > 0 \\
     %
     P(t) &= \int_{-\infty}^t p(t')dt' = \int_0^t \lambda f(t') dt' = \bigl[e^{-\lambda t'} \bigr]_0^t = 1 - e^{-\lambda t}\\
     %
-    P(\infty) &= 1}
+    P(\infty) &= 1
   \end{aligned}
 \]    
     
@@ -970,17 +970,17 @@ required
 
 \[
   \begin{aligned}
-  \action<+->{g(x) dx &= C \quad a \leq x < b\\}
+g(x) dx &= C \quad a \leq x < b\\
   %
-  \action<+->{G(x) &= \int_{-\infty}^x g(x')dx' = C \int_a^x dx' = C\bigl[x' \bigr]_a^x = C \bigl(x - a)\\
-    G(\infty) &= G(b) = C(b-a)\\}
+G(x) &= \int_{-\infty}^x g(x')dx' = C \int_a^x dx' = C\bigl[x' \bigr]_a^x = C \bigl(x - a)\\
+    G(\infty) &= G(b) = C(b-a)\\
     %
-    \action<+->{\\p(x) &= \frac{g(x)}{G(\infty)} = \frac{C}{C(b-a)} = \frac{1}{b-a} \quad a \leq x < b\\}
+\\p(x) &= \frac{g(x)}{G(\infty)} = \frac{C}{C(b-a)} = \frac{1}{b-a} \quad a \leq x < b\\
     %
-    \action<+->{P(x) &= \int_{-\infty}^x p(x')dx' = \frac{1}{b-a}\int_a^x dx' = \frac{x-a}{b-a}\\
+P(x) &= \int_{-\infty}^x p(x')dx' = \frac{1}{b-a}\int_a^x dx' = \frac{x-a}{b-a}\\
     %
     &\\
-    x &= P^{-1}(\xi) = \xi\bigl(b-a\bigr) + a}
+    x &= P^{-1}(\xi) = \xi\bigl(b-a\bigr) + a
   \end{aligned}
 \]    
     
@@ -993,17 +993,17 @@ required
 
 \[
   \begin{aligned}
-  \action<+->{g(x) dx &= mx \qquad 0 \leq x < 1\\}
+g(x) dx &= mx \qquad 0 \leq x < 1\\
   %
-  \action<+->{G(x) &= \int_{-\infty}^x g(x')dx' = \int_0^x mx' dx' = \frac{m}{2}\bigl[x'^2 \bigr]_0^x = \frac{m}{2} x^2\\
-    G(\infty) &= G(1) = \frac{m}{2}\\}
+G(x) &= \int_{-\infty}^x g(x')dx' = \int_0^x mx' dx' = \frac{m}{2}\bigl[x'^2 \bigr]_0^x = \frac{m}{2} x^2\\
+    G(\infty) &= G(1) = \frac{m}{2}\\
     %
-    \action<+->{\\p(x) &= \frac{mx}{\frac{m}{2}} = 2x \qquad 0 \leq x < 1\\}
+\\p(x) &= \frac{mx}{\frac{m}{2}} = 2x \qquad 0 \leq x < 1\\
     %
-    \action<+->{P(x) &= \int_{-\infty}^x p(x')dx' = \int_0^x 2x' dx' = \bigl[x'^2 \bigr]_0^x = x^2\\
+P(x) &= \int_{-\infty}^x p(x')dx' = \int_0^x 2x' dx' = \bigl[x'^2 \bigr]_0^x = x^2\\
     %
     &\\
-    x &= P^{-1}(\xi) = \sqrt{\xi} \qquad\text{Independent of }m}
+    x &= P^{-1}(\xi) = \sqrt{\xi} \qquad\text{Independent of }m
   \end{aligned}
 \]    
     
@@ -1043,7 +1043,7 @@ required
       \item e.g.\ Klien-Nishina cross-section
       \end{itemize}
     \vspace*{1 em}
-    \pause
+    
     \item Use an approach that is more graphical
       \begin{itemize}
       \item Select a point in a 2-D domain
@@ -1069,7 +1069,7 @@ required
     \item Simplest choice is $g(x) = C$
     \item May not be best choice
     \vspace*{1 em}
-    \pause
+    
     \item Generate pair of random variables, $(\xi, \eta)$
       \begin{itemize}
       \item $x' = G^{-1} (\xi)$
@@ -1107,7 +1107,7 @@ required
       \item Always works
       \end{itemize}
     \vspace*{1 em}
-    \pause
+    
     \item Disadvantages
       \begin{itemize}
       \item Will be inefficient if shapes of $g(x)$ and $p(x)$ are not similar
@@ -1127,13 +1127,13 @@ required
 
     \begin{itemize}
     \item Physics can be represented \textit{probabilistically}
-\pause
+
 \vspace*{.5em}
     \item We can create PDFs and from those generate CDFs
-\pause
+
 \vspace*{.5em}
     \item These can be either continuous or discrete
-\pause
+
 \vspace*{.5em}
     \item We learned some basic ways to use random numbers to \textit{sample} from these distributions to \alert{simulate physics}
     \end{itemize}
