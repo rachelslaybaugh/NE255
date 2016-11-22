@@ -2,7 +2,7 @@
 %%  NE 255
 %%
 
-\documentclass[xcolor=x11names,compress]{beamer}
+\documentclass[xcolor=x11names,compress, handouts]{beamer}
 
 \definecolor{CoolBlack}{rgb}{0.0, 0.18, 0.39}
 %% General document %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -394,7 +394,7 @@ We're skipping how to find $s_b$, just know that we can find it using the intern
   \item Sample \textbf{target nuclide} for a mixture with $J$ nuclides
     \[\Sigma_t = \sum_{j=1}^J N_j \sigma_{t,j}\]
   \item \textit{Discrete PDF} to determine which nuclide is hit
-    \[p_i = \frac{\Sigma_{t,j}}{\Sigma_t}\]
+    \[p_j = \frac{\Sigma_{t,j}}{\Sigma_t}\]
   \pause
   \item Sample \textbf{reaction type} for an nuclide with R types of reactions
      \[\Sigma_{t,j} = \sum_{x=1}^R \Sigma_{x,j}\]
@@ -438,7 +438,7 @@ Scattering angles are defined relative to the original direction (considered as 
     \item Azimuthal angle, $\theta$, determined by sampling isotropically
     \vspace*{0.5em}
    % \item Consider old/original direction as the z-axis in a different coordinate system
-    \item The new direction is $\bigl(\sin(\phi) \cos(\theta), \sin(\phi) \sin(\theta), \cos(\theta)\bigr)$ \[= \bigl(\sqrt{1 - \mu^2} \cos(\theta),  \sqrt{1 - \mu^2} \sin(\theta), \mu \bigr)\]
+    \item The new direction is $\bigl(\sin(\theta) \cos(\phi), \sin(\theta) \sin(\phi), \cos(\phi)\bigr)$ \[= \bigl(\sqrt{1 - \mu^2} \cos(\theta),  \sqrt{1 - \mu^2} \sin(\theta), \mu \bigr)\]
 \end{itemize}
 
   	\begin{figure}
