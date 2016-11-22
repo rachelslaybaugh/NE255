@@ -294,7 +294,7 @@ Nicholas Metropolis, S.\ Ulam. ''The Monte Carlo Method," J\textit{ournal of the
 
 \item \alert{Shift}: developed at ORNL, distributed via RSICC, \href{http://rsicc.ornl.gov}{http://rsicc.ornl.gov}
 
-\item \alert{Capsaicin}: developed at LANL, \href{http://permalink.lanl.gov/object/tr?what=info:lanl-repo/lareport/LA-UR-11-01410}{http://permalink.lanl.gov/object/tr?what=info:lanl-repo/lareport/LA-UR-11-01410}
+\item \alert{Mercury}: developed at LLNL, \href{https://wci.llnl.gov/simulation/computer-codes/mercury}{https://wci.llnl.gov/simulation/computer-codes/mercury}
 
 \end{itemize}
 
@@ -970,7 +970,7 @@ G(t) &= \int_{-\infty}^t g(t')dt' = \int_0^t g(t') dt' = \biggl[- \frac{e^{-\lam
 
 \[
   \begin{aligned}
-g(x) dx &= C \quad a \leq x < b\\
+g(x) dx &= C dx \quad a \leq x < b\\
   %
 G(x) &= \int_{-\infty}^x g(x')dx' = C \int_a^x dx' = C\bigl[x' \bigr]_a^x = C \bigl(x - a)\\
     G(\infty) &= G(b) = C(b-a)\\
@@ -993,7 +993,7 @@ P(x) &= \int_{-\infty}^x p(x')dx' = \frac{1}{b-a}\int_a^x dx' = \frac{x-a}{b-a}\
 
 \[
   \begin{aligned}
-g(x) dx &= mx \qquad 0 \leq x < 1\\
+g(x) dx &= mx\:dx \qquad 0 \leq x < 1\\
   %
 G(x) &= \int_{-\infty}^x g(x')dx' = \int_0^x mx' dx' = \frac{m}{2}\bigl[x'^2 \bigr]_0^x = \frac{m}{2} x^2\\
     G(\infty) &= G(1) = \frac{m}{2}\\
@@ -1016,7 +1016,7 @@ P(x) &= \int_{-\infty}^x p(x')dx' = \int_0^x 2x' dx' = \bigl[x'^2 \bigr]_0^x = x
 
 \[
   \begin{aligned}
-  g(x) dx &= m(x - a) \qquad a \leq x < b\\
+  g(x) dx &= m(x - a)\:dx \qquad a \leq x < b\\
   %
   G(x) &= \int_{-\infty}^x g(x')dx' = \int_a^x m(x'-a) dx' = \frac{m}{2}\bigl[(x'-a)^2 \bigr]_0^x = \frac{m}{2} (x-a)^2\\
     G(\infty) &= G(1) = \frac{m}{2}(b-a)^2\\
